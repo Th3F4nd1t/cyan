@@ -1,3 +1,5 @@
+# CYAN
+
 ## Config Files
 ### Metadata
 | ID | Description | Required |
@@ -97,4 +99,4 @@ class add:
             return True
         else:
             return False
-```# cyan
+```
