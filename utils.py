@@ -21,7 +21,7 @@ config_elements = [
 ]
 
 
-def checkConfig(configDict: dict, version) -> bool:
+def isConfigValid(configDict: dict, version) -> bool:
     """This method checks the configuration of the configuration for a CYAN emulator.
 
     Args:
@@ -56,6 +56,13 @@ def checkConfig(configDict: dict, version) -> bool:
         return False
 
     return True
+
+def checkConfig(config, version):
+    if checkConfig(config, version):
+        print("Configuration is valid.")
+    else:
+        print("Configuration is invalid.")
+        raise Exception("Configuration is invalid.")
 
 def getConfig(configPath: str) -> dict:
     """Returns a dict of the configuration from the given json file.
