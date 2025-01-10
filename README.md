@@ -1,6 +1,17 @@
+# CYAN
+## License
+[CC BY-NC-SA](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+## How to Use
+i dunno man, figure it out
+(new documentation coming soon)
+
+## Things I have to do
+
 ## Config Files
 ### Metadata
 | ID | Description | Required |
+
 |:--:| :---------: | :------: |
 |name| The name of the processor| yes
 |cyan_version| The version of the emulator to use| yes
@@ -97,4 +108,4 @@ class add:
             return True
         else:
             return False
-```# cyan
+```
