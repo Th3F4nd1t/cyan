@@ -1,3 +1,6 @@
+import json
+
+
 config_elements = [
     "ram",
     "dcache",
@@ -18,7 +21,7 @@ config_elements = [
 ]
 
 
-def checkConfig(configDict: dict) -> bool:
+def checkConfig(configDict: dict, version) -> bool:
     """This method checks the configuration of the configuration for a CYAN emulator.
 
     Args:
@@ -47,9 +50,25 @@ def checkConfig(configDict: dict) -> bool:
         if field not in configDict.get("datapoints", {}):
             print(f"Missing required datapoints field: {field}")
             return False
+        
+    if configDict.get("metadata", {}).get("cyan_version") > version:
+        print(f"Config is too new. Expected {configDict.get('metadata', {}).get('cyan_version')}, got {version}")
+        return False
 
     return True
 
+def getConfig(configPath: str) -> dict:
+    """Returns a dict of the configuration from the given json file.
+
+    Args:
+        configPath (str): The absolute or relative path of the configuration file.
+
+    Returns:
+        dict: The dict of the config.
+    """
+
+    with open(configPath, "r") as f:
+        return json.load(f)
 
 def dumpOutput(stateDict: dict):
     """
@@ -61,7 +80,7 @@ def dumpOutput(stateDict: dict):
     Raises:
         TypeError: If stateDict is not a dictionary.
     """
-    if not isinstance(stateDict, StateDict):
+    if not isinstance(stateDict, dict):
         raise TypeError()
 
     key_width = max(len(str(key)) for key in stateDict.keys()) if stateDict else 3
@@ -79,20 +98,3 @@ def dumpOutput(stateDict: dict):
     for key, value in stateDict.items():
         print(f"| {str(key).ljust(key_width)} | {str(value).ljust(value_width)} |")
     print(border)
-
-
-class StateDict:
-    def __init__(self):
-        self.dict = {}
-    
-    def getItem(self, key):
-        return self.dict.get(key)
-    
-    def setItem(self, key, value):
-        self.dict[key] = value
-
-    def removeItem(self, key):
-        self.dict.pop(key)
-
-    def get(self):
-        return self.dict
