@@ -7,7 +7,14 @@ class Processor:
             stateDict (dict, optional): The state to start in, if any. If incorrectly formatted, things may break. Defaults to None.
         """
         self.config = config
-        self.state = []; self.initState()
+        if stateDict is not None:
+            self.state = stateDict
+        else:
+            self.state = []; self.initState()
+        self.programFile = None
+        self.instructionFile = None
+        self.isRunning = False
+        self.parsedProgram = None
 
     def initState(self) -> dict:
         """Initialize the processor state with default values."""
@@ -51,12 +58,46 @@ class Processor:
 
         return self.state
     
+    def step(self):
+        ...
+
+    def run(self):
+        ...
+
+    def isRunning(self):
+        ...
+
+    def exportState(self):
+        ...
+
+    def dumpState(self):
+        ...
+
+    def reset(self):
+        ...
+
+    def loadProgram(self, programFile: str) -> bool:
+        self.programFile = programFile
+        ...
+
+    def setInstructionsFile(self, instructionsFile: str) -> bool:
+        self.instructionsFile = instructionsFile
+        ...
+
+    def parse(self):
+        ...
 
 class ram:
     def __init__(self, address: int, word_size: int) -> None:
         self.address = address
         self.word_size = word_size
-        self.data = 0
+        self.data = [0] * self.word_size
+
+    def get(self) -> list:
+        return self.data
+    
+    def set(self, data: list) -> None:
+        self.data = data
 
 class dcache:
     def __init__(self, address: int, word_size: int) -> None:
@@ -64,11 +105,16 @@ class dcache:
         self.word_size = word_size
         self.data = [0] * self.word_size
 
+    # TODO
+
 class prom:
     def __init__(self, address: int, word_size: int) -> None:
         self.address = address
         self.word_size = word_size
         self.data = [0] * self.word_size
+
+    def get(self) -> list:
+        return self.data
 
 class icache:
     def __init__(self, address: int, word_size: int) -> None:
@@ -76,14 +122,42 @@ class icache:
         self.word_size = word_size
         self.data = [0] * self.word_size
 
+    # TODO
+
 class register:
     def __init__(self, address: int, word_size: int) -> None:
         self.address = address
         self.word_size = word_size
         self.data = [0] * self.word_size
+        self.locked = False
+
+    def get(self) -> list:
+        return self.data
+    
+    def set(self, data: list) -> None:
+        self.data = data
+
+    def lock(self) -> None:
+        self.locked = True
+
+    def unlock(self) -> None:
+        self.locked = False
 
 class io:
     def __init__(self, address: int, size: int) -> None:
         self.address = address
         self.size = size
         self.data = [0] * self.size
+        self.locked = False
+
+    def get(self) -> list:
+        return self.data
+    
+    def set(self, data: list) -> None:
+        self.data = data
+
+    def lock(self) -> None:
+        self.locked = True
+
+    def unlock(self) -> None:
+        self.locked = False

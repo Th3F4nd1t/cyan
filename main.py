@@ -7,11 +7,12 @@ CONFIG_PATH = ".\config\config.json"
 INSTRUCTIONS_PATH = ".\config\instructions.py"
 
 
-# Get Data
 config = getConfig(CONFIG_PATH)
 
 proc = Processor(config)
 
-# Run processor
+proc.loadProgram()
 
-print(proc.state)
+# Run processor
+while proc.isRunning():
+    proc.run()

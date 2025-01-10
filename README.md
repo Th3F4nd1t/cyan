@@ -7,6 +7,12 @@ i dunno man, figure it out
 (new documentation coming soon)
 
 ## Things I have to do
+- [ ] Processor Functions
+- [x] Hardware Classes
+- [ ] Parser Functions
+- [ ] Instruction Libraries
+- [ ] Execution Functions
+
 
 ## Config Files
 ### Metadata
