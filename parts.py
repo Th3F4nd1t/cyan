@@ -1,5 +1,5 @@
 import time
-
+from utils import *
 
 class Processor:
     def __init__(self, config: dict, stateDict: dict = None) -> None:
@@ -75,17 +75,19 @@ class Processor:
         self.isRunning = False
 
     def exportState(self, filePath: str) -> bool:
-        ...
-        # TODO: Dump the processor state to a file
+        try:
+            with open(filePath, "w") as f:
+                f.write(str(self.state))
+                return True
+        except Exception as e:
+            return False
 
     def dumpState(self) -> None:
-        ...
-        # TODO: Dump the processor state as a pretty table
+        dumpOutput(self.state)
         
 
     def reset(self):
-        ...
-        # TODO: Reset the processor state
+        self.initState()
 
     def execute(self, instruction: str) -> None:
         ...
@@ -101,6 +103,59 @@ class Processor:
 
     def parse(self):
         ...
+
+    def setReg(self, address: int, data: list) -> None:
+        self.state["registers"][address].set(data)
+    
+    def setIO(self, address: int, data: list) -> None:
+        self.state["io"][address].set(data)
+
+    def setRAM(self, address: int, data: list) -> None:
+        self.state["ram"][address].set(data)
+
+    def setDCache(self, address: int, data: list) -> None:
+        self.state["dcache"][address].set(data)
+
+    def setICache(self, address: int, data: list) -> None:
+        self.state["icache"][address].set(data)
+
+
+    def getReg(self, address: int) -> list:
+        return self.state["registers"][address].get()
+    
+    def getIO(self, address: int) -> list:
+        return self.state["io"][address].get()
+    
+    def getRAM(self, address: int) -> list:
+        return self.state["ram"][address].get()
+    
+    def getDCache(self, address: int) -> list:
+        return self.state["dcache"][address].get()
+    
+    def getICache(self, address: int) -> list:
+        return self.state["icache"][address].get()
+    
+    def getProm(self, address: int) -> list:
+        return self.state["prom"][address].get()
+    
+    def setRegLock(self, address: int, lockState: bool) -> None:
+        if lockState:
+            self.state["registers"][address].lock()
+        else:
+            self.state["registers"][address].unlock()
+
+    def setIOLock(self, address: int, lockState: bool) -> None:
+        if lockState:
+            self.state["io"][address].lock()
+        else:
+            self.state["io"][address].unlock()
+    
+
+    def getPC(self) -> int:
+        return self.state["pc"]
+    
+    def setPC(self, address: int) -> None:
+        self.state["pc"] = address
 
 class ram:
     def __init__(self, address: int, word_size: int) -> None:
