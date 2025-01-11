@@ -24,7 +24,6 @@ Run `main.py` using `python3 main.py`.
 ## Config Files
 ### Metadata
 | ID | Description | Required |
-
 |:--:| :---------: | :------: |
 |name| The name of the processor| yes
 |cyan_version| The version of the emulator to use| yes
