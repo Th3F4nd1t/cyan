@@ -1,5 +1,6 @@
 import time
 from utils import *
+import config
 
 class Processor:
     def __init__(self, config: dict, stateDict: dict = None) -> None:
@@ -14,7 +15,7 @@ class Processor:
             self.state = stateDict
         else:
             self.state = []; self.initState()
-        self.programFile = None
+        self.program = None
         self.instructionFile = None
         self.isRunning = False
         self.parsedProgram = None
@@ -60,10 +61,6 @@ class Processor:
             print("No io defined in config. Skipping.")
 
         return self.state
-    
-    def step(self):
-        ...
-        # TODO: Implement processor state transition and instruction execution
 
     def run(self):
         self.isRunning = True
@@ -80,62 +77,68 @@ class Processor:
                 f.write(str(self.state))
                 return True
         except Exception as e:
+            print(e)
             return False
 
     def dumpState(self) -> None:
         dumpOutput(self.state)
-        
 
     def reset(self):
         self.initState()
 
-    def execute(self, instruction: str) -> None:
-        ...
-        # TODO: Implement instruction execution
+    def execute(self) -> bool:
+        if self.program is None:
+            print("No program loaded.")
+            return False
+        line = self.program[self.state["pc"]]
+        
+        opcode = line[:3]
+        if not (opcode in self.config["operations"]):
+            print(f"Unknown opcode: {opcode}")
+            return False
+        
+        instr_class = getattr("config.instructions", opcode)
+
+        operands = line[4:].split(" ")
+        if len(operands) != instr_class.operand_count:
+            print(f"Expected {instr_class.operand_count} operands, got {len(operands)}")
+            return False
+
+        instr_class(self, operands)
 
     def loadProgram(self, programFile: str) -> bool:
-        self.programFile = programFile
-        ...
+        try:
+            with open(programFile, "r") as f:
+                self.program = f.readlines()
+                return True
+        except Exception as e:
+            print(e)
+            return False
 
     def setInstructionsFile(self, instructionsFile: str) -> bool:
         self.instructionsFile = instructionsFile
         ...
 
-    def parse(self):
-        ...
-
-    def setReg(self, address: int, data: list) -> None:
+    def setReg(self, address: int, data: int) -> None:
         self.state["registers"][address].set(data)
     
-    def setIO(self, address: int, data: list) -> None:
+    def setIO(self, address: int, data: int) -> None:
         self.state["io"][address].set(data)
 
-    def setRAM(self, address: int, data: list) -> None:
+    def setRAM(self, address: int, data: int) -> None:
         self.state["ram"][address].set(data)
 
-    def setDCache(self, address: int, data: list) -> None:
-        self.state["dcache"][address].set(data)
 
-    def setICache(self, address: int, data: list) -> None:
-        self.state["icache"][address].set(data)
-
-
-    def getReg(self, address: int) -> list:
+    def getReg(self, address: int) -> int:
         return self.state["registers"][address].get()
     
-    def getIO(self, address: int) -> list:
+    def getIO(self, address: int) -> int:
         return self.state["io"][address].get()
     
-    def getRAM(self, address: int) -> list:
+    def getRAM(self, address: int) -> int:
         return self.state["ram"][address].get()
     
-    def getDCache(self, address: int) -> list:
-        return self.state["dcache"][address].get()
-    
-    def getICache(self, address: int) -> list:
-        return self.state["icache"][address].get()
-    
-    def getProm(self, address: int) -> list:
+    def getProm(self, address: int) -> int:
         return self.state["prom"][address].get()
     
     def setRegLock(self, address: int, lockState: bool) -> None:
@@ -157,54 +160,78 @@ class Processor:
     def setPC(self, address: int) -> None:
         self.state["pc"] = address
 
-class ram:
-    def __init__(self, address: int, word_size: int) -> None:
-        self.address = address
-        self.word_size = word_size
-        self.data = [0] * self.word_size
 
-    def get(self) -> list:
-        return self.data
+    def getDCache(self, address: int) -> int:
+        return self.state["dcache"][address].get()
     
-    def set(self, data: list) -> None:
-        self.data = data
+    def getICache(self, address: int) -> int:
+        return self.state["icache"][address].get()
+    
+    def setDCache(self, address: int, data: int) -> None:
+        self.state["dcache"][address].set(data)
 
+    def setICache(self, address: int, data: int) -> None:
+        self.state["icache"][address].set(data)
+
+
+# Hardware classes
 class dcache:
     def __init__(self, address: int, word_size: int) -> None:
         self.address = address
         self.word_size = word_size
-        self.data = [0] * self.word_size
+        self.data = 0
 
-    # TODO
-
-class prom:
-    def __init__(self, address: int, word_size: int) -> None:
-        self.address = address
-        self.word_size = word_size
-        self.data = [0] * self.word_size
-
-    def get(self) -> list:
+    def get(self) -> int:
         return self.data
+    
+    def set(self, data: int) -> None:
+        self.data = data
 
 class icache:
     def __init__(self, address: int, word_size: int) -> None:
         self.address = address
         self.word_size = word_size
-        self.data = [0] * self.word_size
+        self.data = 0
+    
+    def get(self) -> int:
+        return self.data
+    
+    def set(self, data: int) -> None:
+        self.data = data
 
-    # TODO
+class ram:
+    def __init__(self, address: int, word_size: int) -> None:
+        self.address = address
+        self.word_size = word_size
+        self.data = 0
+
+    def get(self) -> int:
+        return self.data
+    
+    def set(self, data: int) -> None:
+        self.data = data
+
+class prom:
+    def __init__(self, address: int, word_size: int) -> None:
+        self.address = address
+        self.word_size = word_size
+        self.data = 0
+
+    def get(self) -> int:
+        return self.data
+    
 
 class register:
     def __init__(self, address: int, word_size: int) -> None:
         self.address = address
         self.word_size = word_size
-        self.data = [0] * self.word_size
+        self.data = 0
         self.locked = False
 
-    def get(self) -> list:
+    def get(self) -> int:
         return self.data
     
-    def set(self, data: list) -> None:
+    def set(self, data: int) -> None:
         self.data = data
 
     def lock(self) -> None:
@@ -217,13 +244,13 @@ class io:
     def __init__(self, address: int, size: int) -> None:
         self.address = address
         self.size = size
-        self.data = [0] * self.size
+        self.data = 0
         self.locked = False
 
-    def get(self) -> list:
+    def get(self) -> int:
         return self.data
     
-    def set(self, data: list) -> None:
+    def set(self, data: int) -> None:
         self.data = data
 
     def lock(self) -> None:

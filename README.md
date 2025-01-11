@@ -3,15 +3,18 @@
 [CC BY-NC-SA](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## How to Use
-i dunno man, figure it out
-(new documentation coming soon)
+### Important Things
+- Mnemonics must be 3 characters long. To change, edit `parts.py (ln 98, col 25)`
+
+### Step by Step
+#### 1. Download ZIP
+#### 2. Extract
+#### 4. Edit `config.json`
+#### 5. Edit `instructions.py`
+#### 6. Run
 
 ## Things I have to do
-- [ ] Processor Functions
-- [x] Hardware Classes
-- [ ] Parser Functions
-- [ ] Instruction Libraries
-- [ ] Execution Functions
+- [ ] Execution Function
 
 
 ## Config Files
@@ -32,8 +35,10 @@ i dunno man, figure it out
 | :------: | :-------------: | :----------: | :-:| :-:|
 |ram|amount of ram|bytes| no | yes
 |dcache|amount of dcache|bytes| no| no
-|prom|amount of prom|bytes| yes| yes
+|dcache_banks|how many banks|number| no | no
 |icache|amount of icache|bytes| no| no
+|icache_banks|how many banks|number| no | no
+|prom|amount of prom|bytes| yes| yes
 |speed|rate that the processor can take |redstone ticks|no| yes
 |delay|amount of time it takes from input to output|redstone ticks|no| yes
 |registers|number of registers|number| yes| yes

@@ -1,5 +1,5 @@
 import json
-
+import importlib
 
 config_elements = [
     "ram",
@@ -105,3 +105,8 @@ def dumpOutput(stateDict: dict):
     for key, value in stateDict.items():
         print(f"| {str(key).ljust(key_width)} | {str(value).ljust(value_width)} |")
     print(border)
+
+def import_class(class_path):
+    module_name, class_name = class_path.rsplit('.', 1)
+    module = importlib.import_module(module_name)
+    return getattr(module, class_name)
