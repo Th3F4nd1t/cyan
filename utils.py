@@ -110,3 +110,10 @@ def import_class(class_path):
     module_name, class_name = class_path.rsplit('.', 1)
     module = importlib.import_module(module_name)
     return getattr(module, class_name)
+
+def dict_of_lists_to_pretty_string(data):
+    result = []
+    for key, class_list in data.items():
+        class_strings = [repr(cls) for cls in class_list]
+        result.append(f"{key}: [{', '.join(class_strings)}]")
+    return "{\n  " + ",\n  ".join(result) + "\n}"

@@ -1,0 +1,4 @@
+ldi 1 14
+ldi 2 1
+add 2 1 0
+hlt

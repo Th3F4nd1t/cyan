@@ -1,0 +1,19 @@
+{
+    "metadata" : {
+        "name" : "Addition",
+        "operations" : ["add", "hlt", "ldi"],
+        "cyan_version" : 1,
+        "creator" : "TheFandit"
+
+    }, "datapoints" : {
+        "prom" : 0,
+        "registers" : 4,  
+        "word_size" : 8,
+        "opcode_size" : 6, 
+        "operand_count" : 2, 
+        "operand_size" : 5,
+        "ram" : 16,
+        "io_count" : 4, 
+        "io_size" : 8
+    }
+}

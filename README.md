@@ -8,13 +8,17 @@
 
 ### Step by Step
 #### 1. Download ZIP
+This is self explanatory. Download the zip file from GitHub.
 #### 2. Extract
+Use your favorite extration tool to put the files in any folder location.
 #### 4. Edit `config.json`
+Follow the instructions below to add your configuration for your processor or import one.
 #### 5. Edit `instructions.py`
-#### 6. Run
-
-## Things I have to do
-- [ ] Execution Function
+Create your ISA or import a pre-made one.
+#### 6. Write Program
+Write your program in program.txt
+#### 7. Run
+Run `main.py` using `python3 main.py`.
 
 
 ## Config Files
@@ -99,24 +103,21 @@
 
 ## Instruction definitions
 ```txt
-class <menomic>:
+class <mnemonic>:
     opcode = <opcode as a string>
-    operand_lengths = <list of operand lengths as integers. the engine will push the operands as integers>
+    operand_count = <number of expected operands>
 
-    def __init__(self, operands: List[int]) -> bool:
+    def __init__(self, proc: Processor, operands: list[int]) -> None:
         <code>
-        return <True if the instruction was executed successfully, False otherwise>
 ```
 
 Example for an `add` instruction:
 ```py
 class add:
-    opcode = "0001"
-    operand_lengths = [3, 3, 3]
+    opcode = "add"
+    operand_count = 3
 
-    def __init__(self, operands: List[int]) -> bool:
-        if setRegister(operands[2], (getRegister(operands[0]) + getRegister(operands[1]))):
-            return True
-        else:
-            return False
+    def __init__(self, proc, operands):
+        proc.setReg(operands[2], proc.getReg(operands[0]) + proc.getReg(operands[1]))
+        proc.incrementPC()
 ```

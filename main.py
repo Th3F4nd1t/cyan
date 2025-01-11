@@ -3,16 +3,12 @@ from parts import *
 
 # Define constants
 CYAN_VERSION = 1
-CONFIG_PATH = ".\config\config.json"
-INSTRUCTIONS_PATH = ".\config\instructions.py"
-
+CONFIG_PATH = ".\configGroup\config.json"
 
 config = getConfig(CONFIG_PATH)
 
 proc = Processor(config)
 
-proc.loadProgram()
+proc.loadProgram("./program.txt")
 
-# Run processor
-while proc.isRunning():
-    proc.run()
+proc.run()

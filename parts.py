@@ -1,6 +1,7 @@
+import os
+import sys
 import time
 from utils import *
-import config
 
 class Processor:
     def __init__(self, config: dict, stateDict: dict = None) -> None:
@@ -10,6 +11,9 @@ class Processor:
             config (dict): The configuration dictionary for the processor.
             stateDict (dict, optional): The state to start in, if any. If incorrectly formatted, things may break. Defaults to None.
         """
+        # IMPORTANT STUFF
+        self.logValue = True
+
         self.config = config
         if stateDict is not None:
             self.state = stateDict
@@ -19,6 +23,11 @@ class Processor:
         self.instructionFile = None
         self.isRunning = False
         self.parsedProgram = None
+
+    def log(self, message: str) -> None:
+        if self.logValue:
+            print(message)
+
 
     def initState(self) -> dict:
         """Initialize the processor state with default values."""
@@ -60,18 +69,27 @@ class Processor:
         except KeyError:
             print("No io defined in config. Skipping.")
 
+        self.log("Initialized state.")
         return self.state
 
     def run(self):
+        self.log("Starting processor.")
         self.isRunning = True
         while self.isRunning:
-            self.execute()
-            time.sleep(0.1 * self.config["speed"])
+            self.log(f"Executing instruction at {self.state['pc']}")
+            temp = self.execute()
+            self.log(f"Instruction executed: {temp}")
+            try:
+                time.sleep(0.1 * self.config["speed"])
+            except KeyError:
+                self.log("No speed defined in config. Defaulting to 0.")
 
     def stop(self):
+        self.log("Stopping processor.")
         self.isRunning = False
 
     def exportState(self, filePath: str) -> bool:
+        self.log(f"Exporting state to {filePath}")
         try:
             with open(filePath, "w") as f:
                 f.write(str(self.state))
@@ -81,74 +99,105 @@ class Processor:
             return False
 
     def dumpState(self) -> None:
-        dumpOutput(self.state)
+        self.log("Dumping state.")
+        dumpOutput(dict_of_lists_to_pretty_string(self.state))
 
     def reset(self):
         self.initState()
 
     def execute(self) -> bool:
+        self.log("Executing instruction.")
         if self.program is None:
             print("No program loaded.")
             return False
         line = self.program[self.state["pc"]]
+        self.log(f"Executing instruction: {line}")
         
         opcode = line[:3]
-        if not (opcode in self.config["operations"]):
+        if not (opcode in self.config["metadata"]["operations"]):
             print(f"Unknown opcode: {opcode}")
             return False
+        self.log(f"Opcode: {opcode}")
         
-        instr_class = getattr("config.instructions", opcode)
+        sys.path.append(f"{os.getcwd()}/configGroup") 
+        module = __import__("instructions")
+
+        class_ = getattr(module, opcode)
+        instr_class = class_
+        self.log(f"Instruction class: {instr_class}")
 
         operands = line[4:].split(" ")
+        if operands == [""]:
+            operands = []
         if len(operands) != instr_class.operand_count:
             print(f"Expected {instr_class.operand_count} operands, got {len(operands)}")
             return False
+    
+        for i in range(0, len(operands)):
+            operands[i] = int(operands[i])
+
+        self.log(f"Operands: {operands}")
+
 
         instr_class(self, operands)
         return True
 
     def loadProgram(self, programFile: str) -> bool:
+        self.log(f"Loading program from {programFile}")
         try:
             with open(programFile, "r") as f:
                 self.program = f.readlines()
-                return True
+                
         except Exception as e:
             print(e)
             return False
+        
+        for index, line in enumerate(self.program):
+            self.program[index] = self.program[index].strip("\n")
 
     def setInstructionsFile(self, instructionsFile: str) -> bool:
+        self.log(f"Setting instructions file to {instructionsFile}")
         self.instructionsFile = instructionsFile
-        ...
+        return True
 
     def setReg(self, address: int, data: int) -> None:
+        self.log(f"Setting register {address} to {data}")
         self.state["registers"][address].set(data)
     
     def setIO(self, address: int, data: int) -> None:
+        self.log(f"Setting IO {address} to {data}")
         self.state["io"][address].set(data)
 
     def setRAM(self, address: int, data: int) -> None:
+        self.log(f"Setting RAM {address} to {data}")
         self.state["ram"][address].set(data)
 
 
     def getReg(self, address: int) -> int:
+        self.log(f"Getting register {address}")
         return self.state["registers"][address].get()
     
     def getIO(self, address: int) -> int:
+        self.log(f"Getting IO {address}")
         return self.state["io"][address].get()
     
     def getRAM(self, address: int) -> int:
+        self.log(f"Getting RAM {address}")
         return self.state["ram"][address].get()
     
     def getProm(self, address: int) -> int:
+        self.log(f"Getting PROM {address}")
         return self.state["prom"][address].get()
     
     def setRegLock(self, address: int, lockState: bool) -> None:
+        self.log(f"Setting register {address} lock to {lockState}")
         if lockState:
             self.state["registers"][address].lock()
         else:
             self.state["registers"][address].unlock()
 
     def setIOLock(self, address: int, lockState: bool) -> None:
+        self.log(f"Setting IO {address} lock to {lockState}")
         if lockState:
             self.state["io"][address].lock()
         else:
@@ -156,10 +205,20 @@ class Processor:
     
 
     def getPC(self) -> int:
+        self.log("Getting PC")
         return self.state["pc"]
     
     def setPC(self, address: int) -> None:
+        self.log(f"Setting PC to {address}")
         self.state["pc"] = address
+
+    def offSetPC(self, offset: int) -> None:
+        self.log(f"Offsetting PC by {offset}")
+        self.state["pc"] += offset
+
+    def incrementPC(self) -> None:
+        self.log("Incrementing PC")
+        self.state["pc"] += 1
 
 
     def getDCache(self, address: int) -> int:
@@ -182,6 +241,9 @@ class dcache:
         self.word_size = word_size
         self.data = 0
 
+    def __repr__(self):
+        return f"Dcache(address={self.address}, data={self.data})"
+
     def get(self) -> int:
         return self.data
     
@@ -193,6 +255,9 @@ class icache:
         self.address = address
         self.word_size = word_size
         self.data = 0
+
+    def __repr__(self):
+        return f"Icache(address={self.address}, data={self.data})"
     
     def get(self) -> int:
         return self.data
@@ -206,6 +271,9 @@ class ram:
         self.word_size = word_size
         self.data = 0
 
+    def __repr__(self):
+        return f"Ram(address={self.address}, data={self.data})"
+
     def get(self) -> int:
         return self.data
     
@@ -218,6 +286,9 @@ class prom:
         self.word_size = word_size
         self.data = 0
 
+    def __repr__(self):
+        return f"Prom(address={self.address}, data={self.data})"
+
     def get(self) -> int:
         return self.data
     
@@ -228,6 +299,9 @@ class register:
         self.word_size = word_size
         self.data = 0
         self.locked = False
+
+    def __repr__(self):
+        return f"Register(address={self.address}, data={self.data}, locked={self.locked})"
 
     def get(self) -> int:
         return self.data
@@ -247,6 +321,9 @@ class io:
         self.size = size
         self.data = 0
         self.locked = False
+
+    def __repr__(self):
+        return f"IO(address={self.address}, data={self.data}, locked={self.locked})"
 
     def get(self) -> int:
         return self.data
