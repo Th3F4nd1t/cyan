@@ -65,7 +65,7 @@ class Processor:
     def run(self):
         self.isRunning = True
         while self.isRunning:
-            self.step()
+            self.execute()
             time.sleep(0.1 * self.config["speed"])
 
     def stop(self):
@@ -105,6 +105,7 @@ class Processor:
             return False
 
         instr_class(self, operands)
+        return True
 
     def loadProgram(self, programFile: str) -> bool:
         try:
