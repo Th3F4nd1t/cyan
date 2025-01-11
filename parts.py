@@ -1,3 +1,6 @@
+import time
+
+
 class Processor:
     def __init__(self, config: dict, stateDict: dict = None) -> None:
         """The class constructor for any processor to be used with CYAN."
@@ -60,21 +63,33 @@ class Processor:
     
     def step(self):
         ...
+        # TODO: Implement processor state transition and instruction execution
 
     def run(self):
-        ...
+        self.isRunning = True
+        while self.isRunning:
+            self.step()
+            time.sleep(0.1 * self.config["speed"])
 
-    def isRunning(self):
-        ...
+    def stop(self):
+        self.isRunning = False
 
-    def exportState(self):
+    def exportState(self, filePath: str) -> bool:
         ...
+        # TODO: Dump the processor state to a file
 
-    def dumpState(self):
+    def dumpState(self) -> None:
         ...
+        # TODO: Dump the processor state as a pretty table
+        
 
     def reset(self):
         ...
+        # TODO: Reset the processor state
+
+    def execute(self, instruction: str) -> None:
+        ...
+        # TODO: Implement instruction execution
 
     def loadProgram(self, programFile: str) -> bool:
         self.programFile = programFile
