@@ -58,7 +58,7 @@ def isConfigValid(configDict: dict, version) -> bool:
     return True
 
 def checkConfig(config, version):
-    if checkConfig(config, version):
+    if isConfigValid(config, version):
         print("Configuration is valid.")
     else:
         print("Configuration is invalid.")
