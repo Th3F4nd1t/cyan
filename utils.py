@@ -3,9 +3,7 @@ import importlib
 
 config_elements = [
     "ram",
-    "dcache",
     "prom",
-    "icache",
     "speed",
     "delay",
     "registers",
