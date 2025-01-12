@@ -73,7 +73,7 @@ class Processor:
             except: 
                 pass
 
-    def Stop(self):
+    def stop(self):
         log("Stopping processor.")
         self.isRunning = False
 
