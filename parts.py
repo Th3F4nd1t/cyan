@@ -88,11 +88,63 @@ class Processor:
         self.log("Stopping processor.")
         self.isRunning = False
 
-    def exportState(self, filePath: str) -> bool:
+    def exportState(self, filePath: str, pretty: bool) -> bool:
         self.log(f"Exporting state to {filePath}")
+
+        # RAM
+        ramHeader = str("RAM:\n")
+        ramBody = "| "
+        for i, ram in enumerate(self.state["ram"]):
+            padding = " " * ((len(str(self.config["datapoints"]["ram"])) + 3)  - (len(str(self.state["ram"][i].get())) + len(str(i))))
+            ramBody += f"{i}: {padding} {ram.get()} | "
+            if (i + 1) % 10 == 0:
+                ramBody += "\n| "
+
+        #PROM
+        romHeader = str("\nProgram ROM:\n")
+        romBody = "| "
+        for i, rom in enumerate(self.state["prom"]):
+            padding = " " * ((len(str(self.config["datapoints"]["prom"])) + 3)  - (len(str(self.state["prom"][i].get())) + len(str(i))))
+            romBody += f"{i}: {padding} {rom.get()}  | "
+            if (i + 1) % 10 == 0:
+                romBody += "\n| "
+        
+
+        # REGISTERS
+        regHeader = str("\nRegisters:\n")
+        regBody = "| "
+        for i, reg in enumerate(self.state["registers"]):
+            padding = " " * ((len(str(self.config["datapoints"]["registers"])) + 3)  - (len(str(self.state["registers"][i].get())) + len(str(i))))
+            regBody += f"{i}: {padding} {reg.get()}  | "
+            if (i + 1) % 3 == 0:
+                regBody += "\n| "
+
+        # I/O PORTS
+        portsHeader = str("\nI/O Ports:\n")
+        portsBody = "| "
+        for i, ports in enumerate(self.state["io"]):
+            padding = " " * ((len(str(self.config["datapoints"]["io_count"])) + 3)  - (len(str(self.state["io"][i].get())) + len(str(i))))
+            portsBody += f"{i}: {padding} {ports.get()}  | "
+            if (i + 1) % 3 == 0:
+                portsBody += "\n| "
+
         try:
             with open(filePath, "w") as f:
-                f.write(str(self.state))
+                if pretty == True:
+                        f.write(str(self.state))
+                else:
+                    f.write(ramHeader)        
+                    f.write(ramBody + "\n")
+
+                    f.write(romHeader)        
+                    f.write(romBody + "\n")
+
+                    f.write(regHeader)        
+                    f.write(regBody + "\n")
+
+                    f.write(portsHeader)        
+                    f.write(portsBody + "\n")
+                    
                 return True
         except Exception as e:
             print(e)
