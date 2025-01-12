@@ -1,25 +1,9 @@
 import json
 import importlib
 
-config_elements = [
-    "ram",
-    "dcache",
-    "prom",
-    "icache",
-    "speed",
-    "delay",
-    "registers",
-    "word_size",
-    "opcode_size",
-    "operand_count",
-    "operand_size",
-    "immediate_size",
-    "stack_depth",
-    "callstack_depth",
-    "io_count",
-    "io_size",
-]
+logValue = True
 
+<<<<<<< HEAD
 
 def isConfigValid(configDict: dict, version) -> bool:
     """This method checks the configuration of the configuration for a CYAN emulator.
@@ -76,6 +60,11 @@ def getConfig(configPath: str) -> dict:
 
     with open(configPath, "r") as f:
         return json.load(f)
+=======
+def log(message: str) -> None:
+    if logValue:
+        print(message)
+>>>>>>> e2d290c4b7e0d44a372b7ee0e998d7876e77f0bb
 
 def dumpOutput(stateDict: dict):
     """
