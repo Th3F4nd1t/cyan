@@ -2,6 +2,9 @@
 ## License
 [CC BY-NC-SA](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
+## Known Issues
+- [ ] The `and` mnemonic doesnt work
+
 ## How to Use
 ### Important Things
 - Mnemonics must be 3 characters long. To change, edit `parts.py (ln 98, col 25)`
@@ -120,3 +123,28 @@ class add:
         proc.setReg(operands[2], proc.getReg(operands[0]) + proc.getReg(operands[1]))
         proc.incrementPC()
 ```
+
+### Processor methods
+- `def log(self, message: str) -> None`
+- `def stop(self)`
+- `def exportState(self, filePath: str) -> bool`
+- `def dumpState(self) -> None`
+- `def reset(self)`
+- `def setInstructionsFile(self, instructionsFile: str) -> bool`
+- `def setReg(self, address: int, data: int) -> None`
+- `def setIO(self, address: int, data: int) -> None`
+- `def setRAM(self, address: int, data: int) -> None`
+- `def getReg(self, address: int) -> int`
+- `def getIO(self, address: int) -> int`
+- `def getRAM(self, address: int) -> int`
+- `def getProm(self, address: int) -> int`
+- `def setRegLock(self, address: int, lockState: bool) -> None`
+- `def setIOLock(self, address: int, lockState: bool) -> None`
+- `def getPC(self) -> int`
+- `def setPC(self, address: int) -> None`
+- `def offSetPC(self, offset: int) -> None`
+- `def incrementPC(self) -> None`
+- `def getDCache(self, address: int) -> int`
+- `def getICache(self, address: int) -> int`
+- `def setDCache(self, address: int, data: int) -> None`
+- `def setICache(self, address: int, data: int) -> None`
