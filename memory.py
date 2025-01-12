@@ -1,4 +1,5 @@
 import math
+from utils import error
 
 class Memory:
     def __init__(self, address: int, wordSize: int) -> None:
@@ -16,7 +17,7 @@ class Memory:
         if data < math.pow(2, self.wordSize):
             self.data = data
         else:
-            raise ValueError("Data out of range")
+            error("Data out of range")
 
 class LockableMemory(Memory):
     def __init__(self, address: int, wordSize: int) -> None:

@@ -73,7 +73,7 @@ class Processor:
             except: 
                 pass
 
-    def stop(self):
+    def Stop(self):
         log("Stopping processor.")
         self.isRunning = False
 
@@ -156,8 +156,7 @@ class Processor:
         
         opcode = line[:3]
         if not (opcode in self.config["metadata"]["operations"]):
-            print(f"Unknown opcode: {opcode}")
-            return False
+            error(f"Unknown opcode: {opcode}")
         log(f"Opcode: {opcode}")
         
         sys.path.append(f"{os.getcwd()}/configGroup") 
@@ -171,11 +170,13 @@ class Processor:
         if operands == [""]:
             operands = []
         if len(operands) != instr_class.operand_count:
-            print(f"Expected {instr_class.operand_count} operands, got {len(operands)}")
-            return False
+            error(f"Expected {instr_class.operand_count} operands, got {len(operands)}")
     
         for i in range(0, len(operands)):
-            operands[i] = int(operands[i])
+            try:
+                operands[i] = int(operands[i])
+            except Exception as e:
+                error(f"Invalid operand {operands[i]} at index {i}")
 
         log(f"Operands: {operands}")
 
