@@ -40,17 +40,17 @@ def validateConfig(configDict: dict, version) -> bool:
     # Check required metadata
     for field in metadata_required:
         if field not in configDict.get("metadata", {}):
-            error(f"Missing required metadata field: {field}")
+            log(f"Missing required metadata field: {field}", "FATAL")
 
     # Check required datapoints
     for field in datapoints_required:
         if field not in configDict.get("datapoints", {}):
-            error(f"Missing required datapoints field: {field}")
+            log(f"Missing required datapoints field: {field}", "FATAL")
         
     if configDict.get("metadata", {}).get("cyan_version") > version:
-        error(f"Config is too new. Expected {version}, got {configDict.get('metadata', {}).get('cyan_version')}")
+        log(f"Config is too new. Expected {version}, got {configDict.get('metadata', {}).get('cyan_version')}", "ERROR")
 
-    log("Configuration is valid.")
+    log("Configuration is valid.", "INFO")
     return True
 
 def GetConfig(configPath: str) -> dict:

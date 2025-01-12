@@ -1,17 +1,25 @@
 import json
 import importlib
+import datetime
 
-logValue = True
+printLogs = True
 
-def log(message: str) -> None:
-    if logValue:
-        print(message)
-
-def error(message: str) -> None:
-    print(f"Error: {message}")
-    print("Exiting the program.")
-    exit(1)
+def log(message: str, level: str) -> None:
+    with open("./log.txt", "a") as f:
+        f.write(str(f"[{datetime.datetime.now().strftime("%H:%M:%S.%f")[:-3]}] {level.upper()}: {message}\n"))
+    if level == "INFO" or level == "WARNING":
+        if printLogs:
+            print(f"{level.upper()}: {message}")
+    elif level == "ERROR" or level == "FATAL":
+        print(f"{level.upper()}: {message}")
+        print("Exiting the program...")
+        with open("./log.txt", "a") as f:
+            f.write(str(f"[{datetime.datetime.now().strftime("%H:%M:%S.%f")[:-3]}] {level.upper()}: Exiting the program..."))
+        exit(1)
     
+def resetLogger():
+    with open("./log.txt", "w") as f:
+        f.write("")
 
 def dumpOutput(stateDict: dict):
     """
