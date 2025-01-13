@@ -186,8 +186,9 @@ class Processor:
         log(f"Instruction class: {instr_class}", "INFO")
 
         operands = line[1:]
-        if operands == [""]:
-            operands = []
+        for operand in operands:
+            if operand == "":
+                operands.remove(operand)
         if len(operands) != instr_class.operand_count:
             log(f"Expected {instr_class.operand_count} operands, got {len(operands)}", "ERROR")
     
