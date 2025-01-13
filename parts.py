@@ -162,6 +162,10 @@ class Processor:
         if self.program is None:
             print("No program loaded.")
             return False
+        elif self.state["pc"] >= len(self.program):
+            print("Reached end of program.")
+            self.stop()
+            return False
         line = self.program[self.state["pc"]]
         self.log(f"Executing instruction: {line}")
         
