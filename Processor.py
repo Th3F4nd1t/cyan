@@ -169,7 +169,8 @@ class Processor:
         line = self.program[self.state["pc"]]
         log(f"Executing instruction: {line}", "INFO")
         
-        opcode = line[:3]
+        line = line.split(" ")
+        opcode = line[0]
         if not (opcode in self.config["metadata"]["operations"]):
             log(f"Unknown opcode: {opcode}", "ERROR")
         log(f"Opcode: {opcode}", "INFO")
@@ -181,7 +182,7 @@ class Processor:
         instr_class = class_
         log(f"Instruction class: {instr_class}", "INFO")
 
-        operands = line[4:].split(" ")
+        operands = line[1:]
         if operands == [""]:
             operands = []
         if len(operands) != instr_class.operand_count:
