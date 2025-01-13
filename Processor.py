@@ -66,18 +66,23 @@ class Processor:
         log("Starting processor.", "INFO")
         self.isRunning = True
         while self.isRunning:
-            log(f"Executing instruction at {self.state['pc']}", "INFO")
-            rpc = self.state["pc"]
-            temp = self.execute()
-            if self.state["pc"] == rpc:
+            if self.program[self.state["pc"]].startswith(";"):
                 self.state["pc"] += 1
-            log(f"Instruction executed: {temp}", "INFO")
-            try:
-                time.sleep(0.1 * self.config["speed"])
-            except: 
-                pass
+            
+            else:
+                log(f"Executing instruction at {self.state['pc']}", "INFO")
+                rpc = self.state["pc"]
+                temp = self.execute()
+                if self.state["pc"] == rpc:
+                    self.state["pc"] += 1
+                log(f"Instruction executed: {temp}", "INFO")
 
-    def Stop(self):
+                try:
+                    time.sleep(0.1 * self.config["speed"])
+                except: 
+                    pass
+
+    def stop(self):
         log("Stopping processor.", "INFO")
         self.isRunning = False
 
@@ -201,41 +206,41 @@ class Processor:
         for index, line in enumerate(self.program):
             self.program[index] = self.program[index].strip("\n")
 
-    def SetInstructionsFile(self, instructionsFile: str) -> bool:
+    def setInstructionsFile(self, instructionsFile: str) -> bool:
         log(f"Setting instructions file to {instructionsFile}", "INFO")
         self.instructionsFile = instructionsFile
         return True
 
-    def SetReg(self, address: int, data: int) -> None:
+    def setReg(self, address: int, data: int) -> None:
         log(f"Setting register {address} to {data}", "INFO")
         self.state["registers"][address].Set(data)
     
-    def SetIO(self, address: int, data: int) -> None:
+    def setIO(self, address: int, data: int) -> None:
         log(f"Setting IO {address} to {data}", "INFO")
         self.state["io"][address].Set(data)
 
-    def SetRAM(self, address: int, data: int) -> None:
+    def setRAM(self, address: int, data: int) -> None:
         log(f"Setting RAM {address} to {data}", "INFO")
         self.state["ram"][address].Set(data)
 
 
-    def GetReg(self, address: int) -> int:
+    def getReg(self, address: int) -> int:
         log(f"Getting register {address}", "INFO")
         return self.state["registers"][address].Get()
     
-    def GetIO(self, address: int) -> int:
+    def getIO(self, address: int) -> int:
         log(f"Getting IO {address}", "INFO")
         return self.state["io"][address].Get()
     
-    def GetRAM(self, address: int) -> int:
+    def getRAM(self, address: int) -> int:
         log(f"Getting RAM {address}", "INFO")
         return self.state["ram"][address].Get()
     
-    def GetProm(self, address: int) -> int:
+    def getProm(self, address: int) -> int:
         log(f"Getting PROM {address}", "INFO")
         return self.state["prom"][address].Get()
 
-    def SetIOLock(self, address: int, lockState: bool) -> None:
+    def setIOLock(self, address: int, lockState: bool) -> None:
         log(f"Setting IO {address} lock to {lockState}", "INFO")
         if lockState:
             self.state["io"][address].Lock()
@@ -243,18 +248,18 @@ class Processor:
             self.state["io"][address].Unlock()
     
 
-    def GetPC(self) -> int:
+    def getPC(self) -> int:
         log("Getting PC", "INFO")
         return self.state["pc"]
     
-    def SetPC(self, address: int) -> None:
+    def setPC(self, address: int) -> None:
         log(f"Setting PC to {address}", "INFO")
         self.state["pc"] = address
 
-    def OffsetPC(self, offset: int) -> None:
+    def offsetPC(self, offset: int) -> None:
         log(f"Offsetting PC by {offset}", "INFO")
         self.state["pc"] += offset
 
-    def IncrementPC(self) -> None:
+    def incrementPC(self) -> None:
         log("Incrementing PC", "INFO")
         self.state["pc"] += 1
