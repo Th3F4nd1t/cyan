@@ -66,7 +66,13 @@ class Processor:
         log("Starting processor.", "INFO")
         self.isRunning = True
         while self.isRunning:
-            if self.program[self.state["pc"]].startswith(";"):
+            # Remove whitespace before the line
+            line = self.program[self.state["pc"]]
+            while line.startswith(" "):
+                line = line[1:]
+
+            # Check for comments or empty lines
+            if line.startswith(";") or line.startswith("\n") or line.startswith(""):
                 self.state["pc"] += 1
             
             else:
