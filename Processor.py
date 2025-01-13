@@ -67,7 +67,10 @@ class Processor:
         self.isRunning = True
         while self.isRunning:
             log(f"Executing instruction at {self.state['pc']}", "INFO")
+            rpc = self.state["pc"]
             temp = self.execute()
+            if self.state["pc"] == rpc:
+                self.state["pc"] += 1
             log(f"Instruction executed: {temp}", "INFO")
             try:
                 time.sleep(0.1 * self.config["speed"])
