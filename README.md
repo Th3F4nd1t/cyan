@@ -106,17 +106,19 @@ class <mnemonic_uppercase>:
     opcode = <opcode as a string>
     operand_count = <number of expected operands>
     operand_sizes = [<List in bits>]
+    signage = [<"u" for unsigned, "s" for signed>]
 
     def __init__(self, proc: Processor, operands: list[int]) -> None:
         <code>
 ```
 
-Example for an `add` instruction:
+Example for an `add` instruction with signed inputs:
 ```py
 class ADD:
     opcode = "add"
     operand_count = 3
-    operand_sizes = []
+    operand_sizes = [4, 8, 8]
+    signage = ["u", "u", "u"]
 
     def __init__(self, proc, operands):
         proc.setReg(operands[2], proc.getReg(operands[0]) + proc.getReg(operands[1]))

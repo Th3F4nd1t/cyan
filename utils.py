@@ -62,9 +62,14 @@ def dict_of_lists_to_pretty_string(data):
         result.append(f"{key}: [{', '.join(class_strings)}]")
     return "{\n  " + ",\n  ".join(result) + "\n}"
 
-def isSizedCorrectly(sizes: list, data: list) -> bool:
-    """ Check if the number in the data list is within the corrospondin number of bits specified in the sizes list. """
+def isSizedCorrectly(sizes: list, data: list, signage: list) -> bool:
+    """ Check if the number in the data list is within the corrospondin number of bits specified in the sizes list. It also uses the signage list to check if the number is signed or unsigned and if it's signed, then it limits the values to be within the 2s complement size."""
     for i, size in enumerate(sizes):
-        if data[i] >= 2 ** size:
-            return False
+        if signage[i] == "u":
+            if data[i] < 0 or data[i] >= 2 ** size:
+                return False
+        elif signage[i] == "s":
+            if data[i] < -(2 ** (size - 1)) or data[i] >= 2 ** (size - 1) - 1:
+                return False
+            
     return True

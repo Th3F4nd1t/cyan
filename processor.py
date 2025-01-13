@@ -190,7 +190,7 @@ class Processor:
             if operand == "":
                 operands.remove(operand)
 
-        if isSizedCorrectly(instr_class.operand_sizes, operands) == False:
+        if isSizedCorrectly(instr_class.operand_sizes, operands, instr_class.signage) == False:
             log("Operand size mismatch.", "ERROR")
         else:
             log("Operand size match.", "INFO")
