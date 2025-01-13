@@ -189,6 +189,12 @@ class Processor:
         for operand in operands:
             if operand == "":
                 operands.remove(operand)
+
+        if isSizedCorrectly(instr_class.operand_sizes, operands) == False:
+            log("Operand size mismatch.", "ERROR")
+        else:
+            log("Operand size match.", "INFO")
+            
         if len(operands) != instr_class.operand_count:
             log(f"Expected {instr_class.operand_count} operands, got {len(operands)}", "ERROR")
     

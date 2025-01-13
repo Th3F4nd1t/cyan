@@ -1,4 +1,3 @@
-import math
 from utils import *
 
 class Memory:
@@ -10,11 +9,11 @@ class Memory:
     def __repr__(self):
         return f"Memory(Address={self.address}, Data={self.data})"
 
-    def Get(self) -> int:
+    def get(self) -> int:
         return self.data
     
-    def Set(self, data: int) -> None:
-        if data < math.pow(2, self.wordSize):
+    def set(self, data: int) -> None:
+        if data < (2 ** self.wordSize):
             self.data = data
         else:
             log("Data out of range", "ERROR")
@@ -24,8 +23,8 @@ class LockableMemory(Memory):
         super().__init__(address, wordSize)
         self.locked = False
 
-    def Lock(self) -> None:
+    def lock(self) -> None:
         self.locked = True
     
-    def Unlock(self) -> None:
+    def unlock(self) -> None:
         self.locked = False

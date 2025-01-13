@@ -61,3 +61,10 @@ def dict_of_lists_to_pretty_string(data):
         class_strings = [repr(cls) for cls in class_list]
         result.append(f"{key}: [{', '.join(class_strings)}]")
     return "{\n  " + ",\n  ".join(result) + "\n}"
+
+def isSizedCorrectly(sizes: list, data: list) -> bool:
+    """ Check if the number in the data list is within the corrospondin number of bits specified in the sizes list. """
+    for i, size in enumerate(sizes):
+        if data[i] >= 2 ** size:
+            return False
+    return True

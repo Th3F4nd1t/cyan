@@ -102,9 +102,10 @@ Run `main.py` using `python3 main.py`.
 
 ## Instruction definitions
 ```txt
-class <mnemonic>:
+class <mnemonic_uppercase>:
     opcode = <opcode as a string>
     operand_count = <number of expected operands>
+    operand_sizes = [<List in bits>]
 
     def __init__(self, proc: Processor, operands: list[int]) -> None:
         <code>
@@ -112,11 +113,17 @@ class <mnemonic>:
 
 Example for an `add` instruction:
 ```py
-class add:
+class ADD:
     opcode = "add"
     operand_count = 3
+    operand_sizes = []
 
     def __init__(self, proc, operands):
         proc.setReg(operands[2], proc.getReg(operands[0]) + proc.getReg(operands[1]))
         proc.incrementPC()
 ```
+
+Note: Incremeting the PC in the instruction is optional. If you dont, the program will automatically do so.
+
+## Programming
+; is a comment
