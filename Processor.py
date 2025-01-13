@@ -74,6 +74,9 @@ class Processor:
             # Check for comments or empty lines
             if line.startswith(";") or line.startswith("\n") or line.startswith(""):
                 self.state["pc"] += 1
+
+            if line.includes(";"):
+                line = line.split(";")[0]
             
             else:
                 log(f"Executing instruction at {self.state['pc']}", "INFO")
@@ -178,7 +181,7 @@ class Processor:
         sys.path.append(f"{os.getcwd()}/configGroup") 
         module = __import__("instructions")
 
-        class_ = getattr(module, opcode)
+        class_ = getattr(module, opcode.upper())
         instr_class = class_
         log(f"Instruction class: {instr_class}", "INFO")
 
