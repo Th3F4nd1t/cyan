@@ -6,7 +6,7 @@ from processor import *
 CYAN_VERSION = 1
 CONFIG_PATH = ".\configGroup\config.json"
 
-config = GetConfig(CONFIG_PATH)
+config = getConfig(CONFIG_PATH)
 
 proc = Processor(config)
 

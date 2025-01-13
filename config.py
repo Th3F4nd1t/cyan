@@ -53,7 +53,7 @@ def validateConfig(configDict: dict, version) -> bool:
     log("Configuration is valid.", "INFO")
     return True
 
-def GetConfig(configPath: str) -> dict:
+def getConfig(configPath: str) -> dict:
     """Returns a dict of the configuration from the given json file.
 
     Args:

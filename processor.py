@@ -102,8 +102,8 @@ class Processor:
         ramHeader = str("RAM:\n")
         ramBody = "| "
         for i, ram in enumerate(self.state["ram"]):
-            padding = " " * ((len(str(self.config["datapoints"]["ram"])) + 3) - (len(str(self.state["ram"][i].Get())) + len(str(i))))
-            ramBody += f"{i}: {padding} {ram.Get()} | "
+            padding = " " * ((len(str(self.config["datapoints"]["ram"])) + 3) - (len(str(self.state["ram"][i].get())) + len(str(i))))
+            ramBody += f"{i}: {padding} {ram.get()} | "
             if (i + 1) % 10 == 0:
                 ramBody += "\n| "
 
@@ -111,8 +111,8 @@ class Processor:
         romHeader = str("\nProgram ROM:\n")
         romBody = "| "
         for i, rom in enumerate(self.state["prom"]):
-            padding = " " * ((len(str(self.config["datapoints"]["prom"])) + 3) - (len(str(self.state["prom"][i].Get())) + len(str(i))))
-            romBody += f"{i}: {padding} {rom.Get()}  | "
+            padding = " " * ((len(str(self.config["datapoints"]["prom"])) + 3) - (len(str(self.state["prom"][i].get())) + len(str(i))))
+            romBody += f"{i}: {padding} {rom.get()}  | "
             if (i + 1) % 10 == 0:
                 romBody += "\n| "
         
@@ -121,8 +121,8 @@ class Processor:
         regHeader = str("\nRegisters:\n")
         regBody = "| "
         for i, reg in enumerate(self.state["registers"]):
-            padding = " " * ((len(str(self.config["datapoints"]["registers"])) + 3) - (len(str(self.state["registers"][i].Get())) + len(str(i))))
-            regBody += f"{i}: {padding} {reg.Get()}  | "
+            padding = " " * ((len(str(self.config["datapoints"]["registers"])) + 3) - (len(str(self.state["registers"][i].get())) + len(str(i))))
+            regBody += f"{i}: {padding} {reg.get()}  | "
             if (i + 1) % 3 == 0:
                 regBody += "\n| "
 
@@ -130,8 +130,8 @@ class Processor:
         portsHeader = str("\nI/O Ports:\n")
         portsBody = "| "
         for i, ports in enumerate(self.state["io"]):
-            padding = " " * ((len(str(self.config["datapoints"]["io_count"])) + 3) - (len(str(self.state["io"][i].Get())) + len(str(i))))
-            portsBody += f"{i}: {padding} {ports.Get()}  | "
+            padding = " " * ((len(str(self.config["datapoints"]["io_count"])) + 3) - (len(str(self.state["io"][i].get())) + len(str(i))))
+            portsBody += f"{i}: {padding} {ports.get()}  | "
             if (i + 1) % 3 == 0:
                 portsBody += "\n| "
 
@@ -194,7 +194,7 @@ class Processor:
             log("Operand size mismatch.", "ERROR")
         else:
             log("Operand size match.", "INFO")
-            
+
         if len(operands) != instr_class.operand_count:
             log(f"Expected {instr_class.operand_count} operands, got {len(operands)}", "ERROR")
     
@@ -230,39 +230,39 @@ class Processor:
 
     def setReg(self, address: int, data: int) -> None:
         log(f"Setting register {address} to {data}", "INFO")
-        self.state["registers"][address].Set(data)
+        self.state["registers"][address].set(data)
     
     def setIO(self, address: int, data: int) -> None:
         log(f"Setting IO {address} to {data}", "INFO")
-        self.state["io"][address].Set(data)
+        self.state["io"][address].set(data)
 
     def setRAM(self, address: int, data: int) -> None:
         log(f"Setting RAM {address} to {data}", "INFO")
-        self.state["ram"][address].Set(data)
+        self.state["ram"][address].set(data)
 
 
     def getReg(self, address: int) -> int:
         log(f"Getting register {address}", "INFO")
-        return self.state["registers"][address].Get()
+        return self.state["registers"][address].get()
     
     def getIO(self, address: int) -> int:
         log(f"Getting IO {address}", "INFO")
-        return self.state["io"][address].Get()
+        return self.state["io"][address].get()
     
     def getRAM(self, address: int) -> int:
         log(f"Getting RAM {address}", "INFO")
-        return self.state["ram"][address].Get()
+        return self.state["ram"][address].get()
     
     def getProm(self, address: int) -> int:
         log(f"Getting PROM {address}", "INFO")
-        return self.state["prom"][address].Get()
+        return self.state["prom"][address].get()
 
     def setIOLock(self, address: int, lockState: bool) -> None:
         log(f"Setting IO {address} lock to {lockState}", "INFO")
         if lockState:
-            self.state["io"][address].Lock()
+            self.state["io"][address].lock()
         else:
-            self.state["io"][address].Unlock()
+            self.state["io"][address].unlock()
     
 
     def getPC(self) -> int:
