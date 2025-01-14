@@ -58,6 +58,7 @@ def isConfigValid(configDict: dict, version) -> bool:
 
     return True
 
+# Check the configuration
 def checkConfig(config, version):
     if isConfigValid(config, version):
         print("Configuration is valid.")
@@ -65,6 +66,7 @@ def checkConfig(config, version):
         print("Configuration is invalid.")
         raise Exception("Configuration is invalid.")
 
+# Get a config file.
 def getConfig(configPath: str) -> dict:
     """Returns a dict of the configuration from the given json file.
 
@@ -78,6 +80,7 @@ def getConfig(configPath: str) -> dict:
     with open(configPath, "r") as f:
         return json.load(f)
 
+# This doesn't even work usually
 def dumpOutput(stateDict: dict):
     """
     Dumps the output of the CYAN emulator as a pretty table.
@@ -107,11 +110,13 @@ def dumpOutput(stateDict: dict):
         print(f"| {str(key).ljust(key_width)} | {str(value).ljust(value_width)} |")
     print(border)
 
+# This isn't used but imports a class
 def import_class(class_path):
     module_name, class_name = class_path.rsplit('.', 1)
     module = importlib.import_module(module_name)
     return getattr(module, class_name)
 
+# This is used for some file dumps
 def dict_of_lists_to_pretty_string(data):
     result = []
     for key, class_list in data.items():
