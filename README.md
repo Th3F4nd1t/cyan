@@ -64,8 +64,7 @@ Run `main.py` using `python3 main.py`.
         "custom_reg_name_1" : {
             "name" : "name_in_code",
             "size" : 8,
-            "should_accumulate" : false,
-            "wrapping_behavior" : "<wrap | clamp | error>"
+            "should_accumulate" : false
         }
     }
 
@@ -80,8 +79,7 @@ Example for an accumulator:
         "acc" : {
             "name" : "acc",
             "size" : 8,
-            "should_accumulate" : true,
-            "wrapping_behavior" : "wrap"
+            "should_accumulate" : true
         }
     }
 

@@ -1,10 +1,11 @@
 from utils import *
 
 class Memory:
-    def __init__(self, address: int | str, wordSize: int) -> None:
+    def __init__(self, address: int | str, wordSize: int, wrapping: bool = False) -> None:
         self.address = address
         self.wordSize = wordSize
         self.data = 0
+        self.wrapping = wrapping
 
     def __repr__(self):
         return f"Memory(Address={self.address}, Data={self.data})"
@@ -15,6 +16,8 @@ class Memory:
     def set(self, data: int) -> None:
         if data < (2 ** self.wordSize):
             self.data = data
+        elif self.wrapping:
+            self.data = data % (2 ** self.wordSize)
         else:
             log("Data out of range", "ERROR")
 
