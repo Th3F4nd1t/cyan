@@ -66,32 +66,46 @@ class Processor:
         log("Starting processor.", "INFO")
         self.isRunning = True
         while self.isRunning:
-            # Remove whitespace before the line
-            line = self.program[self.state["pc"]]
-            while line.startswith(" "):
-                line = line[1:]
+            self.executeLine()
 
-            # Check for comments or empty lines
-            if line.startswith(";") or line == "\n" or line == "":
+    def executeLine(self):
+        # Remove whitespace before the line
+        line = self.program[self.state["pc"]]
+        while line.startswith(" "):
+            line = line[1:]
+
+        # Check for comments or empty lines
+        if line.startswith(";") or line == "\n" or line == "":
+            self.state["pc"] += 1
+            log("Skipping comment or empty line.", "INFO")
+
+        if ";" in line:
+            line = line.split(";")[0]
+            log("Removing comment.", "INFO")
+        
+        else:
+            log(f"Executing instruction at {self.state['pc']}", "INFO")
+            rpc = self.state["pc"]
+            temp = self.execute()
+            if self.state["pc"] == rpc:
                 self.state["pc"] += 1
-                log("Skipping comment or empty line.", "INFO")
+            log(f"Instruction executed: {temp}", "INFO")
 
-            if ";" in line:
-                line = line.split(";")[0]
-                log("Removing comment.", "INFO")
-            
-            else:
-                log(f"Executing instruction at {self.state['pc']}", "INFO")
-                rpc = self.state["pc"]
-                temp = self.execute()
-                if self.state["pc"] == rpc:
-                    self.state["pc"] += 1
-                log(f"Instruction executed: {temp}", "INFO")
+            try:
+                time.sleep(0.1 * self.config["speed"])
+            except: 
+                pass
 
-                try:
-                    time.sleep(0.1 * self.config["speed"])
-                except: 
-                    pass
+    def runSteps(self):
+        log("Starting processor in step mode.", "INFO")
+        self.isRunning = True
+        while self.isRunning:
+            self.executeLine()
+            input("Press enter to continue to next line...")
+
+    def pause(self, time: int):
+        log(f"Pausing for {time} seconds.", "INFO")
+        time.sleep(time)
 
     def stop(self):
         log("Stopping processor.", "INFO")
