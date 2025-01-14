@@ -12,13 +12,17 @@ class Processor:
             stateDict (dict, optional): The state to start in, if any. If incorrectly formatted, things may break. Defaults to None.
         """
         # IMPORTANT STUFF
-        self.logValue = True
+        self.logValue = True # CSP EXAM. This is a variable that determines if the log function should print the messages to the console. It's boolean, either True or False.
 
         self.config = config
+
+        # CSP EXAM. stateDict is an argument variable passed. It defaults to None when there isn't a dictionary passed and this small if statement checks if it needs to run the initState() function to create a state dictionary.
         if stateDict is not None:
             self.state = stateDict
         else:
             self.state = []; self.initState()
+
+        
         self.program = None
         self.instructionFile = None
         self.isRunning = False
@@ -32,6 +36,7 @@ class Processor:
     def initState(self) -> dict:
         """Initialize the processor state with default values."""
 
+        # CSP EXAM. self.state is a dictionary that stores various lists and integers that represent the current data stored across the processor.
         self.state = {
             "ram" : [],
             "dcache" : [],
@@ -75,7 +80,7 @@ class Processor:
     def run(self):
         self.log("Starting processor.")
         self.isRunning = True
-        while self.isRunning:
+        while self.isRunning: # CSP EXAM. This loop is the main loop that goes through all the lines in the program file and parses and executes them with the self.execute() function.
             self.log(f"Executing instruction at {self.state['pc']}")
             temp = self.execute()
             self.log(f"Instruction executed: {temp}")
@@ -125,7 +130,8 @@ class Processor:
         class_ = getattr(module, opcode)
         instr_class = class_
         self.log(f"Instruction class: {instr_class}")
-
+        
+        # The operands list is used to pass the arguments of each instruction into the instruction class for the execution. There is some cleaning of it as well as some length checking. It also get's turned into integers.
         operands = line[4:].split(" ")
         if operands == [""]:
             operands = []
@@ -152,7 +158,7 @@ class Processor:
             print(e)
             return False
         
-        for index, line in enumerate(self.program):
+        for index, line in enumerate(self.program): # CSP EXAM. This for loop goes through all the lines in the program file and turn them into a list and remove the newline character as a first round of cleaning.
             self.program[index] = self.program[index].strip("\n")
 
     def setInstructionsFile(self, instructionsFile: str) -> bool:
