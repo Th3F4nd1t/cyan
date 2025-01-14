@@ -51,13 +51,22 @@ class Processor:
             for i in range(0, int(self.config["datapoints"]["io_count"])):
                 self.state["io"].append(LockableMemory(i, self.config["datapoints"]["io_size"]))
         except KeyError:
-            print("No io defined in config. Skipping.")
+            log("No io defined in config. Skipping.", "WARNING")
 
         try:
             if self.config["datapoints"]["speed"] is None:
                 pass
         except Exception as e:
             log("No speed defined in config. Defaulting to 0.", "WARNING")
+
+        try:
+            for reg_data in self.config["custom_registers"]:
+                if reg_data["should_accumulate"] == True:
+                    self.state["custom_regs"][reg_data["name"]].append(AccumulatedMemory(reg_data["name"], reg_data["word_size"], reg_data["wrapping_behavior"]))
+                else:
+                    self.state["custom_regs"][reg_data["name"]].append(Memory(reg_data["name"], reg_data["word_size"]))
+        except KeyError:
+            log("No custom registers defined in config. Skipping.", "WARNING")
 
         log("Initialized state.", "INFO")
         return self.state
@@ -259,6 +268,10 @@ class Processor:
         log(f"Setting RAM {address} to {data}", "INFO")
         self.state["ram"][address].set(data)
 
+    def setCustomReg(self, name: str, data: int) -> None:
+        log(f"Setting custom register {name} to {data}", "INFO")
+        self.state["custom_regs"][name].set(data)
+
 
     def getReg(self, address: int) -> int:
         log(f"Getting register {address}", "INFO")
@@ -275,6 +288,11 @@ class Processor:
     def getProm(self, address: int) -> int:
         log(f"Getting PROM {address}", "INFO")
         return self.state["prom"][address].get()
+    
+    def getCustomReg(self, name: str) -> int:
+        log(f"Getting custom register {name}", "INFO")
+        return self.state["custom_regs"][name].get()
+
 
     def setIOLock(self, address: int, lockState: bool) -> None:
         log(f"Setting IO {address} lock to {lockState}", "INFO")

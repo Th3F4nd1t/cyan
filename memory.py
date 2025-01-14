@@ -1,7 +1,7 @@
 from utils import *
 
 class Memory:
-    def __init__(self, address: int, wordSize: int) -> None:
+    def __init__(self, address: int | str, wordSize: int) -> None:
         self.address = address
         self.wordSize = wordSize
         self.data = 0
@@ -19,7 +19,7 @@ class Memory:
             log("Data out of range", "ERROR")
 
 class LockableMemory(Memory):
-    def __init__(self, address: int, wordSize: int) -> None:
+    def __init__(self, address: int | str, wordSize: int) -> None:
         super().__init__(address, wordSize)
         self.locked = False
 
@@ -28,3 +28,27 @@ class LockableMemory(Memory):
     
     def unlock(self) -> None:
         self.locked = False
+
+class AccumulatedMemory(Memory):
+    def __init__(self, address: str, wordSize: int, wrappingBehavior: str) -> None:
+        super().__init__(-1, wordSize)
+        self.wrappingBehavior = wrappingBehavior
+        self.address = address
+
+    def set(self, data: int) -> None:
+        overFlow = False
+        
+        self.data += data
+
+        if self.data > (2 ** self.wordSize) - 1:
+            overFlow = True
+        
+        if overFlow:
+            if self.wrappingBehavior == "wrap":
+                self.data -= (2 ** self.wordSize) - 1
+            elif self.wrappingBehavior == "error":
+                log("Data out of range", "ERROR")
+            elif self.wrappingBehavior == "clamp":
+                self.data = (2 ** self.wordSize) - 1
+
+        
