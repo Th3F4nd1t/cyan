@@ -72,11 +72,13 @@ class Processor:
                 line = line[1:]
 
             # Check for comments or empty lines
-            if line.startswith(";") or line.startswith("\n") or line.startswith(""):
+            if line.startswith(";") or line == "\n" or line == "":
                 self.state["pc"] += 1
+                log("Skipping comment or empty line.", "INFO")
 
-            if line.includes(";"):
+            if ";" in line:
                 line = line.split(";")[0]
+                log("Removing comment.", "INFO")
             
             else:
                 log(f"Executing instruction at {self.state['pc']}", "INFO")
@@ -189,6 +191,9 @@ class Processor:
         for operand in operands:
             if operand == "":
                 operands.remove(operand)
+        
+        for i, operand in enumerate(operands):
+            operands[i] = int(operand, 0)
 
         if isSizedCorrectly(instr_class.operand_sizes, operands, instr_class.signage) == False:
             log("Operand size mismatch.", "ERROR")
