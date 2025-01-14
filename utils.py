@@ -1,6 +1,7 @@
 import json
 import importlib
 
+# A list of all the possible elements that a config file could have
 config_elements = [
     "ram",
     "dcache",
@@ -20,7 +21,7 @@ config_elements = [
     "io_size",
 ]
 
-
+# This function checks if the config is valid
 def isConfigValid(configDict: dict, version) -> bool:
     """This method checks the configuration of the configuration for a CYAN emulator.
 
@@ -58,7 +59,7 @@ def isConfigValid(configDict: dict, version) -> bool:
     return True
 
 def checkConfig(config, version):
-    if checkConfig(config, version):
+    if isConfigValid(config, version):
         print("Configuration is valid.")
     else:
         print("Configuration is invalid.")
