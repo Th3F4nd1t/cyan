@@ -218,7 +218,13 @@ class Processor:
                 operands.remove(operand)
         
         for i, operand in enumerate(operands):
-            operands[i] = int(operand, 0)
+            if instr_class.signage == "u":
+                operands[i] = int(operand, 0)
+            elif instr_class.signage == "s":
+                operands[i] = int(operand, 0) - (2 ** (instr_class.operand_sizes[i] - 1))
+            else:
+                log("Unknown signage.", "ERROR")
+
 
         if isSizedCorrectly(instr_class.operand_sizes, operands, instr_class.signage) == False:
             log("Operand size mismatch.", "ERROR")

@@ -16,6 +16,9 @@ config_elements = [
     "callstack_depth",
     "io_count",
     "io_size",
+    "reg_error",
+    "ram_error",
+    "io_error"
 ]
 
 
@@ -33,8 +36,7 @@ def validateConfig(configDict: dict, version) -> bool:
     
     # Datapoints required fields
     datapoints_required = [
-        "prom", "registers", "word_size", "opcode_size", "operand_count",
-        "operand_size"
+        "prom", "registers", "word_size", "opcode_size", "operand_count", "operand_size", "reg_error", "ram_error", "io_error"
     ]
 
     # Check required metadata
