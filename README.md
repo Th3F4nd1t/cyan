@@ -55,6 +55,9 @@ Run `main.py` using `python3 main.py`.
 |callstack_depth|callstack depth|idk| no| no
 |io_count|number of IO ports|number| no| yes
 |io_size| size of IO ports|bits| no| yes
+|reg_error| error on overflow| yes| yes
+|ram_error| error on overflow| yes| yes
+|io_error| error on overflow| if i/o| yes
 
 ### Examples
 #### Required
@@ -71,7 +74,10 @@ Run `main.py` using `python3 main.py`.
         "word_size" : 8,
         "opcode_size" : 6, 
         "operand_count" : 2, 
-        "operand_size" : 5
+        "operand_size" : 5,
+        "reg_error" : false,
+        "ram_error" : false,
+        "io_error" : false
     }
 }
 ```
@@ -96,12 +102,16 @@ Run `main.py` using `python3 main.py`.
         "speed" : 4,
         "delay" : 6,
         "io_count" : 4, 
-        "io_size" : 8
+        "io_size" : 8,
+        "reg_error" : false,
+        "ram_error" : false,
+        "io_error" : false
     }
 }
 ```
 
 ### How to Define Custom Registers
+Note that error is error on overflow.
 ```json
 {
     "metadata" : {},
@@ -110,7 +120,8 @@ Run `main.py` using `python3 main.py`.
         "custom_reg_name_1" : {
             "name" : "name_in_code",
             "size" : 8,
-            "should_accumulate" : false
+            "should_accumulate" : false,
+            "error" : false
         }
     }
 
@@ -125,7 +136,8 @@ Example for an accumulator:
         "acc" : {
             "name" : "acc",
             "size" : 8,
-            "should_accumulate" : true
+            "should_accumulate" : true,
+            "error" : false
         }
     }
 

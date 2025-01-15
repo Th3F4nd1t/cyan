@@ -39,17 +39,17 @@ class Processor:
         }
 
         for i in range(0, int(self.config["datapoints"]["ram"])):
-            self.state["ram"].append(Memory(i, self.config["datapoints"]["word_size"]))
+            self.state["ram"].append(Memory(i, self.config["datapoints"]["word_size"], self.config["datapoints"]["ram_error"]))
 
         for i in range(0, int(self.config["datapoints"]["prom"])):
             self.state["prom"].append(Memory(i, self.config["datapoints"]["opcode_size"] + self.config["datapoints"]["operand_count"] * self.config["datapoints"]["operand_size"]))
 
         for i in range(0, int(self.config["datapoints"]["registers"])): 
-            self.state["registers"].append(Memory(i, self.config["datapoints"]["word_size"]))
+            self.state["registers"].append(Memory(i, self.config["datapoints"]["word_size"], self.config["datapoints"]["reg_error"]))
 
         try:
             for i in range(0, int(self.config["datapoints"]["io_count"])):
-                self.state["io"].append(LockableMemory(i, self.config["datapoints"]["io_size"]))
+                self.state["io"].append(LockableMemory(i, self.config["datapoints"]["io_size"], self.config["datapoints"]["io_error"]))
         except KeyError:
             log("No io defined in config. Skipping.", "WARNING")
 
@@ -62,9 +62,9 @@ class Processor:
         try:
             for reg_data in self.config["custom_registers"]:
                 if reg_data["should_accumulate"] == True:
-                    self.state["custom_regs"][reg_data["name"]].append(AccumulatedMemory(reg_data["name"], reg_data["word_size"], reg_data["wrapping_behavior"]))
+                    self.state["custom_regs"][reg_data["name"]].append(AccumulatedMemory(reg_data["name"], reg_data["word_size"], reg_data["wrapping"]))
                 else:
-                    self.state["custom_regs"][reg_data["name"]].append(Memory(reg_data["name"], reg_data["word_size"]))
+                    self.state["custom_regs"][reg_data["name"]].append(Memory(reg_data["name"], reg_data["word_size"], reg_data["wrapping"]))
         except KeyError:
             log("No custom registers defined in config. Skipping.", "WARNING")
 
