@@ -55,37 +55,6 @@ Run `main.py` using `python3 main.py`.
 |io_count|number of IO ports|number| no| yes
 |io_size| size of IO ports|bits| no| yes
 
-#### How to Define Custom Registers
-```json
-{
-    "metadata" : {},
-    "datapoints" : {},
-    "custom_regs" : {
-        "custom_reg_name_1" : {
-            "name" : "name_in_code",
-            "size" : 8,
-            "should_accumulate" : false
-        }
-    }
-
-}
-```
-Example for an accumulator:
-```json
-{
-    "metadata" : {},
-    "datapoints" : {},
-    "custom_regs" : {
-        "acc" : {
-            "name" : "acc",
-            "size" : 8,
-            "should_accumulate" : true
-        }
-    }
-
-}
-```
-
 ### Examples
 #### Required
 ```json
@@ -130,6 +99,38 @@ Example for an accumulator:
     }
 }
 ```
+
+### How to Define Custom Registers
+```json
+{
+    "metadata" : {},
+    "datapoints" : {},
+    "custom_regs" : {
+        "custom_reg_name_1" : {
+            "name" : "name_in_code",
+            "size" : 8,
+            "should_accumulate" : false
+        }
+    }
+
+}
+```
+Example for an accumulator:
+```json
+{
+    "metadata" : {},
+    "datapoints" : {},
+    "custom_regs" : {
+        "acc" : {
+            "name" : "acc",
+            "size" : 8,
+            "should_accumulate" : true
+        }
+    }
+
+}
+```
+
 
 ## Instruction definitions
 ```txt
