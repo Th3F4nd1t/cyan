@@ -3,11 +3,9 @@
 [CC BY-NC-SA](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ## Features
-- 
+- Will write this list at the end
 
 ## How to Use
-### Important Things
-- Mnemonics must be 3 characters long. To change, edit `parts.py (ln 98, col 25)`
 
 ### Step by Step
 #### 1. Download ZIP
@@ -136,6 +134,7 @@ Example for an accumulator:
 
 
 ## Instruction File
+Must be a Python file inside of the folder `configGroup`. Note that if you don't change the PC in the instruction, the engine will automatically proceed to the next line in the program.
 ### Structure
 ```txt
 class <mnemonic_uppercase>:
@@ -158,7 +157,7 @@ class <mnemonic_uppercase>:
 - `dumpState() -> none`
 - `reset() -> none`
 - `loadProgram(programFile: str) -> bool`
-- `setInstructionsFile(instructionsFile: str) -> bool` UNIMPLEMENTED
+- `setInstructionsFile(instructionsFile: str) -> bool`
 
 #### Memory
 - `setReg(address: int, data: int) -> none`
@@ -203,7 +202,11 @@ Note: Incremeting the PC in the instruction is optional. If you dont, the progra
 
 ## Programming
 ### Notes
-- Comments can be on their own line or in-line
+- Comments can be on their own line or in-line (`;` signifies the start of a comment)
 
+### Format
+The default format for CYAN instruction inputs is: `<mnemonic> <operand> <operand> <etc>`
 
+The mnemonic can be lowercase, uppercase, or a mix. This is the same letters as whatever it's defined as in the isntructions file.
 
+The operands should be numbers of any base. For bases other than 10, they must use any of the common notations (0x, 0b, 0o, and decimal). Negative numbers aren't supported and must be dealt with by describing the operand as signed in the instruction class.

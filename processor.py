@@ -23,7 +23,7 @@ class Processor:
         else:
             self.state = []; self.initState()
         self.program = None
-        self.instructionFile = None
+        self.instructionsFile = None
         self.isRunning = False
         self.parsedProgram = None
 
@@ -204,7 +204,9 @@ class Processor:
         log(f"Opcode: {opcode}", "INFO")
         
         sys.path.append(f"{os.getcwd()}/configGroup") 
-        module = __import__("instructions")
+        if self.instructionsFile is None:
+            self.instructionsFile = "instructions.py"
+        module = __import__(str(self.instructionsFile))
 
         class_ = getattr(module, opcode.upper())
         instr_class = class_
