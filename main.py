@@ -1,5 +1,4 @@
 from config import *
-from parts import *
 from processor import *
 
 # Define constants

@@ -2,6 +2,9 @@
 ## License
 [CC BY-NC-SA](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
+## Features
+- 
+
 ## How to Use
 ### Important Things
 - Mnemonics must be 3 characters long. To change, edit `parts.py (ln 98, col 25)`
@@ -11,17 +14,17 @@
 This is self explanatory. Download the zip file from GitHub.
 #### 2. Extract
 Use your favorite extration tool to put the files in any folder location.
-#### 4. Edit `config.json`
+#### 4. Create [Config File](#config-file)
 Follow the instructions below to add your configuration for your processor or import one.
-#### 5. Edit `instructions.py`
+#### 5. Create [Instruction File](#instruction-file)
 Create your ISA or import a pre-made one.
-#### 6. Write Program
+#### 6. [Write Program](#programming)
 Write your program in program.txt
 #### 7. Run
 Run `main.py` using `python3 main.py`.
 
 
-## Config Files
+## Config File
 ### Metadata
 | ID | Description | Required |
 |:--:| :---------: | :------: |
@@ -132,7 +135,8 @@ Example for an accumulator:
 ```
 
 
-## Instruction definitions
+## Instruction File
+### Structure
 ```txt
 class <mnemonic_uppercase>:
     opcode = <opcode as a string>
@@ -144,6 +148,44 @@ class <mnemonic_uppercase>:
         <code>
 ```
 
+### Processor Methods
+#### Control
+- `run() -> none`
+- `runSteps() -> none`
+- `pause(time: int) -> none`
+- `stop() -> none`
+- `exportState(filePath: str, pretty: bool) -> bool`
+- `dumpState() -> none`
+- `reset() -> none`
+- `loadProgram(programFile: str) -> bool`
+- `setInstructionsFile(instructionsFile: str) -> bool` UNIMPLEMENTED
+
+#### Memory
+- `setReg(address: int, data: int) -> none`
+- `setRAM(address: int, data: int) -> none`
+- `setCustomReg(name: str, data: int) -> none`
+- `getReg(address: int) -> int`
+- `getRAM(address: int) -> int`
+- `getProm(address: int) -> int`
+- `getCustomReg(address: int) -> int`
+
+#### Input/Output
+- `setIO(address: int, data: int) -> none`
+- `getIO(address: int) -> int`
+- `setIOLock(address: int, lockState: bool) -> none`
+
+#### Program Counter
+- `getPC() -> int`
+- `setPC(address: int) -> none`
+- `offsetPC(offset: int) -> none`
+- `incrementPC() -> none`
+
+#### Internal Methods (DO NOT USE)
+- `initState() -> none`
+- `executeLine() -> none`
+- `execute() -> bool`
+
+### Example
 Example for an `add` instruction with signed inputs:
 ```py
 class ADD:
@@ -160,4 +202,8 @@ class ADD:
 Note: Incremeting the PC in the instruction is optional. If you dont, the program will automatically do so.
 
 ## Programming
-; is a comment
+### Notes
+- Comments can be on their own line or in-line
+
+
+
