@@ -51,8 +51,6 @@ Run `main.py` using `python3 main.py`.
 |operand_count|operands|number| yes | yes
 |operand_size|number of operands|number| yes| yes
 |immediate_size|immediate size|bits| no| no
-|stack_depth|stack depth|idk| no| no
-|callstack_depth|callstack depth|idk| no| no
 |io_count|number of IO ports|number| no| yes
 |io_size| size of IO ports|bits| no| yes
 |reg_error| error on overflow| yes| yes
