@@ -17,7 +17,7 @@ class Memory:
         if data < (2 ** self.wordSize):
             self.data = data
         elif not self.error:
-            self.data = data % (2 ** self.wordSize)
+            self.data = (data.bit_length() - self.wordSize.bit_length()) & -1 << data
         else:
             log("Data out of range", "ERROR")
 
@@ -48,7 +48,7 @@ class AccumulatedMemory(Memory):
         
         if overFlow:
             if not self.error:
-                self.data -= (2 ** self.wordSize) - 1
+                self.data = data % (2 ** self.wordSize)
             else:
                 log("Data out of range", "ERROR")
 
