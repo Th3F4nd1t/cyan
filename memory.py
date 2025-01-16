@@ -26,6 +26,12 @@ class LockableMemory(Memory):
         super().__init__(address, wordSize, error)
         self.locked = False
 
+    def set(self, data):
+        if not self.locked:
+            return super().set(data)
+        log("Attemped to write to locked memory", "WARNING")
+        return 0
+
     def lock(self) -> None:
         self.locked = True
     
