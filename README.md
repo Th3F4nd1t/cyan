@@ -1,30 +1,27 @@
 # CYAN
 ## License
 [CC BY-NC-SA](https://creativecommons.org/licenses/by-nc-sa/4.0/)
-
-## Known Issues
-- [ ] The `and` mnemonic doesnt work
+## Features
+- Will write this list at the end
 
 ## How to Use
-### Important Things
-- Mnemonics must be 3 characters long. To change, edit `parts.py (ln 98, col 25)`
 
 ### Step by Step
 #### 1. Download ZIP
 This is self explanatory. Download the zip file from GitHub.
 #### 2. Extract
 Use your favorite extration tool to put the files in any folder location.
-#### 4. Edit `config.json`
+#### 4. Create [Config File](#config-file)
 Follow the instructions below to add your configuration for your processor or import one.
-#### 5. Edit `instructions.py`
+#### 5. Create [Instruction File](#instruction-file)
 Create your ISA or import a pre-made one.
-#### 6. Write Program
+#### 6. [Write Program](#programming)
 Write your program in program.txt
 #### 7. Run
 Run `main.py` using `python3 main.py`.
 
 
-## Config Files
+## Config File
 ### Metadata
 | ID | Description | Required |
 |:--:| :---------: | :------: |
@@ -53,10 +50,11 @@ Run `main.py` using `python3 main.py`.
 |operand_count|operands|number| yes | yes
 |operand_size|number of operands|number| yes| yes
 |immediate_size|immediate size|bits| no| no
-|stack_depth|stack depth|idk| no| no
-|callstack_depth|callstack depth|idk| no| no
 |io_count|number of IO ports|number| no| yes
 |io_size| size of IO ports|bits| no| yes
+|reg_error| error on overflow| yes| yes
+|ram_error| error on overflow| yes| yes
+|io_error| error on overflow| if i/o| yes
 
 ### Examples
 #### Required
@@ -73,7 +71,12 @@ Run `main.py` using `python3 main.py`.
         "word_size" : 8,
         "opcode_size" : 6, 
         "operand_count" : 2, 
-        "operand_size" : 5
+        "operand_size" : 5,
+        "reg_error" : false,
+        "ram_error" : false,
+        "io_error" : false,
+        "flags" : ["zero, carry, overflow"],
+        "zero_register": true
     }
 }
 ```
@@ -98,53 +101,167 @@ Run `main.py` using `python3 main.py`.
         "speed" : 4,
         "delay" : 6,
         "io_count" : 4, 
-        "io_size" : 8
+        "io_size" : 8,
+        "reg_error" : false,
+        "ram_error" : false,
+        "io_error" : false,
+        "flags" : ["zero, carry, overflow"],
+        "zero_register": true
     }
 }
 ```
 
-## Instruction definitions
+### How to define flags
+After setting the flag list in the config.json file (Example: "flags" : ["zero, carry, overflow"]), you must define what each flag does in the instructions.py file.
+```python
+class flag_name:
+    def get(value) -> bool:
+```
+Example for a zero flag:
+config.json:
+```json
+{
+    "metadata" : {
+        "name" : "foobar",
+        "cyan_version" : 1,
+        "operations" : ["add", "sub", "xor", "not", "and"]
+
+    }, "datapoints" : {
+        "prom" : 64,
+        "registers" : 8,  
+        "word_size" : 8,
+        "opcode_size" : 6, 
+        "operand_count" : 2, 
+        "operand_size" : 5,
+        "reg_error" : false,
+        "ram_error" : false,
+        "io_error" : false,
+        "flags" : ["zero"],
+        "zero_register": true
+    }
+}
+```
+instructions.py:
+Note that the class name MUST match the flag name that was defined in config.json.
+```python
+class zero:
+    def get(value) -> bool:
+        return value == 0
+```
+
+### How to Define Custom Registers
+Note that error is error on overflow.
+```json
+{
+    "metadata" : {},
+    "datapoints" : {},
+    "custom_regs" : {
+        "custom_reg_name_1" : {
+            "name" : "name_in_code",
+            "size" : 8,
+            "should_accumulate" : false,
+            "error" : false
+        }
+    }
+
+}
+```
+Example for an accumulator:
+```json
+{
+    "metadata" : {},
+    "datapoints" : {},
+    "custom_regs" : {
+        "acc" : {
+            "name" : "acc",
+            "size" : 8,
+            "should_accumulate" : true,
+            "error" : false
+        }
+    }
+
+}
+```
+
+
+## Instruction File
+Must be a Python file inside of the folder `configGroup`. Note that if you don't change the PC in the instruction, the engine will automatically proceed to the next line in the program.
+### Structure
 ```txt
-class <mnemonic>:
+class <mnemonic_uppercase>:
     opcode = <opcode as a string>
     operand_count = <number of expected operands>
+    operand_sizes = [<List in bits>]
+    signage = [<"u" for unsigned, "s" for signed>]
 
     def __init__(self, proc: Processor, operands: list[int]) -> None:
         <code>
 ```
 
-Example for an `add` instruction:
+### Processor Methods
+#### Control
+- `run() -> none`
+- `runSteps() -> none`
+- `pause(time: int) -> none`
+- `stop() -> none`
+- `exportState(filePath: str, pretty: bool) -> bool`
+- `dumpState() -> none`
+- `reset() -> none`
+- `loadProgram(programFile: str) -> bool`
+- `setInstructionsFile(instructionsFile: str) -> bool`
+
+#### Memory
+- `setReg(address: int, data: int, bool setFlags) -> none`
+- `setRAM(address: int, data: int, bool setFlags) -> none`
+- `setCustomReg(name: str, data: int, bool setFlags) -> none`
+- `getReg(address: int) -> int`
+- `getRAM(address: int) -> int`
+- `getProm(address: int) -> int`
+- `getCustomReg(address: int) -> int`
+
+### Flags
+- `getFlag(name: str) -> bool`
+
+#### Input/Output
+- `setIO(address: int, data: int) -> none`
+- `getIO(address: int) -> int`
+- `setIOLock(address: int, lockState: bool) -> none`
+
+#### Program Counter
+- `getPC() -> int`
+- `setPC(address: int) -> none`
+- `offsetPC(offset: int) -> none`
+- `incrementPC() -> none`
+
+#### Internal Methods (DO NOT USE)
+- `initState() -> none`
+- `initFlags() -> none`
+- `updateFlags() -> none`
+- `executeLine() -> none`
+- `execute() -> bool`
+
+### Example
+Example for an `add` instruction with signed inputs:
 ```py
-class add:
+class ADD:
     opcode = "add"
     operand_count = 3
+    operand_sizes = [4, 8, 8]
+    signage = ["u", "u", "u"]
 
     def __init__(self, proc, operands):
         proc.setReg(operands[2], proc.getReg(operands[0]) + proc.getReg(operands[1]))
-        proc.incrementPC()
 ```
 
-### Processor methods
-- `def log(self, message: str) -> None`
-- `def stop(self)`
-- `def exportState(self, filePath: str) -> bool`
-- `def dumpState(self) -> None`
-- `def reset(self)`
-- `def setInstructionsFile(self, instructionsFile: str) -> bool`
-- `def setReg(self, address: int, data: int) -> None`
-- `def setIO(self, address: int, data: int) -> None`
-- `def setRAM(self, address: int, data: int) -> None`
-- `def getReg(self, address: int) -> int`
-- `def getIO(self, address: int) -> int`
-- `def getRAM(self, address: int) -> int`
-- `def getProm(self, address: int) -> int`
-- `def setRegLock(self, address: int, lockState: bool) -> None`
-- `def setIOLock(self, address: int, lockState: bool) -> None`
-- `def getPC(self) -> int`
-- `def setPC(self, address: int) -> None`
-- `def offSetPC(self, offset: int) -> None`
-- `def incrementPC(self) -> None`
-- `def getDCache(self, address: int) -> int`
-- `def getICache(self, address: int) -> int`
-- `def setDCache(self, address: int, data: int) -> None`
-- `def setICache(self, address: int, data: int) -> None`
+Note: Incremeting the PC in the instruction is optional. If you dont, the program will automatically do so.
+
+## Programming
+### Notes
+- Comments can be on their own line or in-line (`;` signifies the start of a comment)
+
+### Format
+The default format for CYAN instruction inputs is: `<mnemonic> <operand> <operand> <etc>`
+
+The mnemonic can be lowercase, uppercase, or a mix. This is the same letters as whatever it's defined as in the isntructions file.
+
+The operands should be numbers of any base. For bases other than 10, they must use any of the common notations (0x, 0b, 0o, and decimal). Negative numbers aren't supported and must be dealt with by describing the operand as signed in the instruction class.

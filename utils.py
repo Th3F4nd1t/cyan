@@ -1,81 +1,26 @@
 import json
 import importlib
+import datetime
 
-config_elements = [
-    "ram",
-    "dcache",
-    "prom",
-    "icache",
-    "speed",
-    "delay",
-    "registers",
-    "word_size",
-    "opcode_size",
-    "operand_count",
-    "operand_size",
-    "immediate_size",
-    "stack_depth",
-    "callstack_depth",
-    "io_count",
-    "io_size",
-]
+printLogs = True
 
+def log(message: str, level: str) -> None:
+    with open("./log.txt", "a") as f:
+        f.write(f"[{datetime.datetime.now().strftime('%H:%M:%S.%f')[:-3]}] {level.upper()}: {message}\n")
 
-def isConfigValid(configDict: dict, version) -> bool:
-    """This method checks the configuration of the configuration for a CYAN emulator.
-
-    Args:
-        configDict (dict): The configuration dictionary to be checked.
-
-    Returns:
-        bool: True if the configuration is valid, False otherwise.
-    """
-    # Metadata required fields
-    metadata_required = ["name", "cyan_version"]
+    if level == "INFO" or level == "WARNING":
+        if printLogs:
+            print(f"{level.upper()}: {message}")
+    elif level == "ERROR" or level == "FATAL":
+        print(f"{level.upper()}: {message}")
+        print("Exiting the program...")
+        with open("./log.txt", "a") as f:
+            f.write(str(f"[{datetime.datetime.now().strftime('%H:%M:%S.%f')[:-3]}] {level.upper()}: Exiting the program...\n"))
+        exit(1)
     
-    # Datapoints required fields
-    datapoints_required = [
-        "prom", "registers", "word_size", "opcode_size", "operand_count",
-        "operand_size"
-    ]
-
-    # Check required metadata
-    for field in metadata_required:
-        if field not in configDict.get("metadata", {}):
-            print(f"Missing required metadata field: {field}")
-            return False
-
-    # Check required datapoints
-    for field in datapoints_required:
-        if field not in configDict.get("datapoints", {}):
-            print(f"Missing required datapoints field: {field}")
-            return False
-        
-    if configDict.get("metadata", {}).get("cyan_version") > version:
-        print(f"Config is too new. Expected {configDict.get('metadata', {}).get('cyan_version')}, got {version}")
-        return False
-
-    return True
-
-def checkConfig(config, version):
-    if checkConfig(config, version):
-        print("Configuration is valid.")
-    else:
-        print("Configuration is invalid.")
-        raise Exception("Configuration is invalid.")
-
-def getConfig(configPath: str) -> dict:
-    """Returns a dict of the configuration from the given json file.
-
-    Args:
-        configPath (str): The absolute or relative path of the configuration file.
-
-    Returns:
-        dict: The dict of the config.
-    """
-
-    with open(configPath, "r") as f:
-        return json.load(f)
+def resetLogger():
+    with open("./log.txt", "w") as f:
+        f.write("")
 
 def dumpOutput(stateDict: dict):
     """
@@ -117,3 +62,15 @@ def dict_of_lists_to_pretty_string(data):
         class_strings = [repr(cls) for cls in class_list]
         result.append(f"{key}: [{', '.join(class_strings)}]")
     return "{\n  " + ",\n  ".join(result) + "\n}"
+
+def isSizedCorrectly(sizes: list, data: list, signage: list) -> bool:
+    """ Check if the number in the data list is within the corrospondin number of bits specified in the sizes list. It also uses the signage list to check if the number is signed or unsigned and if it's signed, then it limits the values to be within the 2s complement size."""
+    for i, size in enumerate(sizes):
+        if signage[i] == "u":
+            if data[i] < 0 or data[i] >= 2 ** size:
+                return False
+        elif signage[i] == "s":
+            if data[i] < -(2 ** (size - 1)) or data[i] >= 2 ** (size - 1) - 1:
+                return False
+            
+    return True

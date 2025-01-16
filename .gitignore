@@ -1,0 +1,7 @@
+__pycache__/
+.idea/
+.vscode/
+configGroup/
+output.txt
+program.txt
+configGroup
