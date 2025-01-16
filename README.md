@@ -77,7 +77,8 @@ Run `main.py` using `python3 main.py`.
         "operand_size" : 5,
         "reg_error" : false,
         "ram_error" : false,
-        "io_error" : false
+        "io_error" : false,
+        "flags" : ["zero, carry, overflow"]
     }
 }
 ```
@@ -105,9 +106,47 @@ Run `main.py` using `python3 main.py`.
         "io_size" : 8,
         "reg_error" : false,
         "ram_error" : false,
-        "io_error" : false
+        "io_error" : false,
+        "flags" : ["zero, carry, overflow"]
     }
 }
+```
+
+### How to define flags
+After setting the flag list in the config.json file (Example: "flags" : ["zero, carry, overflow"]), you must define what each flag does in the instructions.py file.
+```python
+class flag_name:
+    def get(value) -> bool:
+```
+Example for a zero flag:
+config.json:
+```json
+{
+    "metadata" : {
+        "name" : "foobar",
+        "cyan_version" : 1,
+        "operations" : ["add", "sub", "xor", "not", "and"]
+
+    }, "datapoints" : {
+        "prom" : 64,
+        "registers" : 8,  
+        "word_size" : 8,
+        "opcode_size" : 6, 
+        "operand_count" : 2, 
+        "operand_size" : 5,
+        "reg_error" : false,
+        "ram_error" : false,
+        "io_error" : false,
+        "flags" : ["zero"]
+    }
+}
+```
+instructions.py:
+Note that the class name MUST match the flag name that was defined in config.json.
+```python
+class zero:
+    def get(value) -> bool:
+        return value == 0
 ```
 
 ### How to Define Custom Registers
@@ -172,13 +211,16 @@ class <mnemonic_uppercase>:
 - `setInstructionsFile(instructionsFile: str) -> bool`
 
 #### Memory
-- `setReg(address: int, data: int) -> none`
-- `setRAM(address: int, data: int) -> none`
-- `setCustomReg(name: str, data: int) -> none`
+- `setReg(address: int, data: int, bool setFlags) -> none`
+- `setRAM(address: int, data: int, bool setFlags) -> none`
+- `setCustomReg(name: str, data: int, bool setFlags) -> none`
 - `getReg(address: int) -> int`
 - `getRAM(address: int) -> int`
 - `getProm(address: int) -> int`
 - `getCustomReg(address: int) -> int`
+
+### Flags
+- `getFlag(name: str) -> bool`
 
 #### Input/Output
 - `setIO(address: int, data: int) -> none`
@@ -193,6 +235,8 @@ class <mnemonic_uppercase>:
 
 #### Internal Methods (DO NOT USE)
 - `initState() -> none`
+- `initFlags() -> none`
+- `updateFlags() -> none`
 - `executeLine() -> none`
 - `execute() -> bool`
 
@@ -207,7 +251,6 @@ class ADD:
 
     def __init__(self, proc, operands):
         proc.setReg(operands[2], proc.getReg(operands[0]) + proc.getReg(operands[1]))
-        proc.incrementPC()
 ```
 
 Note: Incremeting the PC in the instruction is optional. If you dont, the program will automatically do so.

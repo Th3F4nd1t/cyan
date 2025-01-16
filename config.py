@@ -36,7 +36,7 @@ def validateConfig(configDict: dict, version) -> bool:
     
     # Datapoints required fields
     datapoints_required = [
-        "prom", "registers", "word_size", "opcode_size", "operand_count", "operand_size", "reg_error", "ram_error", "io_error"
+        "prom", "registers", "word_size", "opcode_size", "operand_count", "operand_size", "reg_error", "ram_error", "io_error", "flags"
     ]
 
     # Check required metadata

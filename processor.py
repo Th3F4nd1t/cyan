@@ -26,6 +26,13 @@ class Processor:
         self.instructionsFile = None
         self.isRunning = False
         self.parsedProgram = None
+        self.flags = []
+        self.initFlags()
+
+    def initFlags(self) -> list[(str, bool)]:
+        """Initialize the processor flags with default values."""
+        for flag in self.config["datapoints"]["flags"]:
+            self.flags.append((flag, False))
 
     def initState(self) -> dict:
         """Initialize the processor state with default values."""
@@ -160,6 +167,11 @@ class Processor:
             if (i + 1) % 3 == 0:
                 portsBody += "\n| "
 
+        flagsHeader = str("\nFlags:\n")
+        flagsBody = "| "
+        for i, flag in enumerate(self.flags):
+            flagsBody += f"{flag[0]}: {flag[1]}\n"
+
         try:
             with open(filePath, "w") as f:
                 if pretty == False:
@@ -176,6 +188,9 @@ class Processor:
 
                     f.write(portsHeader)        
                     f.write(portsBody + "\n")
+
+                    f.write(flagsHeader)        
+                    f.write(flagsBody + "\n")
                     
                 return True
         except Exception as e:
@@ -206,7 +221,7 @@ class Processor:
         sys.path.append(f"{os.getcwd()}/configGroup") 
         if self.instructionsFile is None:
             self.instructionsFile = "instructions.py"
-        module = __import__(str(self.instructionsFile))
+        module = __import__(str(self.instructionsFile).strip(".py"))
 
         class_ = getattr(module, opcode.upper())
         instr_class = class_
@@ -218,9 +233,9 @@ class Processor:
                 operands.remove(operand)
         
         for i, operand in enumerate(operands):
-            if instr_class.signage == "u":
+            if instr_class.signage[i] == "u":
                 operands[i] = int(operand, 0)
-            elif instr_class.signage == "s":
+            elif instr_class.signage[i] == "s":
                 operands[i] = int(operand, 0) - (2 ** (instr_class.operand_sizes[i] - 1))
             else:
                 log("Unknown signage.", "ERROR")
@@ -259,26 +274,46 @@ class Processor:
         for index, line in enumerate(self.program):
             self.program[index] = self.program[index].strip("\n")
 
+    def updateFlags(self, value: int) -> None: 
+        for i, flag in enumerate(self.flags):
+            module = __import__(str(self.instructionsFile).strip(".py"))
+            class_ = getattr(module, flag[0])
+            self.flags[i] = (flag[0], class_.get(value))
+            
+
     def setInstructionsFile(self, instructionsFile: str) -> bool:
         log(f"Setting instructions file to {instructionsFile}", "INFO")
         self.instructionsFile = instructionsFile
         return True
 
-    def setReg(self, address: int, data: int) -> None:
+    def setReg(self, address: int, data: int, setFlags : bool) -> None:
         log(f"Setting register {address} to {data}", "INFO")
         self.state["registers"][address].set(data)
+        if setFlags:
+            self.updateFlags(data)
     
     def setIO(self, address: int, data: int) -> None:
         log(f"Setting IO {address} to {data}", "INFO")
         self.state["io"][address].set(data)
 
-    def setRAM(self, address: int, data: int) -> None:
+    def setRAM(self, address: int, data: int, setFlags : bool) -> None:
         log(f"Setting RAM {address} to {data}", "INFO")
         self.state["ram"][address].set(data)
+        if setFlags:
+            self.updateFlags(data)
 
-    def setCustomReg(self, name: str, data: int) -> None:
+    def setCustomReg(self, name: str, data: int, setFlags : bool) -> None:
         log(f"Setting custom register {name} to {data}", "INFO")
         self.state["custom_regs"][name].set(data)
+        if setFlags:
+            self.updateFlags(data)
+
+    def getFlag(self, name: str) -> bool:
+        for i, flag in enumerate(self.flags):
+            if flag[0] == name:
+                return flag[1]
+        log(f"Unable to locate {name} flag", "WARNING")
+        return False
 
 
     def getReg(self, address: int) -> int:
