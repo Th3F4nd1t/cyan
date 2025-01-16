@@ -78,7 +78,8 @@ Run `main.py` using `python3 main.py`.
         "reg_error" : false,
         "ram_error" : false,
         "io_error" : false,
-        "flags" : ["zero, carry, overflow"]
+        "flags" : ["zero, carry, overflow"],
+        "zero_register": true
     }
 }
 ```
@@ -107,7 +108,8 @@ Run `main.py` using `python3 main.py`.
         "reg_error" : false,
         "ram_error" : false,
         "io_error" : false,
-        "flags" : ["zero, carry, overflow"]
+        "flags" : ["zero, carry, overflow"],
+        "zero_register": true
     }
 }
 ```
@@ -137,7 +139,8 @@ config.json:
         "reg_error" : false,
         "ram_error" : false,
         "io_error" : false,
-        "flags" : ["zero"]
+        "flags" : ["zero"],
+        "zero_register": true
     }
 }
 ```

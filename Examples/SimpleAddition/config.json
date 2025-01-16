@@ -18,6 +18,7 @@
         "reg_error" : false,
         "ram_error" : false,
         "io_error" : false,
-        "flags": []
+        "flags": [],
+        "zero_register": false
     }
 }

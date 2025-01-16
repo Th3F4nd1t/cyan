@@ -52,8 +52,15 @@ class Processor:
             self.state["prom"].append(Memory(i, self.config["datapoints"]["opcode_size"] + self.config["datapoints"]["operand_count"] * self.config["datapoints"]["operand_size"]))
 
         for i in range(0, int(self.config["datapoints"]["registers"])): 
-            self.state["registers"].append(Memory(i, self.config["datapoints"]["word_size"], self.config["datapoints"]["reg_error"]))
-
+            if i == 0:
+                if self.config["datapoints"]["zero_register"] == False:
+                    self.state["registers"].append(Memory(i, self.config["datapoints"]["word_size"], self.config["datapoints"]["reg_error"]))
+                else:
+                    zeroReg = LockableMemory(i, self.config["datapoints"]["word_size"], self.config["datapoints"]["reg_error"])
+                    zeroReg.lock()
+                    self.state["registers"].append(zeroReg)
+            else:
+                self.state["registers"].append(Memory(i, self.config["datapoints"]["word_size"], self.config["datapoints"]["reg_error"]))
         try:
             for i in range(0, int(self.config["datapoints"]["io_count"])):
                 self.state["io"].append(LockableMemory(i, self.config["datapoints"]["io_size"], self.config["datapoints"]["io_error"]))
