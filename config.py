@@ -22,7 +22,7 @@ config_elements = [
 ]
 
 
-def validateConfig(configDict: dict, version) -> bool:
+def validateConfig(configDict: dict, version: int) -> bool:
     """This method checks the configuration of the configuration for a CYAN emulator.
 
     Args:
@@ -49,7 +49,7 @@ def validateConfig(configDict: dict, version) -> bool:
         if field not in configDict.get("datapoints", {}):
             log(f"Missing required datapoints field: {field}", "FATAL")
         
-    if configDict.get("metadata", {}).get("cyan_version") > version:
+    if int(configDict.get("metadata", {}).get("cyan_version")) > version:
         log(f"Config is too new. Expected {version}, got {configDict.get('metadata', {}).get('cyan_version')}", "ERROR")
 
     log("Configuration is valid.", "INFO")
