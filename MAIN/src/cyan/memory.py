@@ -1,0 +1,1 @@
+# define all the types of memory that can be used in the simulation
