@@ -74,3 +74,54 @@ def isSizedCorrectly(sizes: list, data: list, signage: list) -> bool:
                 return False
             
     return True
+
+
+
+def compileprogram(raw_program):  #still need to do error handling
+    #this turns the program in program.txt into a useable format. 
+    #has a few QOL features such as functions
+    compiled_program = []
+    functions = {
+
+    }
+    funcStatus = "open"
+    for index, line in enumerate(raw_program):
+        line = line.strip()
+        
+        while line.startswith(" "):
+            line = line[1:]
+
+        # Check for comments or empty lines
+        if line.startswith(";") or line == "\n" or line == "":
+            line = ""
+
+        if ";" in line:
+            line = line.split(";")[0]
+        
+        if line in functions:
+            line = f"sysjump {functions[line]+1}" #fix
+        if line.startswith("."):
+            if len(line) == 1:
+                if funcStatus == "open":
+                    log(f"No system instruction or function attached to initializer at line {index}", "ERROR")
+                else:
+                    funcStatus = "open"
+                    line = " "
+                    continue
+            line = line[1:].split(' ')
+            if line[0] == "func":
+                funcName = line[1] #removes trailing whitespaces
+                functions[funcName] = index #for future compiler references
+                line = " "
+                funcStatus = "waiting" #waiting for a closing dot
+            else:
+                if len(line) == 1: #if it is only a dot
+                    line = ''
+                elif line[0] == "return":
+                    line = f"sysreturn"
+                funcStatus = "open"
+        compiled_program.append(line)
+    print([compiled_program])
+    return compiled_program
+
+

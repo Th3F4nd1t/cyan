@@ -4,6 +4,7 @@ import time
 from utils import *
 from memory import *
 from config import *
+from sysfunctions import *
 
 class Processor:
     def __init__(self, config: dict, stateDict: dict = None) -> None:
@@ -42,7 +43,8 @@ class Processor:
             "prom" : [],
             "registers" : [],
             "io" : [],
-            "pc" : 0
+            "pc" : 0,
+            "callstack": [],
         }
 
         for i in range(0, int(self.config["datapoints"]["ram"])):
@@ -96,11 +98,11 @@ class Processor:
         line = self.program[self.state["pc"]]
         while line.startswith(" "):
             line = line[1:]
-
         # Check for comments or empty lines
-        if line.startswith(";") or line == "\n" or line == "":
+        if line.startswith(";") or line == "\n" or line == "" or len(line) == 0:
             self.state["pc"] += 1
             log("Skipping comment or empty line.", "INFO")
+            return
 
         if ";" in line:
             line = line.split(";")[0]
@@ -221,13 +223,18 @@ class Processor:
         
         line = line.split(" ")
         opcode = line[0]
-        if not (opcode in self.config["metadata"]["operations"]):
+        if not (opcode in self.config["metadata"]["operations"] or opcode in systemFuncs):
             log(f"Unknown opcode: {opcode}", "ERROR")
         log(f"Opcode: {opcode}", "INFO")
         
-        sys.path.append(f"{os.getcwd()}/configGroup") 
+        
         if self.instructionsFile is None:
+            sys.path.append(f"{os.getcwd()}/configGroup") 
             self.instructionsFile = "instructions.py"
+
+        if opcode in systemFuncs:
+            sys.path.append(f"{os.getcwd()}") 
+            self.instructionsFile = "sysfunctions.py"
         module = __import__(str(self.instructionsFile).strip(".py"))
 
         class_ = getattr(module, opcode.upper())
@@ -266,20 +273,21 @@ class Processor:
 
 
         instr_class(self, operands)
+        if opcode in systemFuncs: #reset path. These calls aren't frequent so hopefully it won't cause lag
+            sys.path.append(f"{os.getcwd()}/configGroup") 
+            self.instructionsFile = "instructions.py"
         return True
 
     def loadProgram(self, programFile: str) -> bool:
         log(f"Loading program from {programFile}", "INFO")
         try:
             with open(programFile, "r") as f:
-                self.program = f.readlines()
+                self.program = compileprogram(f.readlines()) #i put compileprogram in utils for now
                 
         except Exception as e:
             print(e)
             return False
-        
-        for index, line in enumerate(self.program):
-            self.program[index] = self.program[index].strip("\n")
+
 
     def updateFlags(self, value: int) -> None: 
         for i, flag in enumerate(self.flags):
@@ -351,12 +359,18 @@ class Processor:
         else:
             self.state["io"][address].unlock()
     
+    def getCST(self) -> int:
+        log("Popping from Call Stack", "INFO")
+        return self.state["callstack"].pop(0)
 
     def getPC(self) -> int:
         log("Getting PC", "INFO")
         return self.state["pc"]
     
-    def setPC(self, address: int) -> None:
+    def setPC(self, address: int, cstackpush: bool) -> None:
+        if cstackpush: #if a setpc instruction contains a push to call stack
+            self.state["callstack"].insert(0,self.state["pc"])
+            log(f"Pushing to Call Stack", "INFO")
         log(f"Setting PC to {address}", "INFO")
         self.state["pc"] = address
 
