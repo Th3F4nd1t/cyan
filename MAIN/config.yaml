@@ -1,1 +1,150 @@
-# registers, components, rom, ram, 
+# registers, components, rom, ram, io, word size, component definitions, register definitions, instruction set
+
+# General
+cpu_name: "Simple CPU"
+cpu_version: "1.0"
+cpu_description: "A simple CPU with 16 registers, 16-bit word size, and 16-bit address space."
+creator: "John Doe"
+
+word_size: 16
+simulation_speed: 0 # 0 if instant, other wise hertz
+
+# Registers
+register_count: 16
+special_registers:
+  - name: "zero_reg"
+    description: "Register that always contains 0."
+    address: 0
+    read_only: True
+    write_only: False
+    default_value: 0
+    size: 16
+    accumulates: False
+
+# ROM/RAM
+rom_size: 256
+ram_size: 256
+
+# IO
+io_type: "pmio" # pmio or mmio
+io_ports:
+  - name: "io_port_1"
+    description: "Port 1 for IO."
+    address: 0
+    size: 16
+    read_only: False
+    write_only: False
+    default_value: 0
+  - name: "io_port_2"
+    description: "Port 2 for IO."
+    address: 1
+    size: 16
+    read_only: False
+    write_only: False
+    default_value: 0
+
+# Components
+components:
+  - name: "alu"
+    class: "ALU"
+    description: "Arithmetic Logic Unit."
+    operations_handled:
+      - "add"
+      - "sub"
+      - "and"
+      - "or"
+      - "xor"
+      - "not"
+      - "shl"
+      - "shr"
+    operation_latency:  # in ticks
+      add: 1
+      sub: 1
+      and: 1
+      or: 1
+      xor: 1
+      not: 1
+      shl: 1
+      shr: 1
+
+# Instruction Set
+instruction_set:
+  - name: "add"
+    opcode: 0
+    description: "Add two registers."
+    operands:
+      - name: "dest"
+        type: "register"
+        size: 16
+      - name: "src1"
+        type: "register"
+        size: 16
+      - name: "src2"
+        type: "register"
+        size: 16
+    operation: "alu.add"
+    latency: 1
+    cycles: 1
+    flags_affected:
+      - "zero"
+      - "carry"
+      - "overflow"
+  - name: "sub"
+    opcode: 1
+    description: "Subtract two registers."
+    operands:
+      - name: "dest"
+        type: "register"
+        size: 16
+      - name: "src1"
+        type: "register"
+        size: 16
+      - name: "src2"
+        type: "register"
+        size: 16
+    operation: "alu.sub"
+    latency: 1
+    cycles: 1
+    flags_affected:
+      - "zero"
+      - "carry"
+      - "overflow"
+  - name: "and"
+    opcode: 2
+    description: "Bitwise AND two registers."
+    operands:
+      - name: "dest"
+        type: "register"
+        size: 16
+      - name: "src1"
+        type: "register"
+        size: 16
+      - name: "src2"
+        type: "register"
+        size: 16
+    operation: "alu.and"
+    latency: 1
+    cycles: 1
+    flags_affected:
+      - "zero"
+  - name: "or"
+    opcode: 3
+    description: "Bitwise OR two registers."
+    operands:
+      - name: "dest"
+        type: "register"
+        size: 16
+      - name: "src1"
+        type: "register"
+        size: 16
+      - name: "src2"
+        type: "register"
+        size: 16
+    operation: "alu.or"
+    latency: 1
+    cycles: 1
+    flags_affected:
+      - "zero"
+  - name: "xor"
+    opcode: 4
+    description: "Bitwise XOR two registers."
