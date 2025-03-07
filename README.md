@@ -341,7 +341,7 @@ class SYSRETURN:
     signage = []
 
     def __init__(self,proc,operands):
-        proc.setPC(proc.getCST(),False)
+        proc.setPC(proc.getCST()+1,False)
 ```
 
 These functions are not recommended to be touched by the user, and can easily be replaced using custom `jmp` and `return` functions.
