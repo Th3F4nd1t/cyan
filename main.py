@@ -12,4 +12,4 @@ proc = Processor(config)
 
 proc.loadProgram("./program.txt")
 
-proc.runSteps() # Use proc.runSteps() to step through the program
+proc.run() # Use proc.runSteps() to step through the program
