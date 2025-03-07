@@ -24,4 +24,4 @@ class SYSRETURN:
     signage = []
 
     def __init__(self,proc,operands):
-        proc.setPC(proc.getCST(),False)
+        proc.setPC(proc.getCST()+1,False)
