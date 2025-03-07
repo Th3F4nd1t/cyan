@@ -97,9 +97,15 @@ def compileprogram(raw_program):  #still need to do error handling
 
         if ";" in line:
             line = line.split(";")[0]
-        
-        if line in functions:
-            line = f"sysjump {functions[line]+1}" #fix
+        if ' ' in line:
+            sys_operands = line.split(' ')
+            if sys_operands[0] in functions:
+                line = f"sysjump {functions[sys_operands[0]]+1} {' '.join(sys_operands[1:])}"
+            for funcName in functions: #replace functions into any calls other than direct functions, like custom jumps
+                if funcName in sys_operands:
+                    sys_operands[sys_operands.index(funcName)] = str(functions[funcName]+1)
+                line = f"{sys_operands[0]} {' '.join(sys_operands[1:])}"
+
         if line.startswith("."):
             if len(line) == 1:
                 if funcStatus == "open":

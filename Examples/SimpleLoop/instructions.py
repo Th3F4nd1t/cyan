@@ -28,14 +28,14 @@ class HLT:
 
 class JMP:
     opcode = "jmp"
-    operand_count = 1
-    operand_sizes = [12]
-    signage = ["u"]
+    operand_count = 3
+    operand_sizes = [8,2,2]
+    signage = ["u","u","u"]
     
 
-    def __init__(self,proc,operands):
-        if not proc.getFlag("zero"):
-            proc.setPc(int(operands[0]),False)
+    def __init__(self,proc,operands): 
+        if not proc.getFlag(proc.config["datapoints"]["flags"][operands[1]]):  #can choose which flag to use for jump
+            proc.setPC(int(operands[0]), True if operands[2] > 0 else False)
 
 
 

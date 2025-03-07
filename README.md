@@ -218,6 +218,7 @@ class <mnemonic_uppercase>:
 - `getRAM(address: int) -> int`
 - `getProm(address: int) -> int`
 - `getCustomReg(address: int) -> int`
+- `getCST() -> int`
 
 ### Flags
 - `getFlag(name: str) -> bool`
@@ -229,7 +230,7 @@ class <mnemonic_uppercase>:
 
 #### Program Counter
 - `getPC() -> int`
-- `setPC(address: int) -> none`
+- `setPC(address: int, cstackpush: bool) -> none`
 - `offsetPC(offset: int) -> none`
 - `incrementPC() -> none`
 
@@ -265,3 +266,93 @@ The default format for CYAN instruction inputs is: `<mnemonic> <operand> <operan
 The mnemonic can be lowercase, uppercase, or a mix. This is the same letters as whatever it's defined as in the isntructions file.
 
 The operands should be numbers of any base. For bases other than 10, they must use any of the common notations (0x, 0b, 0o, and decimal). Negative numbers aren't supported and must be dealt with by describing the operand as signed in the instruction class.
+
+### Functions
+The compiler supports limited functions, which allow for dynamic reusing of code and loops.
+
+A function can be initialized using `.func <name>` and must be ended using `.`
+The code within is reusable, however when the PC reaches a function it will ignore the lines starting with . and run the code normally.
+
+Example of a basic function:
+```py
+.func minus
+    sub 0b0001 0b0001 0b0010 #data
+.
+minus 0b00 0b00
+```
+The function above subtracts register 2 from register 1 and stores it in register 1 as the PC passes through it, then it gets called and runs again by `minus 0b00 0b00`.
+
+This code gets compiled into:
+```py
+NOP
+sub 0b0001 0b0001 0b0010
+NOP
+sysjump 1 0b00 0b00
+```
+`.func minus` gets turned into a NOP, and `minus` is turned into a hook where whenever `minus` is called, it is replaced by `sysjump` and respective operands. 
+`sysjump` contains three operands, one of which is filled in at compile, therefore function calls contain two operands: `flag` and `cstackpush`, which define the flag to use for the jump and whether or not to push to the call stack, respectively.
+
+This can be used to make a loop like this
+```py
+.func minus
+    sub 0b0001 0b0001 0b0010 #data
+    minus 0b00 0b00
+.
+```
+
+The period closing the function also has a functionality. Replacing it with a `.return` will pop from the callstack and jump to that number
+Example:
+```py
+.func minus
+    sub 0b0001 0b0001 0b0010 #data
+    minus 0b00 0b00
+.return
+```
+
+Compiled:
+```py
+NOP
+sub 0b0001 0b0001 0b0010
+sysjump 1 0b00 0b00
+sysreturn
+```
+`sysreturn` contains no operands, and requires the call stack to have at least one item not throw an error.
+
+### System Methods
+
+The system methods used by the functions to operate are defined in `sysfunctions.py`.
+The two default methods are defined as such:
+```py
+
+class SYSJUMP:
+    opcode = "sysjump"
+    operand_count = 3
+    operand_sizes = [8,2,2]
+    signage = ["u","u","u"]
+    
+    def __init__(self,proc,operands): 
+        if not proc.getFlag(proc.config["datapoints"]["flags"][operands[1]]):
+            proc.setPC(int(operands[0]), True if operands[2] > 0 else False)
+
+class SYSRETURN:
+    opcode = "sysreturn"
+    operand_count = 0
+    operand_sizes = []
+    signage = []
+
+    def __init__(self,proc,operands):
+        proc.setPC(proc.getCST(),False)
+```
+
+These functions are not recommended to be touched by the user, and can easily be replaced using custom `jmp` and `return` functions.
+For example, when using a custom `jmp` instead of writing just `<funcName>` it is best to write `jmp <funcName>`. `<funcName>` then compiles to an index. 
+When using a custom `return`, it is best to leave the last period blank and use it on its own line.
+
+Example using custom functions:
+```py
+.func minus
+    sub 0b0001 0b0001 0b0010 #data
+    jmp minus 0b00 0b00
+    ret
+.
+```

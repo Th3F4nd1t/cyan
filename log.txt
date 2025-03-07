@@ -1,2 +1,314 @@
-[14:43:23.009] FATAL: Missing required metadata field: name
-[14:43:23.009] FATAL: Exiting the program...
+[20:15:00.271] INFO: Configuration is valid.
+[20:15:00.271] WARNING: No speed defined in config. Defaulting to 0.
+[20:15:00.271] WARNING: No custom registers defined in config. Skipping.
+[20:15:00.271] INFO: Initialized state.
+[20:15:00.271] INFO: Loading program from ./program.txt
+[20:15:00.287] INFO: Starting processor in step mode.
+[20:15:00.299] INFO: Executing instruction at 0
+[20:15:00.302] INFO: Executing instruction.
+[20:15:00.305] INFO: Executing instruction: ldi 1 0xE
+[20:15:00.305] INFO: Opcode: ldi
+[20:15:00.320] INFO: Instruction class: <class 'instructions.LDI'>
+[20:15:00.320] INFO: Operand size match.
+[20:15:00.320] INFO: Operands: [1, 14]
+[20:15:00.320] INFO: Setting register 1 to 14
+[20:15:00.320] INFO: Instruction executed: True
+[20:15:06.043] INFO: Executing instruction at 1
+[20:15:06.043] INFO: Executing instruction.
+[20:15:06.043] INFO: Executing instruction: ldi 2 0x1
+[20:15:06.043] INFO: Opcode: ldi
+[20:15:06.043] INFO: Instruction class: <class 'instructions.LDI'>
+[20:15:06.043] INFO: Operand size match.
+[20:15:06.043] INFO: Operands: [2, 1]
+[20:15:06.043] INFO: Setting register 2 to 1
+[20:15:06.043] INFO: Instruction executed: True
+[20:15:06.477] INFO: Skipping comment or empty line.
+[20:15:06.885] INFO: Executing instruction at 3
+[20:15:06.885] INFO: Executing instruction.
+[20:15:06.900] INFO: Executing instruction: sub 1 0b0001 0b0010
+[20:15:06.900] INFO: Opcode: sub
+[20:15:06.901] INFO: Instruction class: <class 'instructions.SUB'>
+[20:15:06.902] INFO: Operand size match.
+[20:15:06.902] INFO: Operands: [1, 1, 2]
+[20:15:06.902] INFO: Getting register 1
+[20:15:06.904] INFO: Getting register 2
+[20:15:06.904] INFO: Setting register 1 to 13
+[20:15:06.904] INFO: Instruction executed: True
+[20:15:08.121] INFO: Executing instruction at 4
+[20:15:08.121] INFO: Executing instruction.
+[20:15:08.121] INFO: Executing instruction: jmp 3 0b00 0b00
+[20:15:08.124] INFO: Opcode: jmp
+[20:15:08.124] INFO: Instruction class: <class 'instructions.JMP'>
+[20:15:08.124] INFO: Operand size match.
+[20:15:08.125] INFO: Operands: [3, 0, 0]
+[20:15:08.125] INFO: Setting PC to 3
+[20:15:08.127] INFO: Instruction executed: True
+[20:15:09.498] INFO: Executing instruction at 3
+[20:15:09.501] INFO: Executing instruction.
+[20:15:09.501] INFO: Executing instruction: sub 1 0b0001 0b0010
+[20:15:09.503] INFO: Opcode: sub
+[20:15:09.503] INFO: Instruction class: <class 'instructions.SUB'>
+[20:15:09.504] INFO: Operand size match.
+[20:15:09.504] INFO: Operands: [1, 1, 2]
+[20:15:09.504] INFO: Getting register 1
+[20:15:09.505] INFO: Getting register 2
+[20:15:09.505] INFO: Setting register 1 to 12
+[20:15:09.506] INFO: Instruction executed: True
+[20:15:09.985] INFO: Executing instruction at 4
+[20:15:09.998] INFO: Executing instruction.
+[20:15:09.998] INFO: Executing instruction: jmp 3 0b00 0b00
+[20:15:09.999] INFO: Opcode: jmp
+[20:15:09.999] INFO: Instruction class: <class 'instructions.JMP'>
+[20:15:09.999] INFO: Operand size match.
+[20:15:10.001] INFO: Operands: [3, 0, 0]
+[20:15:10.001] INFO: Setting PC to 3
+[20:15:10.001] INFO: Instruction executed: True
+[20:15:10.432] INFO: Executing instruction at 3
+[20:15:10.436] INFO: Executing instruction.
+[20:15:10.436] INFO: Executing instruction: sub 1 0b0001 0b0010
+[20:15:10.436] INFO: Opcode: sub
+[20:15:10.436] INFO: Instruction class: <class 'instructions.SUB'>
+[20:15:10.436] INFO: Operand size match.
+[20:15:10.436] INFO: Operands: [1, 1, 2]
+[20:15:10.439] INFO: Getting register 1
+[20:15:10.439] INFO: Getting register 2
+[20:15:10.439] INFO: Setting register 1 to 11
+[20:15:10.441] INFO: Instruction executed: True
+[20:15:10.715] INFO: Executing instruction at 4
+[20:15:10.715] INFO: Executing instruction.
+[20:15:10.715] INFO: Executing instruction: jmp 3 0b00 0b00
+[20:15:10.715] INFO: Opcode: jmp
+[20:15:10.715] INFO: Instruction class: <class 'instructions.JMP'>
+[20:15:10.715] INFO: Operand size match.
+[20:15:10.730] INFO: Operands: [3, 0, 0]
+[20:15:10.730] INFO: Setting PC to 3
+[20:15:10.731] INFO: Instruction executed: True
+[20:15:10.895] INFO: Executing instruction at 3
+[20:15:10.895] INFO: Executing instruction.
+[20:15:10.895] INFO: Executing instruction: sub 1 0b0001 0b0010
+[20:15:10.896] INFO: Opcode: sub
+[20:15:10.896] INFO: Instruction class: <class 'instructions.SUB'>
+[20:15:10.896] INFO: Operand size match.
+[20:15:10.896] INFO: Operands: [1, 1, 2]
+[20:15:10.899] INFO: Getting register 1
+[20:15:10.900] INFO: Getting register 2
+[20:15:10.900] INFO: Setting register 1 to 10
+[20:15:10.901] INFO: Instruction executed: True
+[20:15:11.049] INFO: Executing instruction at 4
+[20:15:11.063] INFO: Executing instruction.
+[20:15:11.063] INFO: Executing instruction: jmp 3 0b00 0b00
+[20:15:11.063] INFO: Opcode: jmp
+[20:15:11.063] INFO: Instruction class: <class 'instructions.JMP'>
+[20:15:11.063] INFO: Operand size match.
+[20:15:11.063] INFO: Operands: [3, 0, 0]
+[20:15:11.063] INFO: Setting PC to 3
+[20:15:11.063] INFO: Instruction executed: True
+[20:15:11.201] INFO: Executing instruction at 3
+[20:15:11.201] INFO: Executing instruction.
+[20:15:11.201] INFO: Executing instruction: sub 1 0b0001 0b0010
+[20:15:11.212] INFO: Opcode: sub
+[20:15:11.212] INFO: Instruction class: <class 'instructions.SUB'>
+[20:15:11.212] INFO: Operand size match.
+[20:15:11.212] INFO: Operands: [1, 1, 2]
+[20:15:11.214] INFO: Getting register 1
+[20:15:11.214] INFO: Getting register 2
+[20:15:11.216] INFO: Setting register 1 to 9
+[20:15:11.216] INFO: Instruction executed: True
+[20:15:11.381] INFO: Executing instruction at 4
+[20:15:11.417] INFO: Executing instruction.
+[20:15:11.417] INFO: Executing instruction: jmp 3 0b00 0b00
+[20:15:11.417] INFO: Opcode: jmp
+[20:15:11.417] INFO: Instruction class: <class 'instructions.JMP'>
+[20:15:11.419] INFO: Operand size match.
+[20:15:11.420] INFO: Operands: [3, 0, 0]
+[20:15:11.420] INFO: Setting PC to 3
+[20:15:11.421] INFO: Instruction executed: True
+[20:15:11.557] INFO: Executing instruction at 3
+[20:15:11.557] INFO: Executing instruction.
+[20:15:11.557] INFO: Executing instruction: sub 1 0b0001 0b0010
+[20:15:11.557] INFO: Opcode: sub
+[20:15:11.557] INFO: Instruction class: <class 'instructions.SUB'>
+[20:15:11.557] INFO: Operand size match.
+[20:15:11.557] INFO: Operands: [1, 1, 2]
+[20:15:11.557] INFO: Getting register 1
+[20:15:11.563] INFO: Getting register 2
+[20:15:11.563] INFO: Setting register 1 to 8
+[20:15:11.563] INFO: Instruction executed: True
+[20:15:11.722] INFO: Executing instruction at 4
+[20:15:11.722] INFO: Executing instruction.
+[20:15:11.722] INFO: Executing instruction: jmp 3 0b00 0b00
+[20:15:11.722] INFO: Opcode: jmp
+[20:15:11.722] INFO: Instruction class: <class 'instructions.JMP'>
+[20:15:11.738] INFO: Operand size match.
+[20:15:11.738] INFO: Operands: [3, 0, 0]
+[20:15:11.738] INFO: Setting PC to 3
+[20:15:11.738] INFO: Instruction executed: True
+[20:15:11.885] INFO: Executing instruction at 3
+[20:15:11.885] INFO: Executing instruction.
+[20:15:11.885] INFO: Executing instruction: sub 1 0b0001 0b0010
+[20:15:11.885] INFO: Opcode: sub
+[20:15:11.885] INFO: Instruction class: <class 'instructions.SUB'>
+[20:15:11.888] INFO: Operand size match.
+[20:15:11.888] INFO: Operands: [1, 1, 2]
+[20:15:11.888] INFO: Getting register 1
+[20:15:11.888] INFO: Getting register 2
+[20:15:11.888] INFO: Setting register 1 to 7
+[20:15:11.891] INFO: Instruction executed: True
+[20:15:12.066] INFO: Executing instruction at 4
+[20:15:12.067] INFO: Executing instruction.
+[20:15:12.067] INFO: Executing instruction: jmp 3 0b00 0b00
+[20:15:12.067] INFO: Opcode: jmp
+[20:15:12.069] INFO: Instruction class: <class 'instructions.JMP'>
+[20:15:12.069] INFO: Operand size match.
+[20:15:12.069] INFO: Operands: [3, 0, 0]
+[20:15:12.069] INFO: Setting PC to 3
+[20:15:12.072] INFO: Instruction executed: True
+[20:15:12.239] INFO: Executing instruction at 3
+[20:15:12.239] INFO: Executing instruction.
+[20:15:12.239] INFO: Executing instruction: sub 1 0b0001 0b0010
+[20:15:12.239] INFO: Opcode: sub
+[20:15:12.239] INFO: Instruction class: <class 'instructions.SUB'>
+[20:15:12.239] INFO: Operand size match.
+[20:15:12.239] INFO: Operands: [1, 1, 2]
+[20:15:12.239] INFO: Getting register 1
+[20:15:12.239] INFO: Getting register 2
+[20:15:12.248] INFO: Setting register 1 to 6
+[20:15:12.248] INFO: Instruction executed: True
+[20:15:12.427] INFO: Executing instruction at 4
+[20:15:12.427] INFO: Executing instruction.
+[20:15:12.427] INFO: Executing instruction: jmp 3 0b00 0b00
+[20:15:12.427] INFO: Opcode: jmp
+[20:15:12.427] INFO: Instruction class: <class 'instructions.JMP'>
+[20:15:12.433] INFO: Operand size match.
+[20:15:12.433] INFO: Operands: [3, 0, 0]
+[20:15:12.433] INFO: Setting PC to 3
+[20:15:12.435] INFO: Instruction executed: True
+[20:15:12.615] INFO: Executing instruction at 3
+[20:15:12.615] INFO: Executing instruction.
+[20:15:12.615] INFO: Executing instruction: sub 1 0b0001 0b0010
+[20:15:12.630] INFO: Opcode: sub
+[20:15:12.630] INFO: Instruction class: <class 'instructions.SUB'>
+[20:15:12.630] INFO: Operand size match.
+[20:15:12.630] INFO: Operands: [1, 1, 2]
+[20:15:12.630] INFO: Getting register 1
+[20:15:12.634] INFO: Getting register 2
+[20:15:12.634] INFO: Setting register 1 to 5
+[20:15:12.634] INFO: Instruction executed: True
+[20:15:12.805] INFO: Executing instruction at 4
+[20:15:12.805] INFO: Executing instruction.
+[20:15:12.805] INFO: Executing instruction: jmp 3 0b00 0b00
+[20:15:12.805] INFO: Opcode: jmp
+[20:15:12.808] INFO: Instruction class: <class 'instructions.JMP'>
+[20:15:12.808] INFO: Operand size match.
+[20:15:12.809] INFO: Operands: [3, 0, 0]
+[20:15:12.809] INFO: Setting PC to 3
+[20:15:12.809] INFO: Instruction executed: True
+[20:15:12.988] INFO: Executing instruction at 3
+[20:15:12.989] INFO: Executing instruction.
+[20:15:12.990] INFO: Executing instruction: sub 1 0b0001 0b0010
+[20:15:12.990] INFO: Opcode: sub
+[20:15:12.991] INFO: Instruction class: <class 'instructions.SUB'>
+[20:15:12.991] INFO: Operand size match.
+[20:15:12.993] INFO: Operands: [1, 1, 2]
+[20:15:12.993] INFO: Getting register 1
+[20:15:12.993] INFO: Getting register 2
+[20:15:12.993] INFO: Setting register 1 to 4
+[20:15:12.994] INFO: Instruction executed: True
+[20:15:13.155] INFO: Executing instruction at 4
+[20:15:13.155] INFO: Executing instruction.
+[20:15:13.155] INFO: Executing instruction: jmp 3 0b00 0b00
+[20:15:13.155] INFO: Opcode: jmp
+[20:15:13.155] INFO: Instruction class: <class 'instructions.JMP'>
+[20:15:13.155] INFO: Operand size match.
+[20:15:13.155] INFO: Operands: [3, 0, 0]
+[20:15:13.155] INFO: Setting PC to 3
+[20:15:13.155] INFO: Instruction executed: True
+[20:15:13.359] INFO: Executing instruction at 3
+[20:15:13.361] INFO: Executing instruction.
+[20:15:13.361] INFO: Executing instruction: sub 1 0b0001 0b0010
+[20:15:13.361] INFO: Opcode: sub
+[20:15:13.361] INFO: Instruction class: <class 'instructions.SUB'>
+[20:15:13.361] INFO: Operand size match.
+[20:15:13.361] INFO: Operands: [1, 1, 2]
+[20:15:13.364] INFO: Getting register 1
+[20:15:13.365] INFO: Getting register 2
+[20:15:13.365] INFO: Setting register 1 to 3
+[20:15:13.365] INFO: Instruction executed: True
+[20:15:13.528] INFO: Executing instruction at 4
+[20:15:13.529] INFO: Executing instruction.
+[20:15:13.529] INFO: Executing instruction: jmp 3 0b00 0b00
+[20:15:13.529] INFO: Opcode: jmp
+[20:15:13.529] INFO: Instruction class: <class 'instructions.JMP'>
+[20:15:13.529] INFO: Operand size match.
+[20:15:13.529] INFO: Operands: [3, 0, 0]
+[20:15:13.532] INFO: Setting PC to 3
+[20:15:13.533] INFO: Instruction executed: True
+[20:15:13.705] INFO: Executing instruction at 3
+[20:15:13.705] INFO: Executing instruction.
+[20:15:13.705] INFO: Executing instruction: sub 1 0b0001 0b0010
+[20:15:13.705] INFO: Opcode: sub
+[20:15:13.705] INFO: Instruction class: <class 'instructions.SUB'>
+[20:15:13.705] INFO: Operand size match.
+[20:15:13.705] INFO: Operands: [1, 1, 2]
+[20:15:13.705] INFO: Getting register 1
+[20:15:13.705] INFO: Getting register 2
+[20:15:13.705] INFO: Setting register 1 to 2
+[20:15:13.713] INFO: Instruction executed: True
+[20:15:13.897] INFO: Executing instruction at 4
+[20:15:13.899] INFO: Executing instruction.
+[20:15:13.899] INFO: Executing instruction: jmp 3 0b00 0b00
+[20:15:13.899] INFO: Opcode: jmp
+[20:15:13.899] INFO: Instruction class: <class 'instructions.JMP'>
+[20:15:13.901] INFO: Operand size match.
+[20:15:13.901] INFO: Operands: [3, 0, 0]
+[20:15:13.901] INFO: Setting PC to 3
+[20:15:13.901] INFO: Instruction executed: True
+[20:15:14.117] INFO: Executing instruction at 3
+[20:15:14.117] INFO: Executing instruction.
+[20:15:14.117] INFO: Executing instruction: sub 1 0b0001 0b0010
+[20:15:14.117] INFO: Opcode: sub
+[20:15:14.117] INFO: Instruction class: <class 'instructions.SUB'>
+[20:15:14.120] INFO: Operand size match.
+[20:15:14.120] INFO: Operands: [1, 1, 2]
+[20:15:14.121] INFO: Getting register 1
+[20:15:14.121] INFO: Getting register 2
+[20:15:14.122] INFO: Setting register 1 to 1
+[20:15:14.123] INFO: Instruction executed: True
+[20:15:14.389] INFO: Executing instruction at 4
+[20:15:14.390] INFO: Executing instruction.
+[20:15:14.390] INFO: Executing instruction: jmp 3 0b00 0b00
+[20:15:14.390] INFO: Opcode: jmp
+[20:15:14.392] INFO: Instruction class: <class 'instructions.JMP'>
+[20:15:14.392] INFO: Operand size match.
+[20:15:14.392] INFO: Operands: [3, 0, 0]
+[20:15:14.392] INFO: Setting PC to 3
+[20:15:14.394] INFO: Instruction executed: True
+[20:15:14.893] INFO: Executing instruction at 3
+[20:15:14.893] INFO: Executing instruction.
+[20:15:14.893] INFO: Executing instruction: sub 1 0b0001 0b0010
+[20:15:14.893] INFO: Opcode: sub
+[20:15:14.893] INFO: Instruction class: <class 'instructions.SUB'>
+[20:15:14.893] INFO: Operand size match.
+[20:15:14.893] INFO: Operands: [1, 1, 2]
+[20:15:14.893] INFO: Getting register 1
+[20:15:14.893] INFO: Getting register 2
+[20:15:14.906] INFO: Setting register 1 to 0
+[20:15:14.906] INFO: Instruction executed: True
+[20:15:15.491] INFO: Executing instruction at 4
+[20:15:15.491] INFO: Executing instruction.
+[20:15:15.491] INFO: Executing instruction: jmp 3 0b00 0b00
+[20:15:15.491] INFO: Opcode: jmp
+[20:15:15.491] INFO: Instruction class: <class 'instructions.JMP'>
+[20:15:15.504] INFO: Operand size match.
+[20:15:15.504] INFO: Operands: [3, 0, 0]
+[20:15:15.504] INFO: Instruction executed: True
+[20:15:15.986] INFO: Executing instruction at 5
+[20:15:15.986] INFO: Executing instruction.
+[20:15:15.986] INFO: Executing instruction: hlt
+[20:15:15.986] INFO: Opcode: hlt
+[20:15:15.986] INFO: Instruction class: <class 'instructions.HLT'>
+[20:15:15.986] INFO: Operand size match.
+[20:15:15.986] INFO: Operands: []
+[20:15:16.001] INFO: Exporting state to output.txt
+[20:15:16.003] INFO: Stopping processor.
+[20:15:16.003] INFO: Instruction executed: True
