@@ -1,2 +1,1 @@
-[14:43:23.009] FATAL: Missing required metadata field: name
-[14:43:23.009] FATAL: Exiting the program...
+

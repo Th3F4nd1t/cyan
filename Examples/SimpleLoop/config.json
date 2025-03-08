@@ -1,0 +1,24 @@
+{
+    "metadata" : {
+        "name" : "Loop",
+        "operations" : ["sub", "hlt", "ldi","jmp"],
+        "cyan_version" : 1,
+        "creator" : "CamLeaf"
+
+    }, "datapoints" : {
+        "prom" : 20,
+        "registers" : 4,  
+        "word_size" : 8,
+        "opcode_size" : 6, 
+        "operand_count" : 2, 
+        "operand_size" : 5,
+        "ram" : 16,
+        "io_count" : 4, 
+        "io_size" : 8,
+        "reg_error" : false,
+        "ram_error" : false,
+        "io_error" : false,
+        "flags": ["zero"],
+        "zero_register": false
+    }
+}

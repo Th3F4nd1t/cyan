@@ -1,4 +1,4 @@
-import json
+import json, sys, os
 from utils import *
 
 config_elements = [
@@ -64,6 +64,5 @@ def getConfig(configPath: str) -> dict:
     Returns:
         dict: The dict of the config.
     """
-
     with open(configPath, "r") as f:
         return json.load(f)
