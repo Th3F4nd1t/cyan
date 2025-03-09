@@ -6,6 +6,7 @@ cpu_version: "1.0"
 cpu_description: "A simple CPU with 16 registers, 16-bit word size, and 16-bit address space."
 creator: "John Doe"
 
+address_space: 16
 word_size: 16
 simulation_speed: 0 # 0 if instant, other wise hertz
 
@@ -27,6 +28,7 @@ ram_size: 256
 
 # IO
 io_type: "pmio" # pmio or mmio
+io_reserved: [] # only if mmio
 io_ports:
   - name: "io_port_1"
     description: "Port 1 for IO."
@@ -57,22 +59,16 @@ components:
       - "not"
       - "shl"
       - "shr"
-    operation_latency:  # in ticks
-      add: 1
-      sub: 1
-      and: 1
-      or: 1
-      xor: 1
-      not: 1
-      shl: 1
-      shr: 1
+# operation latency removed from here as it was handled  in instruction set
 
 # Instruction Set
 instruction_set:
+  - opcode_length: 16
+  - component: "alu"
   - name: "add"
     opcode: 0
     description: "Add two registers."
-    operands:
+    operands: # operands are in order of appearance
       - name: "dest"
         type: "register"
         size: 16
@@ -82,7 +78,6 @@ instruction_set:
       - name: "src2"
         type: "register"
         size: 16
-    operation: "alu.add"
     latency: 1
     cycles: 1
     flags_affected:
