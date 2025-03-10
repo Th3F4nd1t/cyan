@@ -23,6 +23,6 @@ def log(message: str, level: LogLevel) -> None:
             f.write(str(f"[{datetime.datetime.now().strftime('%H:%M:%S.%f')[:-3]}] {level.upper()}: Exiting the program...\n"))
         exit(1)
     
-def resetLogger():
+def resetLog():
     with open("./log.txt", "w") as f:
         f.write("")
