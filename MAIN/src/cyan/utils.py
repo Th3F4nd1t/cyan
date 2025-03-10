@@ -3,7 +3,13 @@ import datetime
 
 printLogs = True
 
-def log(message: str, level: str) -> None:
+class LogLevel:
+    INFO = "INFO"
+    WARNING = "WARNING"
+    ERROR = "ERROR"
+    FATAL = "FATAL"
+
+def log(message: str, level: LogLevel) -> None:
     with open("./log.txt", "a") as f:
         f.write(f"[{datetime.datetime.now().strftime('%H:%M:%S.%f')[:-3]}] {level.upper()}: {message}\n")
 
