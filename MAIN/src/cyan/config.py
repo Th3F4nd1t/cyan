@@ -12,6 +12,7 @@ class StaticConfig:
         self.description:str = config["cpu_description"]
         self.creator:str = config["cpu_creator"]
 
+        self.pipelined:bool = config["pipelined"]
         self.word_size:int = config["word_size"]
         self.simulation_speed:float = config["simulation_speed"]
 

@@ -6,6 +6,7 @@ cpu_version: "1.0"
 cpu_description: "A simple CPU with 16 registers, 16-bit word size, and 16-bit address space."
 creator: "John Doe"
 
+pipeline: False
 address_space: 16
 word_size: 16
 simulation_speed: 0 # 0 if instant, other wise hertz

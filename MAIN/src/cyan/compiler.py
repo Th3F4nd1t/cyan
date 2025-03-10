@@ -1,5 +1,6 @@
 # compiler which turns user-generated program into program which is seen by the processor
 # for example functions, loops and other need to be compiled after writing
+# take the instruction file and turn it into classes that can be used by the engine
 
 def get_compiled(file):
 
