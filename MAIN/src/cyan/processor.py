@@ -47,7 +47,7 @@ class Processor:
                 "read_only": False,
                 "write_only": False
             }
-            self.state["ram"].append(MemoryCell(ram_cell,"RAM"))
+            self.state["ram"].append(MemoryCell(ram_cell, "RAM"))
         
         ## set registers
         # special
