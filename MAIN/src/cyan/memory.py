@@ -22,7 +22,7 @@ class MemoryCell:
 
     def read(self):
         if self.write_only:
-            log(f"Write-only error: Reading from {self.mem_class} {self.name}, address {self.address} failed","WARNING")
+            log(f"Write-only error: Reading from {self.mem_class} {self.address} failed","WARNING")
             return
         return self.value
     
@@ -30,7 +30,7 @@ class MemoryCell:
     def write(self, value):
         # add size checking
         if self.read_only:
-            log(f"Read-only error: Writing to {self.mem_class} {self.name}, address {self.address} failed","WARNING")
+            log(f"Read-only error: Writing to {self.mem_class} {self.address} failed","WARNING")
             return
         
         if self.accumulates: # check for accumulator reg
@@ -40,5 +40,6 @@ class MemoryCell:
         
         if self.value > (2**self.word_size): #size checking
             log("Data out of range, overflowing", "WARNING")
-            # for signage that warning becomes an error
+            # for signed that warning becomes an error
+            # also for signed overflow to negative
             self.value = self.value % (2 ** self.wordSize)

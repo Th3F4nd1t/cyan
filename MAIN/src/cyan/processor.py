@@ -38,7 +38,7 @@ class Processor:
         for address in range(0, self.static.ram_size):
             if address in self.static.io_reserved: continue
             ram_cell = {
-                "name": f"RAM cell {i}",
+                "name": f"RAM cell {address}",
                 "description": "RAM",
                 "address": address,
                 "size": self.static.word_size,
@@ -47,7 +47,7 @@ class Processor:
                 "read_only": False,
                 "write_only": False
             }
-            self.state["ram"].append(MemoryCell(ram_cell,"ram"))
+            self.state["ram"].append(MemoryCell(ram_cell,"RAM"))
         
         ## set registers
         # special
@@ -61,7 +61,7 @@ class Processor:
         for address in range(0, self.static.register_count):
             if address in special_register_reserved: continue # if taken by special reg
             register_cell = {
-                "name": f"Register cell {i}",
+                "name": f"Register cell {address}",
                 "description": "Register",
                 "address": address,
                 "size": self.static.word_size,
