@@ -17,7 +17,7 @@ def log(message: str, level: LogLevel) -> None:
             print("\033[1;31mExiting due to fatal error\033[0m") # PROD: COMMENT THIS OUT
             exit(1)
 
-def resetLog():
+def reset_log():
     with open("./log.txt", "w") as f:
         f.write("")
 

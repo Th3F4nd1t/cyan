@@ -16,7 +16,7 @@ class Processor:
 
 
 
-    def generate_state(self, config): #resets and takes all state from config.yaml
+    def generate_state(self, config): # resets and takes all state from config.yaml
         self.state = {
             "ram": [],
             "prom": [],
@@ -75,5 +75,5 @@ class Processor:
 
 
 
-    def upload_state(self,config) -> dict: #takes state from file export
+    def upload_state(self,config) -> dict: # takes state from file export
         ...
