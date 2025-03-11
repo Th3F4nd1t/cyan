@@ -65,7 +65,6 @@ components:
 # Instruction Set
 instruction_set:
   - opcode_length: 16
-  - component: "alu"
   - name: "add"
     opcode: 0
     description: "Add two registers."
@@ -81,6 +80,7 @@ instruction_set:
         size: 16
     latency: 1
     cycles: 1
+    operation: "alu.add"
     flags_affected:
       - "zero"
       - "carry"
@@ -144,3 +144,18 @@ instruction_set:
   - name: "xor"
     opcode: 4
     description: "Bitwise XOR two registers."
+    operands:
+      - name: "dest"
+        type: "register"
+        size: 16
+      - name: "src1"
+        type: "register"
+        size: 16
+      - name: "src2"
+        type: "register"
+        size: 16
+    operation: "alu.xor"
+    latency: 1
+    cycles: 1
+    flags_affected:
+      - "zero"

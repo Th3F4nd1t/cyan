@@ -4,6 +4,9 @@ from cyan.processor import Processor
 from config import *
 
 class Engine:
+    static: StaticConfig
+    proc: Processor
+    
     def __init__(self, instructions, config):
         validate_config(config) # validate config not set up yet
         self.static = StaticConfig(config) # contains base info about cpu which could be useful
