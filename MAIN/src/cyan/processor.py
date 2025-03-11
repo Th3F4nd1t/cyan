@@ -63,12 +63,11 @@ class Processor:
             }
             self.state.registers.append( MemoryCell(register_cell, "Register"))
 
-        # if pipeline is true then intialize the pipeline
 
         if self.static.pipelined:
             self.pipeline = self.Pipeline()
 
-    def upload_state(self,config) -> dict: #takes state from file export
+    def upload_state(self,config) -> dict: # takes state from file export
         ...
 
 

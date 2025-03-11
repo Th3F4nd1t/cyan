@@ -2,7 +2,7 @@
 # for example functions, loops and other need to be compiled after writing
 # take the instruction file and turn it into classes that can be used by the engine
 
-def get_compiled(file):
+def get_compiled(file: str) -> list:
 
     with open(file, 'r') as f:
         raw_program = f.readlines()
