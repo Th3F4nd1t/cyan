@@ -2,7 +2,7 @@
 from typing import List, Dict, Any
 from memory import *
 from config import *
-from ...Config.components import *
+from ...Config.components import * # meant for pipeline but i don't want error. if you find better idea fan just do it
 
 class Processor:
     registers:List[MemoryCell]
@@ -80,7 +80,7 @@ class Processor:
 
     # processor subclasses
 
-    class State:
+    class State: # handles processor state
         ram: List[MemoryCell]
         registers: List[MemoryCell]
         io: List[MemoryCell]
@@ -93,12 +93,12 @@ class Processor:
             self.io = []
             self.prom = [] # replace with List[Instruction] when instruction is defined
             self.pc = 0
-
-    class Pipeline(Pipeline):
+        
+    class Pipeline(Pipeline): #handles pipeline state
 
         current: List[Any] # replace with List[Instruction] once that is defined
         def __init__(self):
-            super.__init__()
+            super.__init__() #get pipeline self.stages from user generated pipeline
             self.current = [[] for i in self.stages]
         
         def flush(self):

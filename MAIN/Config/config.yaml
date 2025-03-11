@@ -6,7 +6,7 @@ cpu_version: "1.0"
 cpu_description: "A simple CPU with 16 registers, 16-bit word size, and 16-bit address space."
 creator: "John Doe"
 
-pipeline: False
+pipeline: True
 address_space: 16
 word_size: 16
 simulation_speed: 0 # 0 if instant, other wise hertz
@@ -28,8 +28,8 @@ rom_size: 256
 ram_size: 256
 
 # IO
-io_type: "pmio" # pmio or mmio
-io_reserved: [] # only if mmio
+io_type: "mmio" # pmio or mmio
+io_reserved: [0,1] # only if mmio
 io_ports:
   - name: "io_port_1"
     description: "Port 1 for IO."
@@ -48,8 +48,7 @@ io_ports:
 
 # Components
 components:
-  - name: "alu"
-    class: "ALU"
+  - class: "ALU"
     description: "Arithmetic Logic Unit."
     operations_handled:
       - "add"
@@ -57,9 +56,16 @@ components:
       - "and"
       - "or"
       - "xor"
-      - "not"
-      - "shl"
-      - "shr"
+  - class: "PC"
+    description: "Program Counter"
+    operations_handled:
+      - "Jmp"
+  - class: "RAM"
+    description: "Random Access Memory. Pointers"
+    operations_handled:
+      - "CST"
+      - "CLD"
+    
 # operation latency removed from here as it was handled  in instruction set
 
 # Instruction Set
@@ -67,6 +73,8 @@ instruction_set:
   - opcode_length: 16
   - name: "add"
     opcode: 0
+    # operations is mostly pseudocode figure this out later
+    operations: ["alu.add", "None", "Writeback"] # for operations we assume IF and ID are done automatically
     description: "Add two registers."
     operands: # operands are in order of appearance
       - name: "dest"
@@ -79,83 +87,7 @@ instruction_set:
         type: "register"
         size: 16
     latency: 1
-    cycles: 1
-    operation: "alu.add"
     flags_affected:
       - "zero"
       - "carry"
       - "overflow"
-  - name: "sub"
-    opcode: 1
-    description: "Subtract two registers."
-    operands:
-      - name: "dest"
-        type: "register"
-        size: 16
-      - name: "src1"
-        type: "register"
-        size: 16
-      - name: "src2"
-        type: "register"
-        size: 16
-    operation: "alu.sub"
-    latency: 1
-    cycles: 1
-    flags_affected:
-      - "zero"
-      - "carry"
-      - "overflow"
-  - name: "and"
-    opcode: 2
-    description: "Bitwise AND two registers."
-    operands:
-      - name: "dest"
-        type: "register"
-        size: 16
-      - name: "src1"
-        type: "register"
-        size: 16
-      - name: "src2"
-        type: "register"
-        size: 16
-    operation: "alu.and"
-    latency: 1
-    cycles: 1
-    flags_affected:
-      - "zero"
-  - name: "or"
-    opcode: 3
-    description: "Bitwise OR two registers."
-    operands:
-      - name: "dest"
-        type: "register"
-        size: 16
-      - name: "src1"
-        type: "register"
-        size: 16
-      - name: "src2"
-        type: "register"
-        size: 16
-    operation: "alu.or"
-    latency: 1
-    cycles: 1
-    flags_affected:
-      - "zero"
-  - name: "xor"
-    opcode: 4
-    description: "Bitwise XOR two registers."
-    operands:
-      - name: "dest"
-        type: "register"
-        size: 16
-      - name: "src1"
-        type: "register"
-        size: 16
-      - name: "src2"
-        type: "register"
-        size: 16
-    operation: "alu.xor"
-    latency: 1
-    cycles: 1
-    flags_affected:
-      - "zero"
