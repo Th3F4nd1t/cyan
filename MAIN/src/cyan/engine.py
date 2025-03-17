@@ -1,7 +1,7 @@
 # take in instruction classes and modify the state of the processor based on the instructions
 
-from cyan.processor import Processor
-from config import *
+from .processor import Processor
+from .config import *
 
 class Engine:
     static: StaticConfig
@@ -11,10 +11,9 @@ class Engine:
         validate_config(config) # validate config not set up yet
         self.static = StaticConfig(config) # contains base info about cpu which could be useful
         self.proc = Processor(config, self.static)
+        self.proc.load_program(instructions)
         self.instructions = instructions
     
-
-
 
     def write_req(self, mem_type, destination, data):
         # this func acts as an intermediary before modifying processor. A smoothing over
@@ -42,7 +41,6 @@ class Engine:
 
         if 0 < location < eval(f"len(self.proc.state.{mem_type})"): # checks for addressing within bounds of memory
         # this eval statement is not safe at all, but since it is a downloaded source project its fine
-        # user can only hack themselves with this
             return eval(f"self.proc.state.{mem_type}[{location}].read()")
 
         # if outside of mem range

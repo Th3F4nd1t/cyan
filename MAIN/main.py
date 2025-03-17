@@ -5,6 +5,11 @@ from src.cyan.compiler import *
 config = get_config('Config/config.yaml')
 instructions = get_compiled('./program.cyan') # send instruction file to compiler
 
-engine = Engine(instructions,config) 
+print(config)
+createDynamicInstructions(config)
 
-engine.run() #engine.run is not implemented yet
+# not fully implemented
+# engine = Engine(instructions,config) 
+
+# not implented
+# engine.run()

@@ -1,7 +1,7 @@
 # the processor class is just a data structure that holds the state of the processor along with methods to modify the state as well as making sure the state is valid
 from typing import List, Dict, Any
-from memory import *
-from config import *
+from .memory import *
+from .config import *
 class Processor:
     registers:List[MemoryCell]
     static:StaticConfig
@@ -43,7 +43,7 @@ class Processor:
         special_register_reserved = []
         for index, reg in enumerate(config["special_registers"]):
             self.state.registers.append( MemoryCell(reg,"Register") )
-            special_register_reserved.append(config["special_registers"]["address"])
+            special_register_reserved.append(config["special_registers"][index]["address"])
 
         # normal
 

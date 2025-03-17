@@ -1,5 +1,7 @@
-from utils import *
+from .utils import *
 from typing import Dict, Any
+# all types of memory live here
+
 
 class MemoryCell:
     # MemoryCell is the basis of all memory types.
@@ -43,3 +45,8 @@ class MemoryCell:
             # for signed that warning becomes an error
             # also for signed overflow to negative
             self.value = self.value % (2 ** self.wordSize)
+
+
+
+
+

@@ -1,6 +1,6 @@
 # getting configuration things also process yaml file
-from utils import *
-from memory import *
+from .utils import *
+from .memory import *
 from typing import List, Dict, Any
 import yaml
 
@@ -10,7 +10,7 @@ class StaticConfig:
         self.name:str = config["cpu_name"]
         self.version:str = config["cpu_version"]
         self.description:str = config["cpu_description"]
-        self.creator:str = config["cpu_creator"]
+        self.creator:str = config["creator"]
 
         self.pipelined:bool = config["pipelined"]
         self.word_size:int = config["word_size"]
