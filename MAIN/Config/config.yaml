@@ -73,8 +73,12 @@ components:
   - class: "RAM"
     description: "Random Access Memory. Pointers"
     operations_handled:
-      - "CST"
-      - "CLD"
+      - "write"
+  - class: "Registers"
+    description: "Registers"
+    operations_handled:
+      - "Lod"
+      - "Write"
     
 # operation latency removed from here as it was handled  in instruction set
 

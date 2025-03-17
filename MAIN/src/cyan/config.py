@@ -20,6 +20,7 @@ class StaticConfig:
         self.register_count:int = config["register_count"]
         self.rom_size:int = config["rom_size"]
         self.ram_size:int = config["ram_size"]
+        
 
         self.io_type:str = config["io_type"] # pmio or mmio
         self.io_reserved:List[int] = config["io_reserved"] # which mem cells are reserved by mmio

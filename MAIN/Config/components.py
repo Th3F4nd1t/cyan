@@ -4,69 +4,72 @@ from typing import List, Any
 # no classes in components.py should have an init function
 # they should just contain the operations and the operands which are given to it
 
-# instruction_req and operand req are put in a single dict with respective names and values
+# instruction req and operand req are not obsolete as we can just put a dict full of everything as data. do error checking in engine.
 # each processor req is added to the end of the instruction in order put
 
-# todo: replace all direct proc calls such as state witha request from Engine which acts as mediator
+# todo: replace all direct proc calls such as state with requests from Engine which acts as mediator
 class ALU:
-    operand_req = ["src1","src2"]
-    instruction_req = ["flags_affected"]
     processor_req = ["flags"]
 
-    def Add(self, data, proc_flags):
+    def Add(self, engine, data, proc_flags):
         # add timing stuff
-        value = data["src1"]+data["src2"]
+        #read req is defined as (Mem_typem address)
+        value = engine.read_req("Register", data["src1"]) + engine.read_req("Register",data["src2"])
         proc_flags.update(value, data["flags_affected"])
         return value
         
-    def Sub(self, data, proc_flags):
-        value = data["src1"]-data["src2"]
+    def Sub(self, engine, data, proc_flags):
+        value = engine.read_req("Register", data["src1"]) - engine.read_req("Register",data["src2"])
         proc_flags.update(value, data["flags_affected"])
         return value
     
-    def And(self, data, proc_flags):
-        value = data["src1"]&data["src2"]
+    def And(self, engine, data, proc_flags):
+        value = engine.read_req("Register", data["src1"]) & engine.read_req("Register",data["src2"])
         proc_flags.update(value, data["flags_affected"])
         return value
 
-    def Or(self, data, proc_flags):
-        value = data["src1"]|data["src2"]
+    def Or(self, engine, data, proc_flags):
+        value = engine.read_req("Register", data["src1"]) | engine.read_req("Register",data["src2"])
         proc_flags.update(value, data["flags_affected"])
         return value
 
-    def Xor(self, data, proc_flags):
-        value = data["src1"]^data["src2"]
+    def Xor(self, engine, data, proc_flags):
+        value = engine.read_req("Register", data["src1"]) ^ engine.read_req("Register",data["src2"])
         proc_flags.update(value, data["flags_affected"])
         return value
 
 
 class PC: # can grab access to proc_flags or state if need be
-    operand_req = ["dest","flag"]
-    instruction_req = []
+
     processor_req = ["flags", "state"]
 
-    def Jmp(self, data, proc_flags, state):
+    def Jmp(self, engine, data, proc_flags, state):
         if proc_flags.get(data["flag"]):
             state.pc = data["dest"]
         return None
 
 class RAM:
-    operand_req = ["dest","src1", "src2"]
-    instruction_req = []
-    processor_req = ["state"]
+    processor_req = []
 
-    def CST(self, data, state):
-        state.ram[data["dest"]+data["src2"]].write(state.registers[data["src1"]].read())
-    
-    def CLD(self, data, state):
-        state.registers[data["dest"]+data["src2"]].write(state.ram[data["src1"]].read())
+    def write(self, engine, data):
+        # write_req should be structured as (mem_type, destination, source data)
+        engine.write_req("RAM", engine.read_req("Register", data["dest"]) + data["off"], engine.read_req("Register", data["src1"]))
 
 class Registers:
-    operand_req = ["dest","imm"]
-    instruction_req = []
-    processor_req = ["state"]
+    processor_req = []
 
-    def LDI(self, data, state):
-        state.registers[data["dest"].write(data["imm"])]
+    def Lod(self, engine, data): #load from RAM
+        engine.write_req("Register", data["dest"], engine.read_req("RAM",engine.read_req("Register", data["src1"]) + data["off"]))
 
+    def write(self, engine, data):
+        engine.write_req("Register", #type
+                         data["dest"], #dest
+                         data["passed"] #in this case passed is keyword for data that is carried through previous stage in pipeline
+                        )
+
+    def LDI(self, engine, data):
+        engine.write_req("Register", #type
+                         data["dest"], #dest
+                         data["imm"] #since src1 is not comp yet it can act as imm
+                        )
 # no I/O state because this is a mmio cpu

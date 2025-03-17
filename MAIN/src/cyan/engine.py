@@ -12,4 +12,39 @@ class Engine:
         self.static = StaticConfig(config) # contains base info about cpu which could be useful
         self.proc = Processor(config, self.static)
         self.instructions = instructions
-        
+    
+
+
+
+    def write_req(self, mem_type, destination, data):
+        # this func acts as an intermediary before modifying processor. A smoothing over
+        mem_type = mem_type.lower()
+
+        if mem_type not in ("register", "ram", "io"):
+            log(f"Addressed to non-existent memory type {mem_type}", "ERROR")
+            return
+        if 0 < destination < eval(f"len(self.proc.state.{mem_type})"):
+        # this eval statement is not safe at all, but since it is a downloaded source project its fine
+        # user can only hack themselves with this
+            return eval(f"self.proc.state.{mem_type}[{destination}].write({data})")
+
+        # if outside of range
+        log(f"Addressed memory out of range", "ERROR")
+        return
+
+    def read_req(self, mem_type, location):
+        mem_type = mem_type.lower()
+
+        # checking if the mem type was written correctly
+        if mem_type not in ("Register", "RAM", "IO"):
+            log(f"Read from non-existent memory type {mem_type}", "ERROR")
+            return
+
+        if 0 < location < eval(f"len(self.proc.state.{mem_type})"): # checks for addressing within bounds of memory
+        # this eval statement is not safe at all, but since it is a downloaded source project its fine
+        # user can only hack themselves with this
+            return eval(f"self.proc.state.{mem_type}[{location}].read()")
+
+        # if outside of mem range
+        log(f"Addressed memory out of range", "ERROR")
+        return
