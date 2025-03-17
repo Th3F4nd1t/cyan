@@ -2,8 +2,6 @@
 from typing import List, Dict, Any
 from memory import *
 from config import *
-from ...Config.components import * # meant for pipeline but i don't want error. if you find better idea fan just do it
-
 class Processor:
     registers:List[MemoryCell]
     static:StaticConfig
@@ -65,7 +63,7 @@ class Processor:
 
 
         if self.static.pipelined:
-            self.pipeline = self.Pipeline()
+            self.pipeline = self.Pipeline(config["pipeline"])
 
     def upload_state(self,config) -> dict: # takes state from file export
         ...
@@ -94,11 +92,11 @@ class Processor:
             self.prom = [] # replace with List[Instruction] when instruction is defined
             self.pc = 0
         
-    class Pipeline(Pipeline): #handles pipeline state
+    class Pipeline(): #handles pipeline state
 
         current: List[Any] # replace with List[Instruction] once that is defined
-        def __init__(self):
-            super.__init__() #get pipeline self.stages from user generated pipeline
+        def __init__(self,stages):
+            self.stages = stages
             self.current = [[] for i in self.stages]
         
         def flush(self):

@@ -3,18 +3,11 @@ from typing import List, Any
 
 # no classes in components.py should have an init function
 # they should just contain the operations and the operands which are given to it
-class Pipeline: # this is inherited by the pipeline class inside processor
-    stages = {
-        "InstructionFetch": 0,
-        "InstructionDecode": 1,
-        "Execute": 2,
-        "Memory Access": 3,
-        "Writeback": 4
-    }
 
 # instruction_req and operand req are put in a single dict with respective names and values
 # each processor req is added to the end of the instruction in order put
 
+# todo: replace all direct proc calls such as state witha request from Engine which acts as mediator
 class ALU:
     operand_req = ["src1","src2"]
     instruction_req = ["flags_affected"]
