@@ -41,7 +41,7 @@ def createDynamicInstructions(config): # add error checking
     # create file if it doesn't exist or just reset it
 
     with open("src/cyan/dynamic_resources/instructions.py", "w") as file:
-        ...
+        file.write("# Generated file do not modify\n")
 
     # starts the creation of the classes
     with open("src/cyan/dynamic_resources/instructions.py", "+a") as file:

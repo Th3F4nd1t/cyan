@@ -81,6 +81,7 @@ def validate_config(config):
         except KeyError:
             log(f"Dependency \'{field}\' not in possible configurations", LogLevel.FATAL)
     
+    # start iterating
     for field in list(required_fields.keys()):
         if field not in config.keys():
             log(f"{field} not found in config. Aborting", LogLevel.FATAL)
