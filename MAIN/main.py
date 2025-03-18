@@ -1,12 +1,19 @@
 from src.cyan.config import *
 from src.cyan.engine import *
 from src.cyan.compiler import *
+from src.cyan.utils import *
+
+log("Booting CPU", LogLevel.INFO)
+
 
 config = get_config('Config/config.yaml')
-instructions = get_compiled('./program.cyan') # send instruction file to compiler
 
-print(config)
+
+validate_config(config)
 createDynamicInstructions(config)
+
+
+instructions = get_compiled('./program.cyan') # finish compiler
 
 # not fully implemented
 # engine = Engine(instructions,config) 

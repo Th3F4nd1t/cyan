@@ -30,12 +30,51 @@ def get_config(file):
     with open(file, 'r') as f:
         return yaml.safe_load(f)
     
+
+
+
 def validate_config(config):
-    ...
+    
+    log("Starting configuration validation", LogLevel.INFO)
+    # contains all required fields and dependencies
 
-# i have no idea where to put or do with these so they will stay here for now
-class Component:
-    ...
+    # required field contains either "none", which skips to the next instruction, "main", which takes the list at index 1 and checks if it is in the outer layer of the config file
+    # or "nest", which checks each nested instance of the original field for all items (nest is explicity used for things with multiple repeated fields, make a new one for other stuff)
+    required_fields = {
+        "cpu_name": ["none"],
+        "creator": ["none"],
+        "pipelined": ["main",["pipeline"]],
+        "address_space": ["none"],
+        "word_size": ["none"],
+        "simulation_speed": ["none"],
+        "register_count": ["none"],
+        "special_registers": ["nest",["name","description","address","read_only","write_only","default_value","size","accumulates"]],
+        "rom_size": ["none"],
+        "ram_size": ["none"],
+        "io_type": ["main",["io_reserved"]],
+        "io_ports": ["nest",["name","description","address","read_only","write_only","default_value","size"]],
+        "components": ["nest",["class","description","operations_handled"]],
+        "opcode_length": ["none"],
+        "instruction_set": ["nest",["name","opcode","operation","description","operands","latency","flags_affected"]],
+    }
 
-class Instruction:
-    ...
+
+
+    for field in list(required_fields.keys()):
+        if field not in config.keys():
+            log(f"{field} not found in config. Aborting", LogLevel.FATAL)
+        if required_fields[field][0] == "none":
+            continue
+        
+        if required_fields[field][0] == "nest":
+            for dependency in required_fields[field][1]:
+                for index, subitem in enumerate(config[field]):
+                    if dependency not in subitem.keys():
+                        log(f"Dependency \'{dependency}\' of \'{field}\' not found in config. Aborting", LogLevel.FATAL)
+        else:
+            for dependency in required_fields[field][1]:
+                if dependency not in config.keys():
+                    log(f"Dependency \'{dependency}\' of \'{field}\' not found in config. Aborting", LogLevel.FATAL)
+                
+
+    log("Configuration validation complete", LogLevel.SUCCESS)

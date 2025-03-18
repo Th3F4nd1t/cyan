@@ -1,5 +1,5 @@
 from typing import Dict, Any
-
+from .utils import *
 # compiler which turns user-generated program into program which is seen by the processor
 # for example functions, loops and other need to be compiled after writing
 # take the instruction file and turn it into classes that can be used by the engine
@@ -36,9 +36,9 @@ def get_compiled(file: str) -> list:
 
 # this function compiles the instructions from config.yaml into classes in the instructions.py inside of dynamic_resources
 
-def createDynamicInstructions(config):
-    
-    #create file if it doesn't exist or just reset it
+def createDynamicInstructions(config): # add error checking
+    log("Starting config adaptation into instruction files", LogLevel.INFO)
+    # create file if it doesn't exist or just reset it
 
     with open("src/cyan/dynamic_resources/instructions.py", "w") as file:
         ...
@@ -69,7 +69,7 @@ def createDynamicInstructions(config):
                 file.write(f"        {corrected_flag}{',' if index != len(instruction['flags_affected'])-1 else ''}\n")
             file.write("    ]\n")
 
-            #pipeline / non pipeline execution info
+            # pipeline / non pipeline execution info
             if config["pipelined"]:
 
                 pipeline_stages = config["pipeline"]
@@ -85,3 +85,4 @@ def createDynamicInstructions(config):
 
             file.write("\n\n\n")
 
+    log("Instruction file creation complete", LogLevel.SUCCESS)

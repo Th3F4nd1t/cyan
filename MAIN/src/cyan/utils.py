@@ -3,7 +3,8 @@ import datetime
 
 class LogLevel:
     # LEVEL = [TAG, COLOR, SHOULD TERMINATE]
-    INFO = ["INFO", "\033[1;34m", False]
+    INFO = ["INFO", "", False]
+    SUCCESS = ["SUCCESS", "\033[1;34m", False]
     WARNING = ["WARNING", "\033[1;33m", False]
     ERROR = ["ERROR", "\033[1;31m", False]
     FATAL = ["FATAL", "\033[1;31m", True]

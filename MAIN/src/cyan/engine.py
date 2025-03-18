@@ -8,7 +8,6 @@ class Engine:
     proc: Processor
     
     def __init__(self, instructions, config):
-        validate_config(config) # validate config not set up yet
         self.static = StaticConfig(config) # contains base info about cpu which could be useful
         self.proc = Processor(config, self.static)
         self.proc.load_program(instructions)
@@ -20,7 +19,7 @@ class Engine:
         mem_type = mem_type.lower()
 
         if mem_type not in ("register", "ram", "io"):
-            log(f"Addressed to non-existent memory type {mem_type}", "ERROR")
+            log(f"Addressed to non-existent memory type {mem_type}", LogLevel.WARNING)
             return
         if 0 < destination < eval(f"len(self.proc.state.{mem_type})"):
         # this eval statement is not safe at all, but since it is a downloaded source project its fine
@@ -28,7 +27,7 @@ class Engine:
             return eval(f"self.proc.state.{mem_type}[{destination}].write({data})")
 
         # if outside of range
-        log(f"Addressed memory out of range", "ERROR")
+        log(f"Addressed memory out of range", LogLevel.WARNING)
         return
 
     def read_req(self, mem_type, location):
@@ -36,7 +35,7 @@ class Engine:
 
         # checking if the mem type was written correctly
         if mem_type not in ("Register", "RAM", "IO"):
-            log(f"Read from non-existent memory type {mem_type}", "ERROR")
+            log(f"Read from non-existent memory type {mem_type}", LogLevel.WARNING)
             return
 
         if 0 < location < eval(f"len(self.proc.state.{mem_type})"): # checks for addressing within bounds of memory
@@ -44,5 +43,5 @@ class Engine:
             return eval(f"self.proc.state.{mem_type}[{location}].read()")
 
         # if outside of mem range
-        log(f"Addressed memory out of range", "ERROR")
+        log(f"Addressed memory out of range", LogLevel.WARNING)
         return
