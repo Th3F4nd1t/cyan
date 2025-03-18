@@ -43,7 +43,7 @@ def validate_config(config):
     required_fields = {
         "cpu_name": ["none"],
         "creator": ["none"],
-        "pipelined": ["main",["pipeline"]],
+        "pipelined": ["main",["pipeline"]], # fix this because it always checks for pipeline facepalm
         "address_space": ["none"],
         "word_size": ["none"],
         "simulation_speed": ["none"],
