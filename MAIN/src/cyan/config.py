@@ -60,7 +60,7 @@ def validate_config(config):
         "instruction_set": ["nest",["name","opcode","operation","description","operands","latency","flags_affected"]],
     }
 
-
+    # make nested nests for when it comes to instruction sets
     # about this section below here. Uhh. So I coded it and it works i guess but i have no clue how i tried to line comment here and there but it is still confusing
     def nest_search(field,domain):
         try:
@@ -68,7 +68,7 @@ def validate_config(config):
                 if dependency == "none": continue
                 for index, subitem in enumerate(config[field]):
                     if dependency not in subitem.keys(): # checks nested instances of domain given
-                        log(f"Dependency \'{dependency}\' of \'{field}\' not found in config. Aborting", LogLevel.FATAL)
+                        log(f"Dependency \'{dependency}\' of \'{field}\' not found in config.", LogLevel.FATAL)
         except KeyError:
             log(f"Dependency \'{field}\' not in possible configurations", LogLevel.FATAL)
 
@@ -77,14 +77,14 @@ def validate_config(config):
             for dependency in domain[field][1]:
                 if dependency == "none": continue
                 if dependency not in config.keys(): # checks surface layer of config
-                    log(f"Dependency \'{dependency}\' of \'{field}\' not found in config. Aborting", LogLevel.FATAL)
+                    log(f"Dependency \'{dependency}\' of \'{field}\' not found in config.", LogLevel.FATAL)
         except KeyError:
             log(f"Dependency \'{field}\' not in possible configurations", LogLevel.FATAL)
     
     # start iterating
     for field in list(required_fields.keys()):
         if field not in config.keys():
-            log(f"{field} not found in config. Aborting", LogLevel.FATAL)
+            log(f"{field} not found in config.", LogLevel.FATAL)
         
         # allows for people to skip sections using None keyword which would otherwise be flagged (more customisablity)
         if required_fields[field][0] == "none" or config[field] == "None":
