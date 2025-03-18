@@ -34,7 +34,7 @@ class Engine:
         mem_type = mem_type.lower()
 
         # checking if the mem type was written correctly
-        if mem_type not in ("Register", "RAM", "IO"):
+        if mem_type not in ("register", "ram", "io"):
             log(f"Read from non-existent memory type {mem_type}", LogLevel.WARNING)
             return
 
@@ -45,3 +45,18 @@ class Engine:
         # if outside of mem range
         log(f"Addressed memory out of range", LogLevel.WARNING)
         return
+
+    def get(self,source):
+        source = source.lower()
+
+        if source not in ("pc", "pipeline"): # maybe add more inthe future
+            log(f"Datatype {source} not valid for engine.\'get\'", LogLevel.WARNING)
+            return
+        
+        elif source in ("pc"): #structured to add more later
+            return self.proc.state.pc
+        
+        elif source in ("pipeline"):
+            return self.proc.pipeline.current
+    
+    

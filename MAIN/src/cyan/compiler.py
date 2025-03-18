@@ -52,21 +52,22 @@ def createDynamicInstructions(config): # add error checking
             file.write(f"   opcode = {instruction['opcode']}\n")
             file.write(f"   latency = {instruction['latency']}\n")
 
-
             # operands
             operands_list = ','.join('\''+operand['name']+'\'' for operand in instruction['operands'])
             file.write(f"   operands = [{operands_list}]\n")
+            file.write("   data =  {\n")
             for operand in instruction['operands']:
-                file.write(f"   {operand['name']} = " + "{\n")
-                file.write(f"       \'type\':\'{operand['type']}\',\n")
-                file.write(f"       \'size\':{operand['size']}\n")
-                file.write("    }\n")
-
+                file.write(f"      \'{operand['name']}\' : " + "{\n")
+                file.write(f"          \'type\':\'{operand['type']}\',\n")
+                file.write(f"          \'size\':{operand['size']},\n")
+                file.write("           \'value\':int\n")
+                file.write("        },\n")
+            file.write("    }\n")
             # flags
             file.write("   flags_affected = [\n")
             for index,flag in enumerate(instruction["flags_affected"]):
                 corrected_flag = "\'" + f"{flag}" + "\'"
-                file.write(f"        {corrected_flag}{',' if index != len(instruction['flags_affected'])-1 else ''}\n")
+                file.write(f"        {corrected_flag},\n")
             file.write("    ]\n")
 
             # pipeline / non pipeline execution info
@@ -77,7 +78,7 @@ def createDynamicInstructions(config): # add error checking
                 file.write("   execution_chain = {\n")
                 for stage in instruction["operation"]:
                     corrected_stage = "\'" + f"{stage}" + "\'" + ":" + "\'" + f"{instruction['operation'][stage]}" + "\'"
-                    file.write(f"        {corrected_stage}{',' if stage != pipeline_stages[-1] else ''}\n")
+                    file.write(f"        {corrected_stage},\n")
                 file.write("    }\n")
 
             else:

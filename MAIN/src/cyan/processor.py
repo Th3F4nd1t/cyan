@@ -2,6 +2,8 @@
 from typing import List, Dict, Any
 from .memory import *
 from .config import *
+import os, sys
+
 class Processor:
     registers:List[MemoryCell]
     static:StaticConfig
@@ -10,7 +12,7 @@ class Processor:
         self.static = static
         if state is None: self.generate_state(config) # Set to a blank state if there is no state provided
         else: self.state = self.upload_state(state)
-    
+        
     def generate_state(self, config): #resets and takes all state from config.yaml
         self.state = self.State()
 
@@ -69,7 +71,40 @@ class Processor:
         ...
 
 
+    def load_program(self,instructions):
+        log(f"Starting program load into processor", LogLevel.INFO)
+        # validate each instruction here
+        # catch format errors but still will need error handling in mainloop as there are
+        # some things that can't be validated
+        sys.path.append(f"{os.getcwd()}/src/cyan/dynamic_resources") 
+        instructionsFile = "instructions.py"
+        module = __import__(str(instructionsFile).strip(".py"))
 
+        for index,line in enumerate(instructions):
+            if line == '': 
+                self.state.prom.append("")
+                continue
+            raw_instr = line.split(' ')
+            opcode, operands = raw_instr[0], raw_instr[1:]
+            class_ = getattr(module, opcode.upper())
+            instr_class = class_
+
+            if len(operands) != len(instr_class.operands):
+                log(f"Invalid operand match on line {index+1}. {opcode} Required {len(instr_class.operands)} --> Got {len(operands)}", LogLevel.FATAL)
+            
+
+            if self.static.pipelined:
+                if list(instr_class.execution_chain.keys()) != self.pipeline.stages:
+                    log(f"Pipeline stages on instruction {instr_class} don't match pipeline. Check config.yaml for uncaught errors",LogLevel.FATAL)
+            
+            # add values to the class
+            for op_name, value in zip(instr_class.operands,operands):
+                instr_class.data[op_name]['value'] = int(value)
+            
+            self.state.prom.append(instr_class)
+        
+        log("Program load complete",LogLevel.SUCCESS)
+        return
 
 
 

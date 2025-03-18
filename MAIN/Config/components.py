@@ -55,7 +55,7 @@ class RAM:
         # write_req should be structured as (mem_type, destination, source data)
         engine.write_req("RAM", engine.read_req("Register", data["dest"]) + data["off"], engine.read_req("Register", data["src1"]))
 
-class Registers:
+class REGISTERS:
     processor_req = []
 
     def LOD(self, engine, data): #load from RAM
