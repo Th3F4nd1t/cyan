@@ -1,3 +1,5 @@
 Todo list: Add anything that you find that needs to be done but you can't at the moment here
 
-- Add the pseudo variables to the compiler that was in Camleaf's addon to the prod branch.
+- Start work on the main engine and stuff. Most background infrastructure has already been built up
+
+- Finish the compiler
