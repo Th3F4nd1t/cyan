@@ -23,7 +23,7 @@ pipeline:
 
 # Registers
 register_count: 16
-special_registers:
+special_registers: # replace the entire category with an empty list if not wanting any special_regs
   - name: "zero_reg"
     description: "Register that always contains 0."
     address: 0

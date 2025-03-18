@@ -61,29 +61,32 @@ def validate_config(config):
     }
 
 
-    # about this section below here. Uhh. So I coded it and it works but i have no clue how i tried to line comment here and there but it is still confusing
+    # about this section below here. Uhh. So I coded it and it works i guess but i have no clue how i tried to line comment here and there but it is still confusing
     def nest_search(field,domain):
-        for dependency in domain[field][1]:
+        try:
+            for dependency in domain[field][1]:
                 if dependency == "none": continue
-                try:
-                    for index, subitem in enumerate(config[field]):
-                        if dependency not in subitem.keys(): # checks nested instances of domain given
-                            log(f"Dependency \'{dependency}\' of \'{field}\' not found in config. Aborting", LogLevel.FATAL)
-                except KeyError: # got a bug when put config certain way so this is warning to user
-                    log("Dependency does not exist. Skipping", LogLevel.Warning)
+                for index, subitem in enumerate(config[field]):
+                    if dependency not in subitem.keys(): # checks nested instances of domain given
+                        log(f"Dependency \'{dependency}\' of \'{field}\' not found in config. Aborting", LogLevel.FATAL)
+        except KeyError:
+            log(f"Dependency \'{field}\' not in possible configurations", LogLevel.FATAL)
 
     def main_search(field,domain):
-        for dependency in domain[field][1]:
-            if dependency == "none": continue
-            if dependency not in config.keys(): # checks surface layer of config
-                log(f"Dependency \'{dependency}\' of \'{field}\' not found in config. Aborting", LogLevel.FATAL)
-
+        try:
+            for dependency in domain[field][1]:
+                if dependency == "none": continue
+                if dependency not in config.keys(): # checks surface layer of config
+                    log(f"Dependency \'{dependency}\' of \'{field}\' not found in config. Aborting", LogLevel.FATAL)
+        except KeyError:
+            log(f"Dependency \'{field}\' not in possible configurations", LogLevel.FATAL)
+    
     for field in list(required_fields.keys()):
         if field not in config.keys():
             log(f"{field} not found in config. Aborting", LogLevel.FATAL)
         
         # allows for people to skip sections using None keyword which would otherwise be flagged (more customisablity)
-        if required_fields[field][0] == "none" or config[field] == None:
+        if required_fields[field][0] == "none" or config[field] == "None":
             continue
         
         #checking for nested or main
