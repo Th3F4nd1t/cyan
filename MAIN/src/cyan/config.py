@@ -40,10 +40,12 @@ def validate_config(config):
 
     # required field contains either "none", which skips to the next instruction, "main", which takes the list at index 1 and checks if it is in the outer layer of the config file
     # or "nest", which checks each nested instance of the original field for all items (nest is explicity used for things with multiple repeated fields, make a new one for other stuff)
+    # after nest or main instead of a list you can put a "cond", followed by a dict with each value and its possible dependencies
+    # however due to how stupid the code is it is needed that you put [None,[<dependencies here>]] as the format.
     required_fields = {
         "cpu_name": ["none"],
         "creator": ["none"],
-        "pipelined": ["main",["pipeline"]], # fix this because it always checks for pipeline facepalm
+        "pipelined": ["main","cond",{True:[None,["pipeline"]], False:[None,["none"]]}], # fix this because it always checks for pipeline facepalm
         "address_space": ["none"],
         "word_size": ["none"],
         "simulation_speed": ["none"],
@@ -51,7 +53,7 @@ def validate_config(config):
         "special_registers": ["nest",["name","description","address","read_only","write_only","default_value","size","accumulates"]],
         "rom_size": ["none"],
         "ram_size": ["none"],
-        "io_type": ["main",["io_reserved"]],
+        "io_type": ["main","cond",{"mmio":[None,["io_reserved"]],"pmio":[None,["none"]]}],
         "io_ports": ["nest",["name","description","address","read_only","write_only","default_value","size"]],
         "components": ["nest",["class","description","operations_handled"]],
         "opcode_length": ["none"],
@@ -59,22 +61,45 @@ def validate_config(config):
     }
 
 
+    # about this section below here. Uhh. So I coded it and it works but i have no clue how i tried to line comment here and there but it is still confusing
+    def nest_search(field,domain):
+        for dependency in domain[field][1]:
+                if dependency == "none": continue
+                try:
+                    for index, subitem in enumerate(config[field]):
+                        if dependency not in subitem.keys(): # checks nested instances of domain given
+                            log(f"Dependency \'{dependency}\' of \'{field}\' not found in config. Aborting", LogLevel.FATAL)
+                except KeyError: # got a bug when put config certain way so this is warning to user
+                    log("Dependency does not exist. Skipping", LogLevel.Warning)
+
+    def main_search(field,domain):
+        for dependency in domain[field][1]:
+            if dependency == "none": continue
+            if dependency not in config.keys(): # checks surface layer of config
+                log(f"Dependency \'{dependency}\' of \'{field}\' not found in config. Aborting", LogLevel.FATAL)
 
     for field in list(required_fields.keys()):
         if field not in config.keys():
             log(f"{field} not found in config. Aborting", LogLevel.FATAL)
-        if required_fields[field][0] == "none":
+        
+        # allows for people to skip sections using None keyword which would otherwise be flagged (more customisablity)
+        if required_fields[field][0] == "none" or config[field] == None:
             continue
         
+        #checking for nested or main
         if required_fields[field][0] == "nest":
-            for dependency in required_fields[field][1]:
-                for index, subitem in enumerate(config[field]):
-                    if dependency not in subitem.keys():
-                        log(f"Dependency \'{dependency}\' of \'{field}\' not found in config. Aborting", LogLevel.FATAL)
+            # checking for conditional
+            if required_fields[field][1] == "cond":
+                # if true changes the domain that the nest_search will be looking for to a more local one
+                nest_search(config[field],required_fields[field][2])
+                continue
+            nest_search(field,required_fields)
         else:
-            for dependency in required_fields[field][1]:
-                if dependency not in config.keys():
-                    log(f"Dependency \'{dependency}\' of \'{field}\' not found in config. Aborting", LogLevel.FATAL)
+            # same as nest_search but for main
+            if required_fields[field][1] == "cond":
+                main_search(config[field],required_fields[field][2])
+                continue
+            main_search(field)
                 
 
     log("Configuration validation complete", LogLevel.SUCCESS)
