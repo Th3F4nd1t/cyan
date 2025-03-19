@@ -64,8 +64,8 @@ class Processor:
             self.state.registers.append( MemoryCell(register_cell, "Register"))
 
         #set flags
-        for flag in self.static.flags:
-            self.static.flags[flag] = False
+        for flag in self.static.flags: # flags are indexed by number
+            self.state.flags[self.static.flags[flag]] = False
 
         if self.static.pipelined:
             self.pipeline = self.Pipeline(config["pipeline"])

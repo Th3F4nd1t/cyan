@@ -3,6 +3,7 @@ from .utils import *
 # compiler which turns user-generated program into program which is seen by the processor
 # for example functions, loops and other need to be compiled after writing
 # take the instruction file and turn it into classes that can be used by the engine
+# maek compiler also take flag names and turn them to their respective indices
 
 def get_compiled(file: str) -> list:
 

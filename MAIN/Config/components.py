@@ -9,54 +9,50 @@ from typing import List, Any
 
 # todo: replace all direct proc calls such as state with requests from Engine which acts as mediator
 class ALU:
-    processor_req = ["flags"]
 
-    def ADD(self, engine, data, proc_flags):
+    def ADD(self, engine, data):
         # add timing stuff
         #read req is defined as (Mem_typem address)
         value = engine.read_req("Register", data["src1"]) + engine.read_req("Register",data["src2"])
-        proc_flags.update(value, data["flags_affected"])
+        engine.set("flags", value, data["flags_affected"])
         return value
         
     def SUB(self, engine, data, proc_flags):
         value = engine.read_req("Register", data["src1"]) - engine.read_req("Register",data["src2"])
-        proc_flags.update(value, data["flags_affected"])
+        engine.set("flags", value, data["flags_affected"])
         return value
     
     def AND(self, engine, data, proc_flags):
         value = engine.read_req("Register", data["src1"]) & engine.read_req("Register",data["src2"])
-        proc_flags.update(value, data["flags_affected"])
+        engine.set("flags", value, data["flags_affected"])
         return value
 
     def OR(self, engine, data, proc_flags):
         value = engine.read_req("Register", data["src1"]) | engine.read_req("Register",data["src2"])
-        proc_flags.update(value, data["flags_affected"])
+        engine.set("flags", value, data["flags_affected"])
         return value
 
     def XOR(self, engine, data, proc_flags):
         value = engine.read_req("Register", data["src1"]) ^ engine.read_req("Register",data["src2"])
-        proc_flags.update(value, data["flags_affected"])
+        engine.set("flags", value, data["flags_affected"])
         return value
 
 
 class PC: # can grab access to proc_flags or state if need be
 
-    processor_req = ["flags", "state"]
 
-    def JMP(self, engine, data, proc_flags, state):
-        if proc_flags.get(data["flag"]):
-            state.pc = data["dest"]
+    def JMP(self, engine, data, state):
+        if engine.get("flags")[data["flag"]]:
+            engine.set("pc",data["dest"])
         return None
 
 class RAM:
-    processor_req = []
 
     def WRITE(self, engine, data):
         # write_req should be structured as (mem_type, destination, source data)
         engine.write_req("RAM", engine.read_req("Register", data["dest"]) + data["off"], engine.read_req("Register", data["src1"]))
 
 class REGISTERS:
-    processor_req = []
 
     def LOD(self, engine, data): #load from RAM
         engine.write_req("Register", data["dest"], engine.read_req("RAM",engine.read_req("Register", data["src1"]) + data["off"]))
@@ -74,20 +70,19 @@ class REGISTERS:
                         )
 # no I/O state because this is a mmio cpu
 
-class FLAGS:
-    class ZERO:
-        def __init__(self,value):
-            return value == 0
-    class CARRY:
-        def __init__(self,value,data):
-            bin_format = '{'+f'0:{data["word_size"]}'+'}'
-            if f'{bin_format}'.format(value)[0] == 1:
-                return True
-            return False
-    class OVERFLOW:
-        def __init__(self,value,data):
-            if value < 2**data["word_size"]:
-                return True
-            return False
+class FLAGS: # data will contain word_size
+    def ZERO(self,value,word_size):
+        return value == 0
+    
+    def CARRY(self,value,word_size):
+        bin_format = '{'+f'0:{word_size}'+'}'
+        if f'{bin_format}'.format(value)[0] == 1:
+            return True
+        return False
+    
+    def OVERFLOW(self,value,word_size):
+        if value < 2**word_size:
+            return True
+        return False
 
 

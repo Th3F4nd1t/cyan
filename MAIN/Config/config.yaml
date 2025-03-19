@@ -13,10 +13,10 @@ simulation_speed: 0 # 0 if instant, other wise hertz
 
 
 # flags
-flags:
-  - "zero"
-  - "carry"
-  - "overflow"
+flags: # flag: id
+  - "zero": 0
+  - "carry": 1
+  - "overflow": 2
   
 # pipline
 pipeline:

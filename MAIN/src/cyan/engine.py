@@ -2,6 +2,7 @@
 
 from .processor import Processor
 from .config import *
+import os,sys
 
 class Engine:
     static: StaticConfig
@@ -51,13 +52,42 @@ class Engine:
 
     def get(self,source):
         source = source.lower()
-
+        # match case for easier expansion
         match source:
             case "pc": return self.proc.state.pc
             case "pipeline": return self.proc.pipeline.current
             case "flags": return self.proc.state.flags
 
-            case source: 
+            case source: # case where nothing else was found
                 log(f"Datatype {source} not valid for engine.\'get\'", LogLevel.WARNING)
                 return
     
+
+    def set(self, source, value:int, flags:List[str] = None):
+        source = source.lower()
+        
+        match source:
+            case "pc": # checks for overflow first
+                if len(self.proc.state.prom) > value:
+                    log(f"Jump to {value} caused PC overflow to {value-len(self.proc.state.prom)}",LogLevel.WARNING)
+                    self.proc.state.pc = value-len(self.proc.state.prom)
+                self.proc.state.pc = value
+                return
+
+            case "flags":
+                # check for flags updating
+                if flags is None: #checks to make sure instruction was given
+                    log(f"Searched flags not present in instruction", LogLevel.WARNING)
+                    return
+                # finds flags class from components.py
+                sys.path.append(f"{os.getcwd()}/Config") 
+                instructionsFile = "components.py"
+                module = __import__(str(instructionsFile).strip(".py"))
+                class_ = getattr(module, "flags".upper())
+
+                for flag in flags: # evals for each flag needed to be updated
+                    self.proc.state.flags[flag] = eval(f"class_.{flag}({value},{self.static.word_size})")
+
+            case source: 
+                log(f"Datatype {source} not valid for engine.\'get\'", LogLevel.WARNING)
+                return
