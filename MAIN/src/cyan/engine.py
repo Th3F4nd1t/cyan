@@ -46,17 +46,18 @@ class Engine:
         log(f"Addressed memory out of range", LogLevel.WARNING)
         return
 
+
+
+
     def get(self,source):
         source = source.lower()
 
-        if source not in ("pc", "pipeline"): # maybe add more inthe future
-            log(f"Datatype {source} not valid for engine.\'get\'", LogLevel.WARNING)
-            return
-        
-        elif source in ("pc"): #structured to add more later
-            return self.proc.state.pc
-        
-        elif source in ("pipeline"):
-            return self.proc.pipeline.current
-    
+        match source:
+            case "pc": return self.proc.state.pc
+            case "pipeline": return self.proc.pipeline.current
+            case "flags": return self.proc.state.flags
+
+            case source: 
+                log(f"Datatype {source} not valid for engine.\'get\'", LogLevel.WARNING)
+                return
     

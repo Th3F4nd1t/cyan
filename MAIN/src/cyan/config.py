@@ -25,6 +25,7 @@ class StaticConfig:
         self.io_type:str = config["io_type"] # pmio or mmio
         self.io_reserved:List[int] = config["io_reserved"] # which mem cells are reserved by mmio
 
+        self.flags: List[str] = config["flags"]
 
 def get_config(file):
     with open(file, 'r') as f:

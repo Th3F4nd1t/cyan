@@ -73,3 +73,21 @@ class REGISTERS:
                          data["imm"] #since src1 is not comp yet it can act as imm
                         )
 # no I/O state because this is a mmio cpu
+
+class FLAGS:
+    class ZERO:
+        def __init__(self,value):
+            return value == 0
+    class CARRY:
+        def __init__(self,value,data):
+            bin_format = '{'+f'0:{data["word_size"]}'+'}'
+            if f'{bin_format}'.format(value)[0] == 1:
+                return True
+            return False
+    class OVERFLOW:
+        def __init__(self,value,data):
+            if value < 2**data["word_size"]:
+                return True
+            return False
+
+

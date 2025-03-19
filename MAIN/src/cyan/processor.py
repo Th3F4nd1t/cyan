@@ -63,6 +63,9 @@ class Processor:
             }
             self.state.registers.append( MemoryCell(register_cell, "Register"))
 
+        #set flags
+        for flag in self.static.flags:
+            self.static.flags[flag] = False
 
         if self.static.pipelined:
             self.pipeline = self.Pipeline(config["pipeline"])
@@ -119,6 +122,7 @@ class Processor:
         io: List[MemoryCell]
         prom: List[Any] # replace with List[Instruction] when instruction is defined
         pc: int
+        flags: Dict[str:bool]
 
         def __init__(self):
             self.ram = []
@@ -126,6 +130,7 @@ class Processor:
             self.io = []
             self.prom = [] # replace with List[Instruction] when instruction is defined
             self.pc = 0
+            self.flags = {}
         
     class Pipeline(): #handles pipeline state
 

@@ -11,7 +11,14 @@ address_space: 16
 word_size: 16
 simulation_speed: 0 # 0 if instant, other wise hertz
 
-#pipline
+
+# flags
+flags:
+  - "zero"
+  - "carry"
+  - "overflow"
+  
+# pipline
 pipeline:
   - "InstructionFetch"
   - "InstructionDecode"
