@@ -64,7 +64,7 @@ class Processor:
             self.state.registers.append( MemoryCell(register_cell, "Register"))
 
         #set flags
-        for flag in self.static.flags: # flags are indexed by number
+        for flag in self.static.flags: # flags are indexed by number. Will a way to make it more user friendly in compiler
             self.state.flags[self.static.flags[flag]] = False
 
         if self.static.pipelined:
@@ -122,7 +122,7 @@ class Processor:
         io: List[MemoryCell]
         prom: List[Any] # replace with List[Instruction] when instruction is defined
         pc: int
-        flags: Dict[str:bool]
+        flags: dict[str:bool]
 
         def __init__(self):
             self.ram = []

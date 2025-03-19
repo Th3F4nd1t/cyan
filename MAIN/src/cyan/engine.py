@@ -1,4 +1,6 @@
 # take in instruction classes and modify the state of the processor based on the instructions
+# instruction operations need a dict "data" which can contain any number of things differently per instruction
+# will need to make a function which contructs it and everything it needs
 
 from .processor import Processor
 from .config import *
