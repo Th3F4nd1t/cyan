@@ -4,7 +4,7 @@
 
 from .processor import Processor
 from .config import *
-import os,sys
+import os,sys, time
 
 class Engine:
     static: StaticConfig
@@ -15,7 +15,7 @@ class Engine:
         self.proc = Processor(config, self.static)
         self.proc.load_program(instructions)
         self.instructions = instructions
-    
+        self.clock_run = False
 
     def write_req(self, mem_type, destination, data):
         # this func acts as an intermediary before modifying processor. A smoothing over
@@ -96,6 +96,7 @@ class Engine:
     
 
     def run(self):
+        self.clock_run = True
 
         log("Starting new runtime",LogLevel.INFO)
         if self.static.pipelined:
@@ -105,21 +106,29 @@ class Engine:
         log("Pipeline disable, using default runtime", LogLevel.INFO)
 
 
+        for instruction in self.proc.state.prom:
+            # start work on this still a hell of a lot of things to iron out on the theory side but it shouldn't b e impossible
+            ...
+
 
         log("Non pipelined runtime hasn't been implented yet", LogLevel.FATAL)
     
 
+    def stop_clock(self):
+        self.clock_run == False
 
 
 
 
     def run_pipelined(self):
 
+        while self.clock_run and self.proc.pipeline.current: # only stop once pipeline is fully empty
 
-        for instruction in self.proc.state.prom:
-            # start work on this still a hell of a lot of things to iron out on the theory side but it shouldn't b e impossible
-            ...
-
-
-
+            # will have to deal with hazards, like data, control, multiple things trying to use a single multi-cycle component. Etc
+            if self.static.simulation_speed == 0:
+                time.sleep(0)
+            else:
+                time.sleep(1000/self.static.simulation_speed)
+            break # just for testing remove once not needed
+        
         log("Pipeliend runtime hasn't been implemented yet", LogLevel.FATAL)

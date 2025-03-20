@@ -70,6 +70,12 @@ class REGISTERS:
                         )
 # no I/O state because this is a mmio cpu
 
+class CLOCK:
+
+    def HLT(self,engine):
+        engine.stop_clock()
+
+
 class FLAGS: # data will contain word_size
     def ZERO(self,value,word_size):
         return value == 0
