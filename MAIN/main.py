@@ -14,8 +14,8 @@ createDynamicInstructions(config)
 
 instructions = get_compiled('./program.cyan') # finish compiler
 
-# not fully implemented
+
 engine = Engine(instructions,config) 
 
 # not implented
-# engine.run()
+engine.run()

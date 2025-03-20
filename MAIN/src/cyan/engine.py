@@ -93,3 +93,33 @@ class Engine:
             case source: 
                 log(f"Datatype {source} not valid for engine.\'get\'", LogLevel.WARNING)
                 return
+    
+
+    def run(self):
+
+        log("Starting new runtime",LogLevel.INFO)
+        if self.static.pipelined:
+            log("Pipeline enabled, switching to pipelined runtime", LogLevel.INFO)
+            self.run_pipelined()
+            return
+        log("Pipeline disable, using default runtime", LogLevel.INFO)
+
+
+
+        log("Non pipelined runtime hasn't been implented yet", LogLevel.FATAL)
+    
+
+
+
+
+
+    def run_pipelined(self):
+
+
+        for instruction in self.proc.state.prom:
+            # start work on this still a hell of a lot of things to iron out on the theory side but it shouldn't b e impossible
+            ...
+
+
+
+        log("Pipeliend runtime hasn't been implemented yet", LogLevel.FATAL)
