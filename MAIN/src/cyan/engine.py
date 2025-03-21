@@ -13,8 +13,7 @@ class Engine:
     def __init__(self, instructions, config):
         self.static = StaticConfig(config) # contains base info about cpu which could be useful
         self.proc = Processor(config, self.static)
-        self.proc.load_program(instructions)
-        self.instructions = instructions
+        self.proc.load_program(instructions, config)
         self.clock_run = False
 
     def write_req(self, mem_type, destination, data):
@@ -98,10 +97,14 @@ class Engine:
     def run(self):
         self.clock_run = True
 
+        sys.path.append(f"{os.getcwd()}/Config") 
+        instructionsFile = "components.py"
+        module = __import__(str(instructionsFile).strip(".py"))
+
         log("Starting new runtime",LogLevel.INFO)
         if self.static.pipelined:
             log("Pipeline enabled, switching to pipelined runtime", LogLevel.INFO)
-            self.run_pipelined()
+            self.run_pipelined(module)
             return
         log("Pipeline disable, using default runtime", LogLevel.INFO)
 
@@ -120,8 +123,13 @@ class Engine:
 
 
 
-    def run_pipelined(self):
+    def run_pipelined(self,module):
         # pipeline already defined
+        forwarder = {
+            
+        }
+        # make the forwarder
+
         while True: # only stop once pipeline is fully empty
             
 
@@ -157,11 +165,14 @@ class Engine:
                 for x in current.data:
                     data[x] = current.data[x]["value"]
                 
+
+
+
                 data["flags"] = []
                 for flag in current.flags:
                     data["flags"].append(flag)
                 
-                passed = self.execute(operation,data)
+                passed = self.execute(operation,data,module)
 
                 if passed is not None:
                     self.proc.pipeline.current[len(self.proc.pipeline.stages) - index - 1].data["passed"] = {"value":passed}
@@ -183,11 +194,8 @@ class Engine:
 
 
 
-    def execute(self, operation, data):
+    def execute(self, operation, data, module):
         
-        sys.path.append(f"{os.getcwd()}/Config") 
-        instructionsFile = "components.py"
-        module = __import__(str(instructionsFile).strip(".py"))
         instrclass, func = operation.split('.')
         class_ = getattr(module, instrclass.upper())
         passed = eval(f"class_.{func.upper()}(self,{data})")

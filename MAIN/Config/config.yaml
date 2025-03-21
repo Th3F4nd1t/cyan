@@ -66,7 +66,10 @@ io_ports:
 # Components
 components:
   - class: "ALU"
-    description: "Arithmetic Logic Unit."
+    forwarder: True
+    forwarded_instructions:
+      - "src1"
+      - "src2"
     operations_handled:
       - "add"
       - "sub"
@@ -74,15 +77,18 @@ components:
       - "or"
       - "xor"
   - class: "PC"
-    description: "Program Counter"
+    forwarder: False
+    forwarded_instructions: []
     operations_handled:
       - "Jmp"
   - class: "RAM"
+    forwarder: False
     description: "Random Access Memory. Pointers"
     operations_handled:
       - "write"
   - class: "Registers"
-    description: "Registers"
+    forwarded_instructions: []
+    forwarder: False
     operations_handled:
       - "Lod"
       - "Write"

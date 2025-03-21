@@ -9,7 +9,6 @@ from typing import List, Any
 
 # todo: replace all direct proc calls such as state with requests from Engine which acts as mediator
 class ALU:
-
     def ADD(engine, data):
         # add timing stuff
         #read req is defined as (Mem_typem address)

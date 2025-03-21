@@ -69,11 +69,11 @@ class Processor:
         if self.static.pipelined:
             self.pipeline = self.Pipeline(config["pipeline"])
 
-    def upload_state(self,config) -> dict: # takes state from file export
+    def upload_state(self, config) -> dict: # takes state from file export
         ...
 
 
-    def load_program(self,instructions):
+    def load_program(self, instructions, config):
         log(f"Starting program load into processor", LogLevel.INFO)
         # validate each instruction here
         # catch format errors but still will need error handling in mainloop as there are
@@ -105,6 +105,7 @@ class Processor:
             
             self.state.prom.append(instr_class)
         
+
         log("Program load complete",LogLevel.SUCCESS)
         return
 

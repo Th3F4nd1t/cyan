@@ -15,6 +15,9 @@ class StaticConfig:
         self.pipelined:bool = config["pipelined"]
         self.word_size:int = config["word_size"]
         self.simulation_speed:float = config["simulation_speed"]
+        self.components = {}
+        for component in config["components"]:
+            self.components[component["name"]] = component
 
         if self.pipelined:
             self.pipeline = config["pipeline"]
@@ -58,7 +61,7 @@ def validate_config(config):
         "ram_size": ["none"],
         "io_type": ["main","cond",{"mmio":[None,["io_reserved"]],"pmio":[None,["none"]]}],
         "io_ports": ["nest",["name","description","address","read_only","write_only","default_value","size"]],
-        "components": ["nest",["class","description","operations_handled"]],
+        "components": ["nest",["class","forwarder","description","operations_handled"]],
         "opcode_length": ["none"],
         "instruction_set": ["nest",["name","opcode","operation","description","operands","latency","flags_affected"]],
     }
