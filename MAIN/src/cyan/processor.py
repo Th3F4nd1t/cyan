@@ -5,7 +5,6 @@ from .config import *
 import os, sys
 
 class Processor:
-    registers:List[MemoryCell]
     static:StaticConfig
 
     def __init__(self, config: dict, static:StaticConfig, state = None):
@@ -44,7 +43,7 @@ class Processor:
         # special
         special_register_reserved = []
         for index, reg in enumerate(config["special_registers"]):
-            self.state.registers.append( MemoryCell(reg,"Register") )
+            self.state.register.append( MemoryCell(reg,"Register") )
             special_register_reserved.append(config["special_registers"][index]["address"])
 
         # normal
@@ -61,7 +60,7 @@ class Processor:
                 "read_only": False,
                 "write_only": False
             }
-            self.state.registers.append( MemoryCell(register_cell, "Register"))
+            self.state.register.append( MemoryCell(register_cell, "Register"))
 
         #set flags
         for flag in self.static.flags: # flags are indexed by number. Will a way to make it more user friendly in compiler
@@ -118,7 +117,7 @@ class Processor:
 
     class State: # handles processor state
         ram: List[MemoryCell]
-        registers: List[MemoryCell]
+        register: List[MemoryCell]
         io: List[MemoryCell]
         prom: List[Any] # replace with List[Instruction] when instruction is defined
         pc: int
@@ -126,22 +125,21 @@ class Processor:
 
         def __init__(self):
             self.ram = []
-            self.registers = []
+            self.register = []
             self.io = []
             self.prom = [] # replace with List[Instruction] when instruction is defined
             self.pc = 0
             self.flags = {}
         
     class Pipeline(): #handles pipeline state
-
-        current: List[Any] # replace with List[Instruction] once that is defined
+ # replace with List[Instruction] once that is defined
         def __init__(self,stages):
             self.stages = stages
-            self.current = [[] for i in self.stages]
+            self.current = ['' for i in self.stages]
         
         def flush(self):
-            self.current = [[] for i in self.stages]
+            self.current = ['' for i in self.stages]
         
         def push(self,instruction):
             self.current.insert(0,instruction) # adds new instruction
-            self.current.pop(len(self.pipeline)-1) # removes instruction just on writeback
+            self.current.pop(len(self.current)-1) # removes instruction just on writeback

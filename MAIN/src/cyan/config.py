@@ -16,6 +16,8 @@ class StaticConfig:
         self.word_size:int = config["word_size"]
         self.simulation_speed:float = config["simulation_speed"]
 
+        if self.pipelined:
+            self.pipeline = config["pipeline"]
         self.address_space:int = config["address_space"]
         self.register_count:int = config["register_count"]
         self.rom_size:int = config["rom_size"]

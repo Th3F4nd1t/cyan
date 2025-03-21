@@ -65,7 +65,7 @@ def createDynamicInstructions(config): # add error checking
                 file.write("        },\n")
             file.write("    }\n")
             # flags
-            file.write("   flags_affected = [\n")
+            file.write("   flags = [\n")
             for index,flag in enumerate(instruction["flags_affected"]):
                 corrected_flag = "\'" + f"{flag}" + "\'"
                 file.write(f"        {corrected_flag},\n")
@@ -84,7 +84,9 @@ def createDynamicInstructions(config): # add error checking
 
             else:
                 file.write(f"   execution = {instruction['operation']}\n")
-
+            file.write("   def __init__(self): ...\n")
+            file.write("   def __repr__(self):\n")
+            file.write(f"       return {instruction['name']}\n")
             file.write("\n\n\n")
 
     log("Instruction file creation complete", LogLevel.SUCCESS)

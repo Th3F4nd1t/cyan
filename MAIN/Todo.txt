@@ -1,7 +1,7 @@
 Todo list: Add anything that you find that needs to be done but you can't at the moment here
 
 
-- Add flag updater in engine.py
+- Add data hazards and stuff to pipeline run in engine.py
 - Start work on the main engine and stuff. Most background infrastructure has already been built up
 
 - Finish the compiler

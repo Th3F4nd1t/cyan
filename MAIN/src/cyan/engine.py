@@ -85,10 +85,10 @@ class Engine:
                 sys.path.append(f"{os.getcwd()}/Config") 
                 instructionsFile = "components.py"
                 module = __import__(str(instructionsFile).strip(".py"))
-                class_ = getattr(module, "flags".upper())
+                class_ = getattr(module, "FLAGS")
 
                 for flag in flags: # evals for each flag needed to be updated
-                    self.proc.state.flags[flag] = eval(f"class_.{flag}({value},{self.static.word_size})")
+                    self.proc.state.flags[flag] = eval(f"class_.{flag.upper()}({value},{self.static.word_size})")
 
             case source: 
                 log(f"Datatype {source} not valid for engine.\'get\'", LogLevel.WARNING)
@@ -114,21 +114,81 @@ class Engine:
         log("Non pipelined runtime hasn't been implented yet", LogLevel.FATAL)
     
 
-    def stop_clock(self):
-        self.clock_run == False
+    def halt_clock(self):
+        self.clock_run = False
 
 
 
 
     def run_pipelined(self):
-
-        while self.clock_run and self.proc.pipeline.current: # only stop once pipeline is fully empty
+        # pipeline already defined
+        while True: # only stop once pipeline is fully empty
+            
 
             # will have to deal with hazards, like data, control, multiple things trying to use a single multi-cycle component. Etc
+            # main data hazard right now to deal with is alu forwarding
+
+            if self.clock_run: # if no halt yet
+                try:
+                    self.proc.pipeline.push(self.proc.state.prom[self.proc.state.pc])
+                except IndexError:
+                    self.proc.pipeline.push('')
+                    if all(x == '' for x in self.proc.pipeline.current):
+                        log("No halt detected at end of program.", LogLevel.FATAL)
+            else:
+                self.proc.pipeline.push('')
+                if all(x == '' for x in self.proc.pipeline.current): #only checks if there are instructions left that were inserted before the halt instruction
+                    break
+
+            prev_clock = self.proc.state.pc
+            print(self.proc.pipeline.current) # debug to see pipeline stages
+            for index in range(len(self.proc.pipeline.stages)):
+                current = self.proc.pipeline.current[len(self.proc.pipeline.stages) - index - 1]
+                if current == '': #skip if empty
+                    continue
+
+
+
+                operation = current.execution_chain[self.static.pipeline[len(self.proc.pipeline.stages) - index - 1]]
+                
+                if operation == "None": continue
+
+                data = {}
+                for x in current.data:
+                    data[x] = current.data[x]["value"]
+                
+                data["flags"] = []
+                for flag in current.flags:
+                    data["flags"].append(flag)
+                
+                passed = self.execute(operation,data)
+
+                if passed is not None:
+                    self.proc.pipeline.current[len(self.proc.pipeline.stages) - index - 1].data["passed"] = {"value":passed}
+                    print(passed) # for passed objects debug
+
+            if prev_clock != self.proc.state.pc:
+                ...
+            else:
+                self.proc.state.pc += 1
             if self.static.simulation_speed == 0:
                 time.sleep(0)
             else:
                 time.sleep(1000/self.static.simulation_speed)
-            break # just for testing remove once not needed
+            input()
+            # just for testing remove once not needed
+            
+        log("Program Halted, runtime ending", LogLevel.SUCCESS)
+
+
+
+
+    def execute(self, operation, data):
         
-        log("Pipeliend runtime hasn't been implemented yet", LogLevel.FATAL)
+        sys.path.append(f"{os.getcwd()}/Config") 
+        instructionsFile = "components.py"
+        module = __import__(str(instructionsFile).strip(".py"))
+        instrclass, func = operation.split('.')
+        class_ = getattr(module, instrclass.upper())
+        passed = eval(f"class_.{func.upper()}(self,{data})")
+        return passed
