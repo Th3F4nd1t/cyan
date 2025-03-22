@@ -67,9 +67,10 @@ io_ports:
 components:
   - class: "ALU"
     forwarder: True
-    forwarded_instructions:
+    forwarded_operands:
       - "src1"
       - "src2"
+    forward_depth: 2
     operations_handled:
       - "add"
       - "sub"
@@ -105,7 +106,7 @@ instruction_set:
     # put "None for operations where it is blank or does something like fetches and decodes. Not important for proc"
     operation:
        InstructionFetch: "None"
-       InstructionDecode: "None"
+       InstructionDecode: "REGISTERS.READ"
        Execute: "ALU.ADD"
        MemoryAccess: "None"
        Writeback: "Registers.WRITE" # add this function

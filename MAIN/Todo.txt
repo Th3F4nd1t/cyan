@@ -5,3 +5,7 @@ Todo list: Add anything that you find that needs to be done but you can't at the
 - Start work on the main engine and stuff. Most background infrastructure has already been built up
 
 - Finish the compiler
+
+
+ - For hazards i may have to rewrite part of the execution code to enable a dedicated reading instruction to allow passing of substituted instructions via hazards. 
+ -  Would make User experience more realistic but will be hard

@@ -98,7 +98,8 @@ class Processor:
             if self.static.pipelined:
                 if list(instr_class.execution_chain.keys()) != self.pipeline.stages:
                     log(f"Pipeline stages on instruction {instr_class} don't match pipeline. Check config.yaml for uncaught errors",LogLevel.FATAL)
-            
+                self.pipeline.init_forwarder()
+
             # add values to the class
             for op_name, value in zip(instr_class.operands,operands):
                 instr_class.data[op_name]['value'] = int(value)
@@ -136,11 +137,37 @@ class Processor:
  # replace with List[Instruction] once that is defined
         def __init__(self,stages):
             self.stages = stages
+            self.forwarder = {}
             self.current = ['' for i in self.stages]
         
+        def init_forwarder(self,config):
+            # grabs forwarding data from components part of config.yaml
+            # puts it in forwarder in this structure
+            # forwarder = {
+            #     <component_name> : {
+            #         <operand1> : [
+            #             '' for i in range(<forward_length>)
+            #         ], 
+            #         <operand2> : [
+            #             '' for i in range(<forward_length>)
+            #         ]
+            #     }
+            # }
+
+            # this isn't implemented yet because i can't figure out how to get it working
+            for component in config["components"]:
+                if self.forwarder[component["forwarder"]]:
+                    self.forwarder[component["class"]] = {}
+                    try:
+                        for operand in component["forwarded_operands"]:
+                            self.forwarder[component["class"]][operand] = [None for i in range(component["class"])]
+                    except KeyError:
+                        log(f"\'forwarded operands\' or \'forward depth\' not found in components-class-{component['class']} where \'forwarder\' is True")
+
+
         def flush(self):
             self.current = ['' for i in self.stages]
         
         def push(self,instruction):
             self.current.insert(0,instruction) # adds new instruction
-            self.current.pop(len(self.current)-1) # removes instruction just on writeback
+            self.current.pop(len(self.current)-1) # removes instruction just on writebacl

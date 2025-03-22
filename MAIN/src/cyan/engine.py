@@ -125,9 +125,6 @@ class Engine:
 
     def run_pipelined(self,module):
         # pipeline already defined
-        forwarder = {
-            
-        }
         # make the forwarder
 
         while True: # only stop once pipeline is fully empty
@@ -145,14 +142,14 @@ class Engine:
                         log("No halt detected at end of program.", LogLevel.FATAL)
             else:
                 self.proc.pipeline.push('')
-                if all(x == '' for x in self.proc.pipeline.current): #only checks if there are instructions left that were inserted before the halt instruction
+                if all(x == '' for x in self.proc.pipeline.current): # only checks if there are instructions left that were inserted before the halt instruction
                     break
 
             prev_clock = self.proc.state.pc
             print(self.proc.pipeline.current) # debug to see pipeline stages
             for index in range(len(self.proc.pipeline.stages)):
                 current = self.proc.pipeline.current[len(self.proc.pipeline.stages) - index - 1]
-                if current == '': #skip if empty
+                if current == '': # skip if empty
                     continue
 
 
@@ -162,21 +159,35 @@ class Engine:
                 if operation == "None": continue
 
                 data = {}
-                for x in current.data:
-                    data[x] = current.data[x]["value"]
+                for operand in current.data:
+                    data[operand] = current.data[operand]["value"]
                 
-
-
+                # for forward but some issues came up that i am wrapping head around
+                # if name in self.proc.pipeline.forwarder.keys():
+                #     for operand in current.data:
+                #         for index in self.proc.pipeline.forwarder[name][operand]:
+                #             if index == data[operand]:
+                                
+                
 
                 data["flags"] = []
                 for flag in current.flags:
                     data["flags"].append(flag)
                 
+                name = operation.split(' ')[0].upper()
                 passed = self.execute(operation,data,module)
 
                 if passed is not None:
                     self.proc.pipeline.current[len(self.proc.pipeline.stages) - index - 1].data["passed"] = {"value":passed}
                     print(passed) # for passed objects debug
+                
+                # part of forward idea but can't figure out how to get working
+                # if name in self.proc.pipeline.forwarder.keys():
+                #     for operand in current.operands:
+                #         self.proc.pipeline.forwarder[name][operand].pop(-1)
+                #         self.proc.pipeline.forwarder[name][operand].insert(0, passed if passed is not None else None) # redundant tenary statement but it breaks without it
+
+
 
             if prev_clock != self.proc.state.pc:
                 ...
@@ -186,8 +197,7 @@ class Engine:
                 time.sleep(0)
             else:
                 time.sleep(1000/self.static.simulation_speed)
-            input()
-            # just for testing remove once not needed
+            input() # just for testing remove once not needed
             
         log("Program Halted, runtime ending", LogLevel.SUCCESS)
 
