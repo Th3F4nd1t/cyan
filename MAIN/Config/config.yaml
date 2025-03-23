@@ -66,6 +66,8 @@ io_ports:
 # Components
 components:
   - class: "ALU"
+    output:
+      - "data1"
     forwarder: True
     forwarded_operands:
       - "src1"
@@ -78,16 +80,19 @@ components:
       - "or"
       - "xor"
   - class: "PC"
+    output: []
     forwarder: False
     forwarded_instructions: []
     operations_handled:
       - "Jmp"
   - class: "RAM"
+    output: []
     forwarder: False
     description: "Random Access Memory. Pointers"
     operations_handled:
       - "write"
   - class: "Registers"
+    output: []
     forwarded_instructions: []
     forwarder: False
     operations_handled:

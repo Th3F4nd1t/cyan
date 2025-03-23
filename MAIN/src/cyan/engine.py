@@ -178,7 +178,8 @@ class Engine:
                 passed = self.execute(operation,data,module)
 
                 if passed is not None:
-                    self.proc.pipeline.current[len(self.proc.pipeline.stages) - index - 1].data["passed"] = {"value":passed}
+                    for passed_name in passed: # passed output should always be a dict
+                        self.proc.pipeline.current[len(self.proc.pipeline.stages) - index - 1].data[passed_name] = {"value":passed[passed_name]}
                     print(passed) # for passed objects debug
                 
                 # part of forward idea but can't figure out how to get working

@@ -12,27 +12,27 @@ class ALU:
     def ADD(engine, data):
         # add timing stuff
         #read req is defined as (Mem_typem address)
-        value = engine.read_req("Register", data["src1"]) + engine.read_req("Register",data["src2"])
+        value = data["data1"] + data["data2"]
         engine.set("flags", value, data["flags"])
         return value
         
     def SUB(engine, data):
-        value = engine.read_req("Register", data["src1"]) - engine.read_req("Register",data["src2"])
+        value = data["data1"] - data["data2"]
         engine.set("flags", value, data["flags"])
         return value
     
     def AND(engine, data):
-        value = engine.read_req("Register", data["src1"]) & engine.read_req("Register",data["src2"])
+        value = data["data1"] & data["data2"]
         engine.set("flags", value, data["flags"])
         return value
 
     def OR(engine, data):
-        value = engine.read_req("Register", data["src1"]) | engine.read_req("Register",data["src2"])
+        value = data["data1"] | data["data2"]
         engine.set("flags", value, data["flags"])
         return value
 
     def XOR(engine, data):
-        value = engine.read_req("Register", data["src1"]) ^ engine.read_req("Register",data["src2"])
+        value = data["data1"] ^ data["data2"]
         engine.set("flags", value, data["flags"])
         return value
 
@@ -41,32 +41,47 @@ class PC: # can grab access to proc_flags or state if need be
 
 
     def JMP(engine, data):
-        if any(engine.get("flags")[data["flags"][flag]] for flag in data["flags"]):
+        if engine.get("flags")[data["cond"]]:
             engine.set("pc",data["dest"])
         return None
 
 class RAM:
+    # this particuliar ram uses pointers
 
     def WRITE(engine, data):
         # write_req should be structured as (mem_type, destination, source data)
-        engine.write_req("RAM", engine.read_req("Register", data["dest"]) + data["off"], engine.read_req("Register", data["src1"]))
+        engine.write_req("RAM", 
+                         data["data1"] + data["offset"], 
+                         data["data2"]
+                         )
+        
+    def LOD(engine, data): #load from RAM
+        engine.write_req("Register", 
+                         data["data2"],
+                         data["data1"] + data["offset"]
+                        )
 
 class REGISTERS:
-
-    def LOD(engine, data): #load from RAM
-        engine.write_req("Register", data["dest"], engine.read_req("RAM",engine.read_req("Register", data["src1"]) + data["off"]))
 
     def WRITE(engine, data):
         engine.write_req("Register", #type
                          data["dest"], #dest
-                         data["passed"] #in this case passed is keyword for data that is carried through previous stage in pipeline
+                         data["data1"] #in this case passed is keyword for data that is carried through previous stage in pipeline
                         )
-
+    # add a read instruction which can take multiple inputs and return multiple outputs, then make the engine able to handle multiple outputs
     def LDI(engine, data):
         engine.write_req("Register", #type
                          data["dest"], #dest
-                         data["imm"] #since src1 is not comp yet it can act as imm
+                         data["src1"] #since src1 is not comp yet it can act as imm
                         )
+        
+    def READ(engine, data):
+        read_list = {
+            "data1":engine.read_req("Register", data["src1"]),
+            "data2": engine.read_req("Register", data["src2"])
+        }
+        return read_list
+        
 # no I/O state because this is a mmio cpu
 
 class CLOCK:
