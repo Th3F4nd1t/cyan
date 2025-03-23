@@ -14,27 +14,27 @@ class ALU:
         #read req is defined as (Mem_typem address)
         value = data["data1"] + data["data2"]
         engine.set("flags", value, data["flags"])
-        return value
+        return {'data1':value}
         
     def SUB(engine, data):
         value = data["data1"] - data["data2"]
         engine.set("flags", value, data["flags"])
-        return value
+        return {'data1':value}
     
     def AND(engine, data):
         value = data["data1"] & data["data2"]
         engine.set("flags", value, data["flags"])
-        return value
+        return {'data1':value}
 
     def OR(engine, data):
         value = data["data1"] | data["data2"]
         engine.set("flags", value, data["flags"])
-        return value
+        return {'data1':value}
 
     def XOR(engine, data):
         value = data["data1"] ^ data["data2"]
         engine.set("flags", value, data["flags"])
-        return value
+        return {'data1':value}
 
 
 class PC: # can grab access to proc_flags or state if need be

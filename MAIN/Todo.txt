@@ -8,3 +8,4 @@ Todo list: Add anything that you find that needs to be done but you can't at the
 
 
  - Need to find a way to ensure that user can control which instructions end up as which outputs for each function in their components
+ - also figure out multiple input output fits for forwarding
