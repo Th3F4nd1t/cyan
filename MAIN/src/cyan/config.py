@@ -17,7 +17,7 @@ class StaticConfig:
         self.simulation_speed:float = config["simulation_speed"]
         self.components = {}
         for component in config["components"]:
-            self.components[component["name"]] = component
+            self.components[component["class"]] = component
 
         if self.pipelined:
             self.pipeline = config["pipeline"]
@@ -56,14 +56,14 @@ def validate_config(config):
         "word_size": ["none"],
         "simulation_speed": ["none"],
         "register_count": ["none"],
-        "special_registers": ["nest",["name","description","address","read_only","write_only","default_value","size","accumulates"]],
+        "special_registers": ["nest",["name","address","read_only","write_only","default_value","size","accumulates"]],
         "rom_size": ["none"],
         "ram_size": ["none"],
         "io_type": ["main","cond",{"mmio":[None,["io_reserved"]],"pmio":[None,["none"]]}],
-        "io_ports": ["nest",["name","description","address","read_only","write_only","default_value","size"]],
-        "components": ["nest",["class","forwarder","description","operations_handled"]],
+        "io_ports": ["nest",["name","address","read_only","write_only","default_value","size"]],
+        "components": ["nest",["class","forwarder","operations_handled"]],
         "opcode_length": ["none"],
-        "instruction_set": ["nest",["name","opcode","operation","description","operands","latency","flags_affected"]],
+        "instruction_set": ["nest",["name","opcode","operation","operands","latency","flags_affected"]],
     }
 
     # make nested nests for when it comes to instruction sets
@@ -89,6 +89,7 @@ def validate_config(config):
     
     # start iterating
     for field in list(required_fields.keys()):
+        print(field)
         if field not in config.keys():
             log(f"{field} not found in config.", LogLevel.FATAL)
         
