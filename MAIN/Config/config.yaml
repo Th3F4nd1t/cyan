@@ -139,7 +139,7 @@ instruction_set:
     # put "None for operations where it is blank or does something like fetches and decodes. Not important for proc"
     operation:
        InstructionFetch: "None"
-       InstructionDecode: "Registers.READ"
+       InstructionDecode: "None"
        Execute: "None"
        MemoryAccess: "None"
        Writeback: "Registers.LDI" # add this function

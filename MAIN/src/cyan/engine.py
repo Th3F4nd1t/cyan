@@ -167,12 +167,13 @@ class Engine:
                 #     for operand in current.data:
                 #         for index in self.proc.pipeline.forwarder[name][operand]:
                 #             if index == data[operand]:
-                                
+                
                 
 
                 data["flags"] = []
                 for flag in current.flags:
                     data["flags"].append(flag)
+                
                 
                 name = operation.split(' ')[0].upper()
                 passed = self.execute(operation,data,module)
