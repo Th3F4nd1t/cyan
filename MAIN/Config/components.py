@@ -72,7 +72,7 @@ class REGISTERS:
     def LDI(engine, data):
         engine.write_req("Register", #type
                          data["dest"], #dest
-                         data["imm"] #since src1 is not comp yet it can act as imm
+                         data["src1"] #since src1 is not comp yet it can act as imm
                         )
         
     def READ(engine, data):

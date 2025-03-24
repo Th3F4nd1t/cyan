@@ -157,13 +157,8 @@ class Processor:
 
             # this isn't implemented yet because i can't figure out how to get it working
             for component in config["components"]:
-                if component["forwarder"]:
-                    self.forwarder[component["class"]] = {}
-                    try:
-                        for operand in component["forwarded_operands"]:
-                            self.forwarder[component["class"]][operand] = [None for i in range(component["forward_depth"])]
-                    except KeyError:
-                        log(f"\'forwarded_operands\' or \'forward_depth\' not found in components-class {component['class']} where \'forwarder\' is True", LogLevel.FATAL)
+                if component["forwarded"]:
+                    self.forwarder[component["class"].upper()] = []
 
         def flush(self):
             self.current = ['' for i in self.stages]

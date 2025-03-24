@@ -66,38 +66,27 @@ io_ports:
 # Components
 components:
   - class: "ALU"
+    forwarded: True
+    stage: "Execute"
     output:
       - "data1"
-    forwarder: True
-    forwarded_operands:
-      - "src1"
-      - "src2"
-    forward_depth: 2
-    operations_handled:
-      - "add"
-      - "sub"
-      - "and"
-      - "or"
-      - "xor"
   - class: "PC"
+    stage: "InstructionDecode"
+    forwarded: False
     output: []
-    forwarder: False
-    forwarded_instructions: []
-    operations_handled:
-      - "Jmp"
   - class: "RAM"
+    stage: "MemoryAccess"
+    forwarded: False
     output: []
-    forwarder: False
     description: "Random Access Memory. Pointers"
-    operations_handled:
-      - "write"
   - class: "Registers"
+    stage: "InstructionDecode"
+    forwarded: False
     output: []
-    forwarded_instructions: []
-    forwarder: False
-    operations_handled:
-      - "Lod"
-      - "Write"
+  - class: "CLOCK"
+    stage: "Writeback"
+    forwarded: False
+    output: []
     
 # operation latency removed from here as it was handled  in instruction set
 
@@ -119,13 +108,13 @@ instruction_set:
     description: "Add two registers."
     operands: # operands are in order of appearance
       - name: "dest"
-        type: "register"
+        type: "register.destination"
         size: 16
       - name: "src1"
-        type: "register"
+        type: "register.source"
         size: 16
       - name: "src2"
-        type: "register"
+        type: "register.source"
         size: 16
     latency: 1
     flags_affected:
@@ -147,10 +136,10 @@ instruction_set:
     description: "Add two registers."
     operands: # operands are in order of appearance
       - name: "dest"
-        type: "register"
+        type: "register.destination"
         size: 16
-      - name: "imm"
-        type: "immediate"
+      - name: "src1"
+        type: "immediate.None"
         size: 16
     latency: 1
     flags_affected: []
