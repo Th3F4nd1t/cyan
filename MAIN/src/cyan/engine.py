@@ -147,98 +147,13 @@ class Engine:
                     break
 
 
-            forward_incremented = []
-            prev_clock = self.proc.state.pc
-            print(self.proc.pipeline.current) # debug to see pipeline stages
-            for index in range(len(self.proc.pipeline.stages)):
-                current = self.proc.pipeline.current[len(self.proc.pipeline.stages) - index - 1]
-                if current == '': # skip if empty
-                    continue 
-
-
-
-                operation = current.execution_chain[self.static.pipeline[len(self.proc.pipeline.stages) - index - 1]]
-                
-                if operation == "None": continue
-
-                data = {}
-                i = 0
-                dest = None
-                sources = []
-                print(current)
-                print(current.data)
-                for operand in current.data:
-                    if current.data[operand]["type"].upper() == "REGISTER.DESTINATION":
-                        dest = current.data[operand]["value"]
-                    if current.data[operand]["type"].upper() == "REGISTER.VALUE":
-                        sources.append(operand)
-                    data[operand] = current.data[operand]["value"]
-                
-
-                data["flags"] = []
-                for flag in current.flags:
-                    data["flags"].append(flag)
-                
-                
-                
-
-
-
-                name = operation.split('.')[0].upper()
-                if self.static.components[name]["forwarded"]:
-                    for source in sources:
-                        for j, option in enumerate(self.proc.pipeline.forwarder[name]):
-                            if option is None: continue
-                            if option[0] == data[source]:
-                                data[source] = option[1]
-                                break
-
-
-
-                passed = self.execute(operation,data,module)
-
-
-                if passed is not None:
-                    for j, passed_name in enumerate(passed): # passed output should always be a dict
-                        self.proc.pipeline.current[len(self.proc.pipeline.stages) - index - 1].data[passed_name] = {"type":"register.value", "value":passed[passed_name]}
-                        if self.static.components[name]["forwarded"]:
-                            if j == 0: # on first passed
-                                if dest is None: # if there is not a destination an error will throw because forwarders are meant to get things that haven't been put to regs yet
-                                    log(f"Instruction {current} missing \'dest\' operand argument required for append to forwarder.", LogLevel.ERROR)
-                                self.proc.pipeline.forwarder[name].insert(0,[dest,passed[passed_name]])
-                                forward_incremented.append(name)
-                            else: # in case more than one passed
-                                log(f"Instruction {current} requested passing more than one instruction into a forwarder, which is not supported.", LogLevel.ERROR)
-                                self.proc.pipeline.forwarder[name].insert(0,None)
-                                forward_incremented.append(name)
-                        
-                # add new section here to deal with immediates and other instructions which modify the queue
-
-
-
-
-                    print(passed) # for passed objects debug
-                else:
-                    if self.static.components[name]["forwarded"]:
-                        self.proc.pipeline.forwarder[name].insert(0,None)
-                        forward_incremented.append(name)
-                # checks if forwarder is gone too long
-                
-            print(self.proc.pipeline.forwarder)
-                
             
 
-            for temp in self.proc.pipeline.forwarder: # update all forwards
-                if temp not in forward_incremented: # except those which have already been updated this cycle
-                    self.proc.pipeline.forwarder[temp].insert(0,None)
                 
-                if len(self.proc.pipeline.forwarder[temp]) > len(self.proc.pipeline.stages) - self.proc.pipeline.stages.index(self.static.components[temp]["stage"]):
-                    self.proc.pipeline.forwarder[temp].pop(-1)
+            print(self.proc.pipeline.forwarder)
 
-            if prev_clock != self.proc.state.pc:
-                ...
-            else:
-                self.proc.state.pc += 1
+            self.proc.state.pc += 1
+            
             if self.static.simulation_speed == 0:
                 time.sleep(0)
             else:

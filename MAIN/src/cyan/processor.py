@@ -158,7 +158,7 @@ class Processor:
             # this isn't implemented yet because i can't figure out how to get it working
             for component in config["components"]:
                 if component["forwarded"]:
-                    self.forwarder[component["class"].upper()] = []
+                    self.forwarder[component["class"].upper()] = [None for _ in range(len(self.stages) - self.stages.index(component["stage"])-1)]
 
         def flush(self):
             self.current = ['' for i in self.stages]
