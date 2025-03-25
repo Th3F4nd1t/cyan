@@ -146,11 +146,86 @@ class Engine:
                 if all(x == '' for x in self.proc.pipeline.current): # only checks if there are instructions left that were inserted before the halt instruction
                     break
 
-
             
+            pipeline_iterator = zip(list(reversed(self.proc.pipeline.current)),list(reversed(self.proc.pipeline.stages)))
+            for instruction, stage in pipeline_iterator:
+                if instruction == '': 
+                    for component in list(self.proc.pipeline.forwarder.keys()):
+                        self.proc.pipeline.forwarder[component][self.proc.pipeline.stages.index(stage)] = None
+                    continue
+
+                    
+                stage_index = self.proc.pipeline.stages.index(stage)
+                operation = instruction.execution_chain[stage]
+                name = operation.split('.')[0].upper()
+
+                data = {}
+                destination = None
+
+                data["flags"] = []
+                for flag in instruction.flags:
+                    data["flags"].append(flag)
+
 
                 
+                for opcode in instruction.data:
+
+                    if instruction.data[opcode]["type"].upper() == "REGISTER.DESTINATION":
+                        destination = instruction.data[opcode]["value"]
+
+                    data[opcode] = instruction.data[opcode]["value"]
+
+                
+
+                
+                # its looping twice but due to the way operands are handled it has to be to avoid missing stuff
+                for component in list(self.proc.pipeline.forwarder.keys()):
+                    self.proc.pipeline.forwarder[component][stage_index] = None
+                    # sets default value to none to overwrite that of previous cycle
+                    if destination is None: continue
+
+                    # 
+                    for opcode in list(reversed(instruction.data)):
+                        if opcode in self.static.components[component]["forward_operands"]:
+                            self.proc.pipeline.forwarder[component][stage_index] = [destination,data[opcode]]
+                            break
+                
+                if operation.upper() == "NONE": continue # important that tis is after the forwarding creation to not break other instructions
+                print(name)
+                # now checks for things that need to be forwarded to itself
+                if self.static.components[name]["forwarded"]:
+                    for opcode in instruction.data:
+                        if instruction.data[opcode]["type"].upper() == "REGISTER.VALUE":
+                            for temp in self.proc.pipeline.forwarder[name][stage_index+1:]:
+                                print(self.proc.pipeline.forwarder[name][stage_index+1:])
+                                print(self.proc.pipeline.forwarder[name])
+                                print(temp)
+                                # I need a way to link register.value types and register.source types
+                                if temp is None: continue
+                                dest_fw, value_fw = temp
+                                print(dest_fw == instruction.data[opcode]["value"] )
+                                if instruction.data[opcode]["value"] == dest_fw:
+                                    data[opcode] = value_fw
+                                    print(data)
+                                    break
+                
+
+                # now actually execute instruction
+
+                passed = self.execute(operation,data,module)
+
+                if passed is not None:
+                    for passed_name in passed:
+                        self.proc.pipeline.current[stage_index].data[passed_name] = {"type":"Register.Value","value":passed[passed_name]}
+
+
+
+
+            print(self.proc.state.register[4])
             print(self.proc.pipeline.forwarder)
+                
+            
+            print(self.proc.pipeline.current)
 
             self.proc.state.pc += 1
             

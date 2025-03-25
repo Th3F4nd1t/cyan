@@ -67,6 +67,10 @@ io_ports:
 components:
   - class: "ALU"
     forwarded: True
+    forward_operands: 
+      - "data1"
+      - "imm"
+
     stage: "Execute"
     output:
       - "data1"
@@ -138,7 +142,7 @@ instruction_set:
       - name: "dest"
         type: "register.destination"
         size: 16
-      - name: "src1"
+      - name: "imm"
         type: "immediate.None"
         size: 16
     latency: 1
