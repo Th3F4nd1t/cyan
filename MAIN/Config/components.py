@@ -77,7 +77,7 @@ class REGISTERS:
         
     def READ(engine, data):
         read_list = {
-            "data1":engine.read_req("Register", data["src1"]),
+            "data1": engine.read_req("Register", data["src1"]),
             "data2": engine.read_req("Register", data["src2"])
         }
         return read_list

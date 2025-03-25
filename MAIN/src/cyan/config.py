@@ -61,7 +61,7 @@ def validate_config(config):
         "ram_size": ["none"],
         "io_type": ["main","cond",{"mmio":[None,["io_reserved"]],"pmio":[None,["none"]]}],
         "io_ports": ["nest",["name","address","read_only","write_only","default_value","size"]],
-        "components": ["nest",["class","forwarded"]],
+        "components": ["nest",["class","forwarded","transfer","stage"]],
         "opcode_length": ["none"],
         "instruction_set": ["nest",["name","opcode","operation","operands","latency","flags_affected"]],
     }

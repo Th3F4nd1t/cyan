@@ -70,27 +70,31 @@ components:
     forward_operands: 
       - "data1"
       - "imm"
-
     stage: "Execute"
-    output:
-      - "data1"
+    transfer:
+      data1_data2: "data1"
+      
   - class: "PC"
     stage: "InstructionDecode"
     forwarded: False
-    output: []
+    transfer: {}
+
   - class: "RAM"
     stage: "MemoryAccess"
     forwarded: False
-    output: []
+    transfer: {}
     description: "Random Access Memory. Pointers"
+
   - class: "Registers"
     stage: "InstructionDecode"
     forwarded: False
-    output: []
+    transfer:
+      src1_src2: "data1_data2"
+
   - class: "CLOCK"
     stage: "Writeback"
     forwarded: False
-    output: []
+    transfer: {}
     
 # operation latency removed from here as it was handled  in instruction set
 
