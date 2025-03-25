@@ -1,4 +1,5 @@
 ; Example
 LDI 4 200
-ADD 4 4 4
+ADD 3 4 4
+ADD 4 3 3
 HLT

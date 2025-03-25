@@ -35,6 +35,8 @@ class MemoryCell:
             log(f"Read-only error: Writing to {self.mem_class} {self.address} failed",LogLevel.WARNING)
             return
         
+
+        log(f"Writing {value} to {self.mem_class} {self.address}", LogLevel.INFO)
         if self.accumulates: # check for accumulator reg
             self.value += value
         else:

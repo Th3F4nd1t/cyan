@@ -4,7 +4,6 @@ from src.cyan.compiler import *
 from src.cyan.utils import *
 import sys
 log("Booting CPU", LogLevel.INFO)
-
 config = get_config('Config/config.yaml')
 
 

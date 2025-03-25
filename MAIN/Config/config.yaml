@@ -72,7 +72,8 @@ components:
       - "imm"
     stage: "Execute"
     transfer:
-      data1_data2: "data1"
+      src1: "data1"
+      src2: "data2"
       
   - class: "PC"
     stage: "InstructionDecode"
@@ -88,8 +89,7 @@ components:
   - class: "Registers"
     stage: "InstructionDecode"
     forwarded: False
-    transfer:
-      src1_src2: "data1_data2"
+    transfer: {}
 
   - class: "CLOCK"
     stage: "Writeback"

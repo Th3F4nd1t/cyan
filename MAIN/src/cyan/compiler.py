@@ -49,44 +49,44 @@ def createDynamicInstructions(config): # add error checking
         for instruction in config["instruction_set"]:
             
             # basic info
-            file.write(f"class {instruction['name'].upper()}:\n")
-            file.write(f"   opcode = {instruction['opcode']}\n")
-            file.write(f"   latency = {instruction['latency']}\n")
+            file.write(f"class {instruction['name'].upper()}:\n") 
+            file.write("   def __init__(self,index):\n")
+            file.write("       self.index = index\n")
+            file.write(f"       self.opcode = {instruction['opcode']}\n")
+            file.write(f"       self.latency = {instruction['latency']}\n")
 
             # operands
             operands_list = ','.join('\''+operand['name']+'\'' for operand in instruction['operands'])
-            file.write(f"   operands = [{operands_list}]\n")
-            file.write("   data =  {\n")
+            file.write(f"       self.operands = [{operands_list}]\n")
+            file.write("       self.data =  {\n")
             for operand in instruction['operands']:
-                file.write(f"      \'{operand['name']}\' : " + "{\n")
-                file.write(f"          \'type\':\'{operand['type']}\',\n")
-                file.write(f"          \'size\':{operand['size']},\n")
-                file.write("           \'value\':int\n")
-                file.write("        },\n")
-            file.write("    }\n")
+                file.write(f"       \'{operand['name']}\' : " + "{\n")
+                file.write(f"           \'type\':\'{operand['type']}\',\n")
+                file.write(f"           \'size\':{operand['size']},\n")
+                file.write("            \'value\':int\n")
+                file.write("            },\n")
+            file.write("        }\n")
             # flags
-            file.write("   flags = [\n")
+            file.write("       self.flags = [\n")
             for index,flag in enumerate(instruction["flags_affected"]):
                 corrected_flag = "\'" + f"{flag}" + "\'"
-                file.write(f"        {corrected_flag},\n")
-            file.write("    ]\n")
+                file.write(f"           {corrected_flag},\n")
+            file.write("        ]\n")
 
             # pipeline / non pipeline execution info
             if config["pipelined"]:
 
                 pipeline_stages = config["pipeline"]
 
-                file.write("   execution_chain = {\n")
+                file.write("       self.execution_chain = {\n")
                 for stage in instruction["operation"]:
                     corrected_stage = "\'" + f"{stage}" + "\'" + ":" + "\'" + f"{instruction['operation'][stage]}" + "\'"
-                    file.write(f"        {corrected_stage},\n")
-                file.write("    }\n")
+                    file.write(f"           {corrected_stage},\n")
+                file.write("        }\n")
 
             else:
-                file.write(f"   execution = {instruction['operation']}\n")
-            file.write("   def __init__(self): ...\n")
-            file.write("   def __repr__(self):\n")
-            file.write(f"       return {instruction['name']}\n")
+                file.write(f"       self.execution = {instruction['operation']}\n")
+
             file.write("\n\n\n")
 
     log("Instruction file creation complete", LogLevel.SUCCESS)
