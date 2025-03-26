@@ -18,7 +18,7 @@ class ConfigGUI:
     
     def create_widgets(self):
         self.frame = ttk.Frame(self.root)
-        self.frame.pack(expand=True, fill='both', padx=10, pady=10)
+        self.frame.pack(expand=True, fill='both', padx=20, pady=10)
         
         self.label = ttk.Label(self.frame, text="Welcome to the CYAN Config Generator!")
         self.label.pack(pady=5)
@@ -37,7 +37,7 @@ class ConfigGUI:
             metadata_fields = ["cpu_name", "cpu_version", "creator", "date", "cpu_description"]
             for field in metadata_fields:
                 row = ttk.Frame(self.frame)
-                row.pack(fill='x', padx=5, pady=2)
+                row.pack(fill='x', padx=10, pady=6)
                 label = ttk.Label(row, text=field.capitalize(), width=15)
                 label.pack(side='left')
                 entry = ttk.Entry(row)
@@ -50,11 +50,43 @@ class ConfigGUI:
         elif self.step == 1:
             self.label = ttk.Label(self.frame, text="Step 2: Enter Specs")
             self.label.pack(pady=5)
+            specs_fields = [["pipelined","bool"],["address_space","txt"],["word_size","txt"],["simulation_speed","txt"],["rom_size","txt"],["ram_size","txt"]]
+            for field in specs_fields:
+                row = ttk.Frame(self.frame)
+                row.pack(fill='x', padx=10, pady=6)
+                label = ttk.Label(row, text=field[0].capitalize(), width=15)
+                label.pack(side='left')
+                if field[1] == "txt":
+                    
+                    entry = ttk.Entry(row)
+                    entry.pack(side='right', fill='x', expand=True)
+                else:
+                    entry = tk.BooleanVar()
+                    temp = ttk.Checkbutton(row,variable=entry)
+                    temp.pack(side='right',fill='x', expand=True)
+                self.entries[field[0]] = entry
             
             # todo
             self.next_button = ttk.Button(self.frame, text="Next", command=self.next_step)
             self.next_button.pack(pady=5)
 
+
+        elif self.step==2 and self.entries["pipelined"].get():
+            self.label = ttk.Label(self.frame, text="Step 3: Pipeline")
+            self.label.pack(pady=5)
+            self.label = ttk.Label(self.frame, text="Seperate instructions by newline")
+            self.label.pack(pady=5)
+            row = ttk.Frame(self.frame)
+            row.pack(fill='x', padx=5, pady=6)
+            entry = scrolledtext.ScrolledText(self.frame, height=8, width=30, wrap=tk.WORD)
+            entry.pack(side='top', fill='x', expand=True)
+            self.entries["pipeline"] = entry
+
+            self.next_button = ttk.Button(self.frame, text="Next", command=self.next_step)
+            self.next_button.pack(pady=5)
+        
+        elif self.step == 3: # flags
+            ...
         self.step += 1
     
     

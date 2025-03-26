@@ -10,7 +10,9 @@ pipelined: True
 address_space: 16
 word_size: 16
 simulation_speed: 0 # 0 if instant, other wise hertz
-
+# ROM/RAM
+rom_size: 256
+ram_size: 256
 
 # flags
 flags: # flag: id
@@ -40,9 +42,6 @@ special_registers: # replace the entire category with an empty list if not wanti
     size: 16
     accumulates: False
 
-# ROM/RAM
-rom_size: 256
-ram_size: 256
 
 # IO
 io_type: "mmio" # pmio or mmio
