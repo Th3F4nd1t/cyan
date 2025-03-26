@@ -86,7 +86,7 @@ def createDynamicInstructions(config): # add error checking
 
             else:
                 file.write(f"       self.execution = {instruction['operation']}\n")
-
+            file.write(f"       self.name = \'{instruction['name'].upper()}\'\n")
             file.write("\n\n\n")
 
     log("Instruction file creation complete", LogLevel.SUCCESS)

@@ -89,7 +89,6 @@ def validate_config(config):
     
     # start iterating
     for field in list(required_fields.keys()):
-        print(field)
         if field not in config.keys():
             log(f"{field} not found in config.", LogLevel.FATAL)
         

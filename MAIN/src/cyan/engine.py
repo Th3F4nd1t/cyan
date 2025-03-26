@@ -147,9 +147,12 @@ class Engine:
                     break
 
             print()
+            log(f"Cycle {self.proc.state.pc}", LogLevel.INFO)
             pipeline_iterator = zip(list(reversed(self.proc.pipeline.current)),list(reversed(self.proc.pipeline.stages)))
             for instruction, stage in pipeline_iterator:
+                
                 if instruction == '': 
+                    log('Executing NOP operation', LogLevel.INFO)
                     for component in list(self.proc.pipeline.forwarder.keys()):
                         self.proc.pipeline.forwarder[component][self.proc.pipeline.stages.index(stage)] = None
                     continue
@@ -193,8 +196,10 @@ class Engine:
                             self.proc.pipeline.forwarder[component][stage_index] = [destination,data[opcode]]
                             break
                 
-                if operation.upper() == "NONE": continue # important that tis is after the forwarding creation to not break other instructions
-                
+                if operation.upper() == "NONE": 
+                    log(f"Executing {instruction.name} instruction, no sub-operation", LogLevel.INFO)
+                    continue # important that tis is after the forwarding creation to not break other instructions
+                log(f"Executing {instruction.name} instruction, sub-operation {instruction.execution_chain[stage]}", LogLevel.INFO)
 
 
 
@@ -223,6 +228,7 @@ class Engine:
 
                 passed = self.execute(operation,data,module)
                 if passed is not None:
+                    log(f"Returning {passed} from {instruction.name}", LogLevel.INFO)
                     for passed_name in passed:
                         self.proc.pipeline.current[stage_index].data[passed_name] = {"type":"Register.Value","value":passed[passed_name]}
 
