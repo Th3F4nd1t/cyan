@@ -6,7 +6,6 @@ import sys
 log("Booting CPU", LogLevel.INFO)
 config = get_config('Config/config.yaml')
 
-
 validate_config(config)
 createDynamicInstructions(config)
 
