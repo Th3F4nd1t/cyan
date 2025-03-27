@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog, scrolledtext, messagebox
 import json, time
 import re
+from copy import deepcopy
 
 class ConfigGUI:
     def __init__(self, root):
@@ -198,7 +199,10 @@ class ConfigGUI:
             for word in self.temp_entries["special_reg_names"].get("1.0",tk.END).split('\n'):
                 if word == '': continue
                 self.iterators.append(word.strip())
-
+        elif self.step == 5:
+            self.entries["special_registers"] = []
+            for field in self.temp_entries:
+                self.entries["special_registers"].append(deepcopy(self.temp_entries[field]))
         self.temp_entries = {}
         print(self.entries)
         self.step += 1
