@@ -1,7 +1,7 @@
 #this is just copied for the moment
 
 import tkinter as tk
-from tkinter import ttk, filedialog, scrolledtext, messagebox
+from tkinter import ttk, filedialog, scrolledtext, messagebox, Listbox
 import json, time
 import re
 from copy import deepcopy
@@ -172,6 +172,43 @@ class ConfigGUI:
                 self.done_button = ttk.Button(self.frame, text="Done", command=self.new_step)
                 self.done_button.pack(pady=5)
 
+        elif self.step == 6:
+            self.label = ttk.Label(self.frame, text="Memory")
+            self.label.pack(pady=5)
+            
+            # mmio or pmio
+            row = ttk.Frame(self.frame) 
+            row.pack(fill='x', padx=10, pady=6)
+            label = ttk.Label(row, text="Memory Type", width=15)
+            label.pack(side='left')
+            entry = tk.Listbox(row,height=2)
+            entry.insert(tk.END, "pmio")
+            entry.insert(tk.END, "mmio")
+            entry.pack(side='top', fill='x', expand=True)
+            self.temp_entries["type"] = entry
+            self.next_button = ttk.Button(self.frame, text="Next", command=self.new_step)
+            self.next_button.pack(pady=5)
+
+        elif self.step == 7 and self.entries["io_type"]=="mmio":
+            self.label = ttk.Label(self.frame, text="Reserved mmio Address spaces")
+            self.label.pack(pady=5)
+            row = ttk.Frame(self.frame) 
+            row.pack(fill='x', padx=10, pady=6)
+            label = ttk.Label(row, text="start of range".capitalize(), width=15)
+            label.pack(side='left')
+            entry = ttk.Entry(row)
+            entry.pack(side='left', fill='x', expand=True)
+            self.temp_entries["start_range"] = entry
+
+            label = ttk.Label(row, text="end of range".capitalize(), width=15)
+            label.pack(side='right')
+            entry = ttk.Entry(row)
+            entry.pack(side='right', fill='x', expand=True)
+            self.temp_entries["end_range"] = entry
+
+            self.next_button = ttk.Button(self.frame, text="Next", command=self.new_step)
+            self.next_button.pack(pady=5)
+
 
 
     def new_step(self): # intermediary function. Just turns everything to normal in case i need values or subdicts
@@ -203,6 +240,11 @@ class ConfigGUI:
             self.entries["special_registers"] = []
             for field in self.temp_entries:
                 self.entries["special_registers"].append(deepcopy(self.temp_entries[field]))
+        elif self.step == 6:
+            self.entries["io_type"] = self.temp_entries["type"].get(self.temp_entries["type"].curselection())
+        elif self.step == 7:
+            self.entries["io_reserved"] = list(range(int(self.temp_entries["start_range"].get().strip()),int(self.temp_entries["end_range"].get().strip())+1))
+            # just make the ports here user would hate having to put in like 3000 entries.
         self.temp_entries = {}
         print(self.entries)
         self.step += 1
