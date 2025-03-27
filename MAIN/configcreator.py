@@ -137,39 +137,39 @@ class ConfigGUI:
             self.next_button = ttk.Button(self.frame, text="Next", command=self.new_step)
             self.next_button.pack(pady=5)
         
-        elif self.step == 5: # find a way to reset the choices on these
+        elif self.step == 5: # fix this up using multiple widgets
             
             self.label = ttk.Label(self.frame, text="Special Registers one by one")
             self.label.pack(pady=5)
-            self.instruction_label = ttk.Label(self.frame, text=f"Regs Left: {', '.join(self.iterators)}")
-            self.instruction_label.pack(pady=5)
-            self.temp_entries = {}
-            
-            specs_fields = [["description","txt"],["address","txt"],["read_only","bool"],["write_only","bool"],["default_value","txt"],["size","txt"],["accumulates","bool"]]
-            for reg_name in self.iterators:
-                self.temp_entries[reg_name] = {"name":reg_name}
-            for field in specs_fields:
-                row = ttk.Frame(self.frame)
-                row.pack(fill='x', padx=10, pady=6)
-                label = ttk.Label(row, text=field[0].capitalize(), width=15)
-                label.pack(side='left')
-                if field[1] == "txt":
-                    
-                    entry = ttk.Entry(row)
-                    entry.pack(side='right', fill='x', expand=True)
-                else:
-                    entry = tk.BooleanVar()
-                    temp = ttk.Checkbutton(row,variable=entry)
-                    temp.pack(side='right',fill='x', expand=True)
-                self.temp_entries[self.iterators[0]][field[0]] = entry
-            
-            self.next_button = ttk.Button(self.frame, text="Add Reg", command=self.port_update)
-            self.next_button.pack(pady=5)
-            self.done_button = ttk.Button(self.frame, text="Done", command=self.new_step, state=tk.DISABLED)
-            self.done_button.pack(pady=5)
-            if len(self.iterators) == 0:
-                self.step = 6
-                self.next_step()
+            if len(self.iterators) > 0:
+                self.instruction_label = ttk.Label(self.frame, text=f"Regs Left: {', '.join(self.iterators)}")
+                self.instruction_label.pack(pady=5)
+                self.instruction_label = ttk.Label(self.frame, text=f"Current: {self.iterators[0]}")
+                self.instruction_label.pack(pady=5)
+                
+                specs_fields = [["description","txt"],["address","txt"],["read_only","bool"],["write_only","bool"],["default_value","txt"],["size","txt"],["accumulates","bool"]]
+                for reg_name in self.iterators:
+                    self.temp_entries[reg_name] = {"name":reg_name}
+                for field in specs_fields:
+                    row = ttk.Frame(self.frame)
+                    row.pack(fill='x', padx=10, pady=6)
+                    label = ttk.Label(row, text=field[0].capitalize(), width=15)
+                    label.pack(side='left')
+                    if field[1] == "txt":
+                        
+                        entry = ttk.Entry(row)
+                        entry.pack(side='right', fill='x', expand=True)
+                    else:
+                        entry = tk.BooleanVar()
+                        temp = ttk.Checkbutton(row,variable=entry)
+                        temp.pack(side='right',fill='x', expand=True)
+                    self.temp_entries[self.iterators[0]][field[0]] = entry
+                
+                self.add_button = ttk.Button(self.frame, text="Add Reg", command=self.port_update)
+                self.add_button.pack(pady=5)
+            else:
+                self.done_button = ttk.Button(self.frame, text="Done", command=self.new_step)
+                self.done_button.pack(pady=5)
 
 
 
@@ -199,6 +199,7 @@ class ConfigGUI:
                 if word == '': continue
                 self.iterators.append(word.strip())
 
+        self.temp_entries = {}
         print(self.entries)
         self.step += 1
         self.next_step()
@@ -210,19 +211,16 @@ class ConfigGUI:
         for field in self.temp_entries[name]:
             if field == "name": continue
             self.temp_entries[name][field] = self.temp_entries[name][field].get()
-        print(self.temp_entries[name])
+        print(self.temp_entries)
         self.check_completion()
+        self.next_step()
 
 
 
     def check_completion(self):
         # Check if we are done
-        if len(self.iterators) == 0:  # If no operations left
-            self.done_button.config(state=tk.NORMAL)
-        else:
-            # If operations still remain, disable "Done"
+        if len(self.iterators) != 0:  # If no operations left
             self.iterators.pop(0)
-            self.done_button.config(state=tk.DISABLED)
 
 
 
