@@ -2,13 +2,6 @@ Todo list: Add anything that you find that needs to be done but you can't at the
 
 
 - Add data hazards and stuff to pipeline run in engine.py
-- Start work on the main engine and stuff. Most background infrastructure has already been built up
-
-- Finish the compiler
 
 
- - Need to find a way to ensure that user can control which instructions end up as which outputs for each function in their components
-
-- Add checking to make sure that components are stage-restricted to ensure realism (in pipelined)
-
- - For forwarding the idea and most of the implementation is there just other instructions which modify the registers don't add to the queue
+- make way to get custom memory types (other than regs; regs are default)
