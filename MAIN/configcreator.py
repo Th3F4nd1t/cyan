@@ -189,22 +189,55 @@ class ConfigGUI:
             self.next_button = ttk.Button(self.frame, text="Next", command=self.new_step)
             self.next_button.pack(pady=5)
 
-        elif self.step == 7 and self.entries["io_type"]=="mmio":
-            self.label = ttk.Label(self.frame, text="Reserved mmio Address spaces")
-            self.label.pack(pady=5)
-            row = ttk.Frame(self.frame) 
-            row.pack(fill='x', padx=10, pady=6)
-            label = ttk.Label(row, text="start of range".capitalize(), width=15)
-            label.pack(side='left')
-            entry = ttk.Entry(row)
-            entry.pack(side='left', fill='x', expand=True)
-            self.temp_entries["start_range"] = entry
+        elif self.step == 7:
+            if self.entries["io_type"] == "mmio":
+                self.label = ttk.Label(self.frame, text="Reserved mmio Address spaces")
+                self.label.pack(pady=5)
+                row = ttk.Frame(self.frame) 
+                row.pack(fill='x', padx=10, pady=6)
+                label = ttk.Label(row, text="start of range".capitalize(), width=15)
+                label.pack(side='left')
+                entry = ttk.Entry(row)
+                entry.pack(side='left', fill='x', expand=True)
+                self.temp_entries["start_range"] = entry
 
-            label = ttk.Label(row, text="end of range".capitalize(), width=15)
-            label.pack(side='right')
-            entry = ttk.Entry(row)
-            entry.pack(side='right', fill='x', expand=True)
-            self.temp_entries["end_range"] = entry
+                label = ttk.Label(row, text="end of range".capitalize(), width=15)
+                label.pack(side='right')
+                entry = ttk.Entry(row)
+                entry.pack(side='right', fill='x', expand=True)
+                self.temp_entries["end_range"] = entry
+            else:
+                self.label = ttk.Label(self.frame, text="Pmio configuration")
+                self.label.pack(pady=5)
+                row = ttk.Frame(self.frame) 
+                row.pack(fill='x', padx=10, pady=6)
+                label = ttk.Label(row, text="Number of ports".capitalize(), width=15)
+                label.pack(side='left')
+                entry = ttk.Entry(row)
+                entry.pack(side='right', fill='x', expand=True)
+                self.temp_entries["ports_num"] = entry
+            
+            self.label = ttk.Label(self.frame, text=f"Config for all {self.entries['io_type']} cells")
+            self.label.pack(pady=5)
+            specs_fields = [["description","txt"],["read_only","bool"],["write_only","bool"],["default_value","txt"],["size","txt"]]
+            self.temp_entries["reg_desc"] = {}
+
+            for field in specs_fields:
+                row = ttk.Frame(self.frame)
+                row.pack(fill='x', padx=10, pady=6)
+                label = ttk.Label(row, text=field[0].capitalize(), width=15)
+                label.pack(side='left')
+                if field[1] == "txt":
+                    
+                    entry = ttk.Entry(row)
+                    entry.pack(side='right', fill='x', expand=True)
+                else:
+                    entry = tk.BooleanVar()
+                    temp = ttk.Checkbutton(row,variable=entry)
+                    temp.pack(side='right',fill='x', expand=True)
+                self.temp_entries["reg_desc"][field[0]] = entry
+
+
 
             self.next_button = ttk.Button(self.frame, text="Next", command=self.new_step)
             self.next_button.pack(pady=5)
@@ -231,19 +264,40 @@ class ConfigGUI:
                     if word == '': continue
                     self.entries[field][word.strip()] = index
 
-        elif self.step == 4:
+        elif self.step == 4: # regs
             self.entries["register_count"] = self.temp_entries["register_count"].get()
             for word in self.temp_entries["special_reg_names"].get("1.0",tk.END).split('\n'):
                 if word == '': continue
                 self.iterators.append(word.strip())
-        elif self.step == 5:
+
+        elif self.step == 5: # special regs
             self.entries["special_registers"] = []
             for field in self.temp_entries:
                 self.entries["special_registers"].append(deepcopy(self.temp_entries[field]))
-        elif self.step == 6:
+
+        elif self.step == 6: # port type
             self.entries["io_type"] = self.temp_entries["type"].get(self.temp_entries["type"].curselection())
-        elif self.step == 7:
-            self.entries["io_reserved"] = list(range(int(self.temp_entries["start_range"].get().strip()),int(self.temp_entries["end_range"].get().strip())+1))
+
+        elif self.step == 7: # ports
+            self.entries["io_ports"] = []
+            generic_entry = {}
+            if self.entries["io_type"] =="mmio":
+                self.entries["io_reserved"] = list(range(int(self.temp_entries["start_range"].get().strip()),int(self.temp_entries["end_range"].get().strip())+1))
+                for entry in self.temp_entries["reg_desc"]:
+                    generic_entry[entry] = self.temp_entries["reg_desc"][entry].get()
+                for index in self.entries["io_reserved"]:
+                    generic_entry["address"] = index
+                    generic_entry["name"] = f"Port {index}"
+                    self.entries["io_ports"].append(deepcopy(generic_entry))
+            else:
+                ports_num = int(str(self.temp_entries["ports_num"].get().strip()))
+                print(ports_num)
+                for entry in self.temp_entries["reg_desc"]:
+                    generic_entry[entry] = self.temp_entries["reg_desc"][entry].get()
+                for index in range(ports_num):
+                    generic_entry["address"] = index
+                    generic_entry["name"] = f"Port {index}"
+                    self.entries["io_ports"].append(deepcopy(generic_entry))
             # just make the ports here user would hate having to put in like 3000 entries.
         self.temp_entries = {}
         print(self.entries)
